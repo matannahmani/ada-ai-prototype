@@ -14,8 +14,9 @@ import HomeHero from "./home-hero"
 const CandidatesCard = async () => {
   const candidates = await api.candidates.list.query()
   const session = await getServerAuthSession()
-  return candidates.map((candidate) => (
+  return candidates.map((candidate, index) => (
     <CandidateCard
+      fullCard={index === 0}
       userId={session?.user?.id ?? "-1"}
       key={`candidate-${candidate.id}`}
       candidate={candidate}
@@ -25,11 +26,14 @@ const CandidatesCard = async () => {
 
 export default function IndexPage() {
   return (
-    <main className="container grid items-center sm:py-2 gap-6 pb-8 pt-6 md:py-10">
+    <main className=" grid items-center gap-6">
       <HomeHero />
       <CardsContainer
-        title="Candidates"
-        description="Explore the top candidates."
+        title="Latest fundraisers"
+        link={{
+          href: "/fundraisers",
+          label: "see more",
+        }}
       >
         <Suspense
           fallback={new Array(10).fill(0).map((_, i) => (

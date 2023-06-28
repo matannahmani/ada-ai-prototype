@@ -1,3 +1,5 @@
+const { fontFamily } = require("tailwindcss/defaultTheme")
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -30,6 +32,10 @@ module.exports = {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -55,6 +61,11 @@ module.exports = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        mono: ["var(--font-mono)", ...fontFamily.mono],
+        serif: ["var(--font-serif)", ...fontFamily.serif],
       },
       keyframes: {
         "accordion-down": {

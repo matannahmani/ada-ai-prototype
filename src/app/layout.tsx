@@ -3,7 +3,7 @@ import "@/styles/globals.css"
 import { type Metadata } from "next"
 
 import { siteConfig } from "@/config/site"
-import { fontSans } from "@/lib/fonts"
+import { fontSans, fontSerif } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import Navbar from "@/components/navbar/navbar"
 import SessionProvider from "@/components/session-provider"
@@ -35,12 +35,12 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
-      <html className="scroll-smooth" lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning>
         <head />
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased ",
-            fontSans.variable
+            fontSerif.variable,
+            "min-h-screen bg-background font-serif antialiased "
           )}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

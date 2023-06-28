@@ -1,34 +1,27 @@
-import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { api } from "@/trpc/server";
-import { Suspense, memo } from "react";
-import { Skeleton } from "@ui/skeleton";
-import Link from "next/link";
-import SidebarCandidateBtn from "./sidebar-candidate-btn";
+import { cache, memo, Suspense } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { getServerAuthSession } from "@/server/auth"
+import { api } from "@/trpc/server"
+import { AspectRatio } from "@ui/aspect-ratio"
+import { Skeleton } from "@ui/skeleton"
 
-type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
+import { cn } from "@/lib/utils"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
-import { cache } from "react";
-import Image from "next/image";
-import { AspectRatio } from "@ui/aspect-ratio";
-import { getServerAuthSession } from "@/server/auth";
+import SidebarCandidateBtn from "./sidebar-candidate-btn"
+
+type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 /**
  * @experimental trying to use rsc offical cache api
  */
-export const getCandidates = cache(async () => {
-  const candidates = await api.candidates.list.query(undefined, {
-    context: {
-      revalidate: false,
-    },
-  });
-  return candidates;
-});
+export const getCandidates = api.candidates.list.query
 
 const MemoedCandidateImage = memo(function CandidateImage({
   candidate,
 }: {
-  candidate: Awaited<ReturnType<typeof getCandidates>>[number];
+  candidate: Awaited<ReturnType<typeof getCandidates>>[number]
 }) {
   return (
     <div className="mr-2 h-8 w-8">
@@ -42,12 +35,12 @@ const MemoedCandidateImage = memo(function CandidateImage({
         />
       </AspectRatio>
     </div>
-  );
-});
+  )
+})
 
 async function ChatCandidateSidebar() {
-  const candidates = await getCandidates();
-  const session = await getServerAuthSession();
+  const candidates = await api.candidates.list.query()
+  const session = await getServerAuthSession()
   return candidates?.map((candidate, i) => (
     <SidebarCandidateBtn candidateId={candidate.id} key={`btn-${i}`}>
       <Link
@@ -58,7 +51,7 @@ async function ChatCandidateSidebar() {
         {candidate.name}
       </Link>
     </SidebarCandidateBtn>
-  ));
+  ))
 }
 
 function SidebarContent({ className }: SidebarProps) {
@@ -76,7 +69,6 @@ function SidebarContent({ className }: SidebarProps) {
                   <Skeleton className="h-[36px] w-full" key={`skeleton-${i}`} />
                 ))}
               >
-                {/* @ts-expect-error async component not supported yet in ts */}
                 <ChatCandidateSidebar />
               </Suspense>
             </div>
@@ -84,6 +76,6 @@ function SidebarContent({ className }: SidebarProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
-export default memo(SidebarContent);
+export default memo(SidebarContent)

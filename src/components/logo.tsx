@@ -1,10 +1,11 @@
 import * as React from "react"
-import { SVGProps, Ref, forwardRef, memo } from "react"
+import { forwardRef, memo, Ref, SVGProps } from "react"
+
 interface SVGRProps {
-  title?: string;
-  titleId?: string;
-  desc?: string;
-  descId?: string;
+  title?: string
+  titleId?: string
+  desc?: string
+  descId?: string
 }
 const SvgComponent = (
   {
@@ -21,6 +22,8 @@ const SvgComponent = (
     xmlnsXlink="http://www.w3.org/1999/xlink"
     width="1em"
     height="1em"
+    viewBox="0 0 90 32"
+    preserveAspectRatio="xMidYMid meet"
     fill="none"
     ref={ref}
     aria-labelledby={titleId}

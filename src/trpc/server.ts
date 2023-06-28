@@ -1,46 +1,38 @@
-"use server";
+"use server"
 
-import { generateCacheTag, getUrl, transformer } from "./shared";
-import { httpLink } from "@trpc/client";
-import { experimental_createTRPCNextAppDirServer } from "@trpc/next/app-dir/server";
-import { headers } from "next/headers";
-import { type AppRouter } from "@/server/api/root";
+import { cookies, headers } from "next/headers"
+import { appRouter, type AppRouter } from "@/server/api/root"
+import { getServerAuthSession } from "@/server/auth"
+import { httpLink, loggerLink } from "@trpc/client"
+import { experimental_nextCacheLink } from "@trpc/next/app-dir/links/nextCache"
+import { experimental_nextHttpLink } from "@trpc/next/app-dir/links/nextHttp"
+import { experimental_createTRPCNextAppDirServer } from "@trpc/next/app-dir/server"
+import SuperJSON from "superjson"
 
+import { generateCacheTag, getUrl, transformer } from "./shared"
+
+/**
+ * This client invokes procedures directly on the server without fetching over HTTP.
+ */
 export const api = experimental_createTRPCNextAppDirServer<AppRouter>({
   config() {
     return {
-      transformer,
+      transformer: SuperJSON,
       links: [
         // loggerLink({
-        //   enabled: (op) =>
-        //     process.env.NODE_ENV === "development" ||
-        //     (op.direction === "down" && op.result instanceof Error),
+        //   enabled: (op) => true,
         // }),
-        httpLink({
+        experimental_nextHttpLink({
+          batch: false,
           url: getUrl(),
-          // @ts-expect-error - need to override headers type
-          headers(ctx) {
-            const cacheTag = generateCacheTag(ctx.op.path, ctx.op.input);
-            let revalidate: number | false | undefined = false;
-            if (
-              ctx.op.context?.revalidate &&
-              typeof ctx.op.context.revalidate === "number"
-            ) {
-              revalidate = ctx.op.context.revalidate;
-            }
-            // console.log(ctx.op.context);
-            // Forward headers from the browser to the API
+          headers() {
             return {
-              ...Object.fromEntries(headers()),
-              "x-trpc-source": "rsc",
-              "next.tags": cacheTag,
-              "next.revalidate": revalidate,
-            };
+              cookie: cookies().toString(),
+              "x-trpc-source": "rsc-http",
+            }
           },
         }),
       ],
-    };
+    }
   },
-});
-
-// export const createAction =
+})

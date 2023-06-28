@@ -33,12 +33,12 @@ const HomeHeroTypewriter = () => {
     <span className="text-4xl leading-tight tracking-tighter font-bold text-center w-full h-[140px]">
       Tired of lack of &nbsp;
       <br className="sm:hidden" />
-      <span className="font-extrabold ">
+      <span className="font-extrabold [&>*:first-child]:bg-indigo-200">
         <Typewriter
           words={sentences}
           loop={true}
-          cursor
-          cursorStyle="_"
+          // cursor
+          // cursorStyle="_"
           typeSpeed={70}
           deleteSpeed={50}
           delaySpeed={1000}
