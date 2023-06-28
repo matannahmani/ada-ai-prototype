@@ -1,6 +1,6 @@
 # We have two main flows to generate and consume the memory
 
-## Cornjob to seed with Vector DB new memory
+## Cornjob to seed VectorDB new memory
 
 ```mermaid
 sequenceDiagram

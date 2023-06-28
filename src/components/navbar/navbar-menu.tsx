@@ -1,6 +1,6 @@
+"use client";
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-"use client";
 
 import React, { Suspense, useMemo } from "react";
 import { Disclosure } from "@headlessui/react";
