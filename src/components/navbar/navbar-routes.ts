@@ -27,14 +27,9 @@ const NavbarRoutes: NavbarRoute[] = [
   },
   {
     path: "#",
-    text: "Donate",
-    i18nKey: "navbar.donate",
-    requiresAuth: true,
-  },
-  {
-    path: "#",
-    text: "Our Mission",
-    i18nKey: "navbar.ourMission",
+    text: "What is Ada",
+    i18nKey: "navbar.what_is_ada",
+    requiresAuth: false,
   },
 ];
 

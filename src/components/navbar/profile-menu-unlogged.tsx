@@ -9,14 +9,7 @@ import Image from "next/image";
  * @clientonly
  */
 const ProfileMenuUnlogged = () => (
-  <Button onClick={() => signIn("google")} className="font-semibold">
-    <Image
-      className="mr-2"
-      src="/google.webp"
-      alt="Google Logo"
-      width={20}
-      height={20}
-    />
+  <Button onClick={() => signIn("google")} className="font-semibold rounded-full px-8 " size="sm">
     Login
   </Button>
 );
