@@ -1,10 +1,7 @@
 import * as React from "react"
 import { forwardRef, memo, Ref, SVGProps } from "react"
 
-const SvgComponent = (
-  props: SVGProps<SVGSVGElement>,
-  ref: Ref<SVGSVGElement>
-) => (
+const LogoFull = (props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 300 85"
@@ -117,6 +114,7 @@ const SvgComponent = (
     />
   </svg>
 )
-const ForwardRef = forwardRef(SvgComponent)
+const ForwardRef = forwardRef(LogoFull)
 const Memo = memo(ForwardRef)
 export default Memo
+export { Memo as LogoFull }

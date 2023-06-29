@@ -13,7 +13,7 @@ import { Menu as MenuIcon, X } from "lucide-react"
 
 import { ChatSidebarTrigger } from "@/app/chat/user/[userId]/candidate/[candidateId]/sidebar"
 
-import Logo from "./Logo"
+import { LogoFull } from "../logo-full"
 import { ThemeSwitcher } from "./theme-switcher"
 
 function classNames(...classes: string[]) {
@@ -67,7 +67,7 @@ function NavbarMenu({
               <div className="relative flex h-16 items-center justify-between">
                 <div className="flex flex-shrink-0 items-center">
                   {/* logo only on desktop */}
-                  <Logo
+                  <LogoFull
                     //  width={40}
                     //  height={40}
                     className="hidden h-8 w-auto md:block"
@@ -114,7 +114,7 @@ function NavbarMenu({
                   className="-ml-3 fixed inset-x-1/2	inset-y-1/2	 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-8 rounded-full bg-background/80 backdrop-blur z-10 sm:hidden"
                 >
                   {/* logo only on mobile */}
-                  <Logo
+                  <LogoFull
                     //  width={40}
                     //  height={40}
                     className=" h-8 w-full justify-center flex md:hidden"

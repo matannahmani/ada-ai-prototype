@@ -5,6 +5,7 @@ import { type Metadata } from "next"
 import { siteConfig } from "@/config/site"
 import { fontSans, fontSerif } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
+import { Footer } from "@/components/footer"
 import Navbar from "@/components/navbar/navbar"
 import SessionProvider from "@/components/session-provider"
 import Sidebar from "@/components/sidebar"
@@ -30,9 +31,10 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: React.ReactNode
+  authModal: React.ReactNode
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children, authModal }: RootLayoutProps) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
@@ -49,6 +51,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <>
                   <Navbar />
                   {children}
+                  {authModal}
+                  <Footer />
                 </>
               </div>
             </SessionProvider>

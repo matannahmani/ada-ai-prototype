@@ -10,7 +10,7 @@ const WhyItem = ({
   description: ReactElement
   icon: ReactElement
 }) => (
-  <div className="flex-1 sm:basis-40 flex flex-wrap h-[200px] items-start">
+  <div className="flex-1 basis-full text-center sm:text-start justify-center items-center sm:basis-40 flex flex-wrap h-[260px] sm:h-[200px] sm:items-start">
     <div className="px-4">{icon}</div>
     <div className="flex-col flex gap-2 content-baseline">
       <span className="text-2xl font-bold text-secondary">{title}</span>
@@ -23,9 +23,9 @@ const WhyItem = ({
 
 const HomeWhySection = () => {
   return (
-    <section className="flex-1 bg-primary-50">
+    <section className="flex-1 bg-primary-50 py-20 h-full">
       <main className="sm:container flex-1 justify-center flex flex-wrap items-center">
-        <div className="flex-1 basis-full flex justify-center items-center py-8 sm:py-12">
+        <div className="flex-1 basis-full flex justify-center items-center pb-20">
           <span className="text-3xl w-fit text-secondary-foreground p-2 font-bold bg-primary">
             Why Ada?
           </span>
@@ -37,7 +37,7 @@ const HomeWhySection = () => {
             flex-wrap
             justify-center
             items-center
-            gap-0
+            gap-10
         "
         >
           <WhyItem
