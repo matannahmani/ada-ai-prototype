@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { cn } from "@lib/utils"
 import { buttonVariants } from "@ui/button"
@@ -35,23 +36,24 @@ const Browser = (props: { children: React.ReactNode | React.ReactNode[] }) => (
 )
 
 const HomeHero = () => (
-  <section className="bg-muted py-6">
+  <section className="text-white py-6 relative lg:h-[700px]">
+    <Image src="/hero-bg.png" fill alt="hero-bg" className="-z-10" />
     <div className="sm:container justify-center md:justify-start flex-wrap flex gap-6 pb-8 pt-6 md:py-10 ">
-      <div className="basis-12/12 md:basis-4/12 items-center text-center justify-center flex max-w-[980px] flex-col sm:text-start sm:items-start gap-8">
+      <div className="basis-12/12 md:basis-4/12 items-center text-center justify-center flex max-w-[980px] flex-col md:text-start md:items-start gap-8">
         <div>
-          <h1 className="font-extrabold leading-tight tracking-tighter text-4xl sm:text-5xl">
+          <h1 className="[text-shadow:1px_1px_6px_black] font-extrabold leading-tight tracking-tighter text-4xl sm:text-5xl">
             The future of
             <br />
             fundraising.
           </h1>
-          <HeroHeadLine width={260} className="-mt-2" />
+          <HeroHeadLine width={260} className="-mt-2 drop-shadow-md" />
         </div>
-        <p className="max-w-[700px] text-lg">
+        <p className="[text-shadow:1px_1px_6px_black] max-w-[420px] md:max-w-[700px] text-lg">
           Welcome to Ada. Solving clarity problems, hidden agendas and much more
           when it comes to donations.
         </p>
 
-        <div className="sm:hidden w-full px-2">
+        <div className="md:hidden w-full px-2 text-black">
           <Browser>
             <HomeHeroTypewriter />
           </Browser>
@@ -60,16 +62,14 @@ const HomeHero = () => (
           href={"#candidate-container"}
           rel="noreferrer"
           className={cn(
-            buttonVariants({
-              variant: "success",
-            }),
-            "self-center sm:self-start shadow-md font-bold "
+            buttonVariants({}),
+            "self-center sm:self-start shadow-md font-bold drop-shadow-lg "
           )}
         >
           View active fundraisers
         </Link>
       </div>
-      <div className="hidden md:flex justify-center basis-full md:basis-7/12 ">
+      <div className="hidden md:flex justify-center basis-full md:basis-6/12 text-black">
         <Browser>
           <HomeHeroTypewriter />
         </Browser>

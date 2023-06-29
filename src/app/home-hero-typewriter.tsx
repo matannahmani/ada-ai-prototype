@@ -33,7 +33,7 @@ const HomeHeroTypewriter = () => {
     <span className="text-4xl leading-tight tracking-tighter font-bold text-center w-full h-[140px]">
       Tired of lack of &nbsp;
       <br className="sm:hidden" />
-      <span className="font-extrabold [&>*:first-child]:bg-indigo-200">
+      <span className="font-extrabold [&>*:first-child]:bg-primary-200">
         <Typewriter
           words={sentences}
           loop={true}

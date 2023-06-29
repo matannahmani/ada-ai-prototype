@@ -6,10 +6,12 @@ import { Skeleton } from "@ui/skeleton"
 
 import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
+import { MissionCard } from "@/components/cards"
 
 import CandidateCard from "./candidate-card"
 import CardsContainer from "./cards-container"
 import HomeHero from "./home-hero"
+import HomeWhySection from "./home-why-section"
 
 const CandidatesCard = async () => {
   const candidates = await api.candidates.list.query()
@@ -26,7 +28,7 @@ const CandidatesCard = async () => {
 
 export default function IndexPage() {
   return (
-    <main className=" grid items-center gap-6">
+    <main className="flex items-stretch flex-col gap-3 sm:gap-6">
       <HomeHero />
       <CardsContainer
         title="Latest fundraisers"
@@ -35,14 +37,20 @@ export default function IndexPage() {
           label: "see more",
         }}
       >
-        <Suspense
+        {/* <MissionCard /> */}
+        <MissionCard />
+        <MissionCard isMobile />
+        <MissionCard isMobile />
+        <MissionCard isMobile />
+        {/* <Suspense
           fallback={new Array(10).fill(0).map((_, i) => (
             <Skeleton className="h-[337px] w-[350px]" key={`skeleton-${i}`} />
           ))}
         >
           <CandidatesCard />
-        </Suspense>
+        </Suspense> */}
       </CardsContainer>
+      <HomeWhySection />
     </main>
   )
 }

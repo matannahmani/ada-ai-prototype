@@ -14,6 +14,7 @@ import { Menu as MenuIcon, X } from "lucide-react"
 import { ChatSidebarTrigger } from "@/app/chat/user/[userId]/candidate/[candidateId]/sidebar"
 
 import Logo from "./Logo"
+import { ThemeSwitcher } from "./theme-switcher"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
@@ -58,7 +59,7 @@ function NavbarMenu({
     <nav className="z-40 h-fit basis-full top-0 sticky">
       <Disclosure
         as="div"
-        className="supports-backdrop-blur:bg-background/60 relative border-b bg-background/80 backdrop-blur"
+        className="supports-backdrop-blur:bg-background/80 relative border-b bg-background backdrop-blur"
       >
         {({ open }) => (
           <>
@@ -71,6 +72,7 @@ function NavbarMenu({
                     //  height={40}
                     className="hidden h-8 w-auto md:block"
                   />
+                  {/* <ThemeSwitcher /> */}
                 </div>
                 <div className="inset-y-0 left-0 flex items-center ">
                   {/* Mobile menu button*/}
@@ -109,7 +111,7 @@ function NavbarMenu({
                 </div>
                 <div
                   id="mobile-logo"
-                  className="fixed inset-x-1/2	inset-y-1/2	 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-8 rounded-full bg-background/80 backdrop-blur z-10 sm:hidden"
+                  className="-ml-3 fixed inset-x-1/2	inset-y-1/2	 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-8 rounded-full bg-background/80 backdrop-blur z-10 sm:hidden"
                 >
                   {/* logo only on mobile */}
                   <Logo

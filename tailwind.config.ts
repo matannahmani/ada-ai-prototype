@@ -1,4 +1,4 @@
-const { fontFamily } = require("tailwindcss/defaultTheme")
+import { fontFamily } from "tailwindcss/defaultTheme"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -27,10 +27,46 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          "50": "#e7f6ff",
+          "100": "#d3efff",
+          "200": "#b0dfff",
+          "300": "#81c7ff",
+          "400": "#4fa0ff",
+          "500": "#2877ff",
+          "600": "#044aff",
+          "700": "#0048ff",
+          "800": "#003edc",
+          "900": "#0b39a4",
+          "950": "#07205f",
+        },
+        haiti: {
+          DEFAULT: "#1C0F30",
+          "50": "#efedff",
+          "100": "#e1deff",
+          "200": "#ccc4ff",
+          "300": "#aea0ff",
+          "400": "#997aff",
+          "500": "#8c5bf9",
+          "600": "#823dee",
+          "700": "#7230d2",
+          "800": "#5c29aa",
+          "900": "#4c2986",
+          "950": "#1c0f30",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          "50": "#efedff",
+          "100": "#e1deff",
+          "200": "#ccc4ff",
+          "300": "#aea0ff",
+          "400": "#997aff",
+          "500": "#8c5bf9",
+          "600": "#823dee",
+          "700": "#7230d2",
+          "800": "#5c29aa",
+          "900": "#4c2986",
+          "950": "#1c0f30",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
