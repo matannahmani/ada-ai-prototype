@@ -16,19 +16,22 @@ type MissionCardProps = {
 const MissionCard = (props: MissionCardProps) => (
   <div
     className={cn(
-      "flex flex-wrap gap-0 w-[340px] md:w-[720px] bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[calc(100vw-16px)] lg:w-[1086px]",
-      props.isMobile && "!w-[340px]"
+      "flex flex-wrap gap-0 flex-1 sm:basis-full bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[calc(100vw-16px)] lg:w-[1086px]",
+      props.isMobile && "!flex-[1_1_0]"
     )}
   >
-    <div className="w-[310px] md:w[420px] lg:w-[534px] ">
-      <AspectRatio ratio={535.4 / 406.19}>
-        <Image
-          src="/card.jpg"
-          fill
-          alt="Image"
-          className="object-fill	rounded-none"
-        />
-      </AspectRatio>
+    <div
+      className={cn(
+        "relative w-[310px] md:w[420px] lg:w-[534px] h-[160px] sm:h-[406px]",
+        props.isMobile && "!h-[160px]"
+      )}
+    >
+      <Image
+        src="/card.jpg"
+        fill
+        alt="Image"
+        className="object-fill	rounded-none"
+      />
     </div>
     <div className="flex-1 flex gap-2 flex-wrap p-4 justify-center ">
       <div className="">
@@ -37,10 +40,7 @@ const MissionCard = (props: MissionCardProps) => (
         </span>
         <br />
         <span
-          className={cn(
-            "line-clamp-3 sm:line-clamp-6",
-            props.isMobile && "!line-clamp-3"
-          )}
+          className={cn("hidden sm:line-clamp-6", props.isMobile && "!hidden")}
         >
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt hic
           doloribus dolore quasi, labore magni! Soluta doloremque omnis tempora,

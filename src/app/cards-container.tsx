@@ -36,7 +36,9 @@ const CardsContainer = ({ ...props }: CardsContainerProps) => {
       </div>
       {/* @ts-expect-error - can only be list */}
       <MobileCardsContainer>{props.children}</MobileCardsContainer>
-      <div className="hidden sm:flex flex-wrap gap-4  ">{props.children}</div>
+      <div className="hidden sm:flex flex-wrap gap-4  max-w-[1086px]">
+        {props.children}
+      </div>
     </div>
   )
 }
