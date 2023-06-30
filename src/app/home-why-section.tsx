@@ -10,7 +10,7 @@ const WhyItem = ({
   description: ReactElement
   icon: ReactElement
 }) => (
-  <div className="flex-1 basis-full text-center sm:text-start justify-center items-center sm:basis-40 flex flex-wrap h-[260px] sm:h-[200px] sm:items-start">
+  <div className=" text-center sm:text-start justify-center items-center flex flex-wrap sm:items-start">
     <div className="px-4">{icon}</div>
     <div className="flex-col flex gap-2 content-baseline">
       <span className="text-2xl font-bold text-secondary">{title}</span>
@@ -23,9 +23,9 @@ const WhyItem = ({
 
 const HomeWhySection = () => {
   return (
-    <section className="flex-1 bg-primary-50 py-20 h-full">
+    <section className="flex-1 bg-primary-50 py-10 lg:py-20 h-full">
       <main className="sm:container flex-1 justify-center flex flex-wrap items-center">
-        <div className="flex-1 basis-full flex justify-center items-center pb-20">
+        <div className="flex-1 basis-full flex justify-center items-center pb-10 lg:pb-20">
           <span className="text-3xl w-fit text-secondary-foreground p-2 font-bold bg-primary">
             Why Ada?
           </span>
@@ -36,8 +36,10 @@ const HomeWhySection = () => {
             flex
             flex-wrap
             justify-center
-            items-center
-            gap-10
+            items-baseline
+            gap-4
+            lg:gap-10
+            px-2 sm:px-0
         "
         >
           <WhyItem
@@ -51,7 +53,7 @@ const HomeWhySection = () => {
                 and goodbye to hidden agendas behind allocation of funds.
               </>
             }
-            icon={<HeartHandshake className="w-20 h-20 text-secondary" />}
+            icon={<HeartHandshake className="w-14 h-14 text-secondary" />}
           />
           <WhyItem
             title="Bye lack of clarity"
@@ -63,7 +65,7 @@ const HomeWhySection = () => {
                 </span>{" "}
               </>
             }
-            icon={<ZoomIn className="w-20 h-20 text-secondary" />}
+            icon={<ZoomIn className="w-14 h-14 text-secondary" />}
           />
           <WhyItem
             title="Chat real-time"
@@ -76,7 +78,7 @@ const HomeWhySection = () => {
                 No more random person you don’t know allocating your donations.
               </>
             }
-            icon={<MessagesSquare className="w-20 h-20 text-secondary" />}
+            icon={<MessagesSquare className="w-14 h-14 text-secondary" />}
           />
         </div>
       </main>

@@ -18,7 +18,7 @@ const useSwitchTimer = (dotsLen: number) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActive((prev) => (prev + 1) % dotsLen)
-    }, 8000)
+    }, 300000)
     intervalRef.current = interval
     return () => clearInterval(interval)
   }, [dotsLen])

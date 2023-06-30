@@ -5,6 +5,7 @@ import { type Metadata } from "next"
 import { siteConfig } from "@/config/site"
 import { fontSans, fontSerif } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
+import AuthModal from "@/components/auth/modal/auth-modal"
 import { Footer } from "@/components/footer"
 import Navbar from "@/components/navbar/navbar"
 import SessionProvider from "@/components/session-provider"
@@ -51,7 +52,7 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
                 <>
                   <Navbar />
                   {children}
-                  {authModal}
+                  <AuthModal>{authModal}</AuthModal>
                   <Footer />
                 </>
               </div>
