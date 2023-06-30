@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { cn } from "@lib/utils"
 import { AspectRatio } from "@ui/aspect-ratio"
 import { Button } from "@ui/button"
@@ -55,10 +56,12 @@ const MissionCard = (props: MissionCardProps) => (
           Chat with AI
           <MessageCircle className="ml-2 h-4 w-4" />
         </Button>
-        <Button variant="secondary" className="rounded-full drop-shadow-md">
-          Learn more
-          <Info className="ml-2 h-4 w-4" />
-        </Button>
+        <Link href="/mission/1">
+          <Button variant="secondary" className="rounded-full drop-shadow-md">
+            Learn more
+            <Info className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
       </div>
     </div>
   </div>

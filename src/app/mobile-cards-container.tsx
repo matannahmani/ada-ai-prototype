@@ -47,6 +47,7 @@ const MobileCardsContainer = (props: MobileCardsContainerProps) => {
           <div
             data-active={active === i}
             key={`dot-${i}`}
+            onClick={() => setActive(i)}
             className="w-[25.12px] h-[25.12px] bg-primary-100
             transition-all
             data-[active=true]:bg-primary

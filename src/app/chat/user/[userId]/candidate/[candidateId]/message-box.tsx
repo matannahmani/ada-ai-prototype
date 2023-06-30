@@ -2,26 +2,26 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { api } from "@/trpc/server";
-import { type Candidate } from "@prisma/client";
-import { Avatar, AvatarImage } from "@ui/avatar";
-import { Separator } from "@ui/separator";
-import type { Session } from "next-auth";
-import { Suspense, forwardRef, memo } from "react";
+import { forwardRef, memo, Suspense } from "react"
+import { api } from "@/trpc/server"
+import { type Candidate } from "@prisma/client"
+import { Avatar, AvatarImage } from "@ui/avatar"
+import { Separator } from "@ui/separator"
+import type { Session } from "next-auth"
 
 export type TChat = {
-  candidate: Candidate;
-  session: Session;
-};
+  candidate: Candidate
+  session: Session
+}
 
 const ChatAvatar = memo(({ image }: { image: string | undefined }) => {
   return (
     <Avatar className="mr-2 h-12 w-12 rounded-sm">
       <AvatarImage src={image} className="object-cover" />
     </Avatar>
-  );
-});
-ChatAvatar.displayName = "ChatAvatar";
+  )
+})
+ChatAvatar.displayName = "ChatAvatar"
 
 const ChatMessageHeader = memo(({ name }: { name: string }) => {
   return (
@@ -29,21 +29,21 @@ const ChatMessageHeader = memo(({ name }: { name: string }) => {
       <p className="w-fit text-sm font-medium leading-none">{name}</p>
       <Separator className="my-1" />
     </div>
-  );
-});
-ChatMessageHeader.displayName = "ChatMessageHeader";
+  )
+})
+ChatMessageHeader.displayName = "ChatMessageHeader"
 
 const ChatMessageBody = memo(({ message }: { message: string }) => {
-  return <p>{message}</p>;
-});
-ChatMessageBody.displayName = "ChatMessageBody";
+  return <p>{message}</p>
+})
+ChatMessageBody.displayName = "ChatMessageBody"
 
 type ChatMessageProps = {
-  id: string;
-  image?: string;
-  name: string;
-  message: string;
-};
+  id: string
+  image?: string
+  name: string
+  message: string
+}
 
 const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
   ({ id, image, name, message }, ref) => {
@@ -55,12 +55,12 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
           <ChatMessageBody message={message} />
         </div>
       </div>
-    );
+    )
   }
-);
+)
 
-ChatMessage.displayName = "ChatMessage";
-export { ChatMessage };
+ChatMessage.displayName = "ChatMessage"
+export { ChatMessage }
 
 const MessagePlaceholder = () => {
   return (
@@ -68,13 +68,13 @@ const MessagePlaceholder = () => {
       <div className="mr-2 h-12 w-12 animate-pulse rounded-sm bg-muted/50"></div>
       <p className="h-6 w-full animate-pulse rounded-sm bg-muted/50"></p>
     </div>
-  );
-};
+  )
+}
 
 async function ChatHistory({ ...props }: TChat) {
   const chat = await api.candidates.chatHistory.query({
     candidateId: props.candidate.id,
-  });
+  })
   return (
     <>
       {chat.messages.map((message) => (
@@ -95,7 +95,7 @@ async function ChatHistory({ ...props }: TChat) {
         />
       ))}
     </>
-  );
+  )
 }
 
 const MessageBox = ({
@@ -103,7 +103,7 @@ const MessageBox = ({
   session,
   children,
 }: TChat & {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) => {
   return (
     <div
@@ -126,12 +126,11 @@ const MessageBox = ({
           <MessagePlaceholder key={`placeholder-${i}`} />
         ))}
       >
-        {/* @ts-expect-error async component */}
         <ChatHistory candidate={candidate} session={session} />
         {children}
       </Suspense>
     </div>
-  );
-};
+  )
+}
 
-export default MessageBox;
+export default MessageBox

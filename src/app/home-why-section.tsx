@@ -23,7 +23,7 @@ const WhyItem = ({
 
 const HomeWhySection = () => {
   return (
-    <section className="flex-1 bg-primary-50 py-10 lg:py-20 h-full">
+    <section className="flex-1 bg-primary-50 dark:bg-primary-950 py-10 lg:py-20 h-full">
       <main className="sm:container flex-1 justify-center flex flex-wrap items-center">
         <div className="flex-1 basis-full flex justify-center items-center pb-10 lg:pb-20">
           <span className="text-3xl w-fit text-secondary-foreground p-2 font-bold bg-primary">

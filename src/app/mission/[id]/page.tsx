@@ -1,18 +1,53 @@
 import Link from "next/link"
 import { Button, buttonVariants } from "@ui/button"
 import { Separator } from "@ui/separator"
-import { ChevronDown, HelpingHand, MessagesSquare, Share } from "lucide-react"
+import {
+  ChevronDown,
+  ChevronUp,
+  HelpingHand,
+  MessagesSquare,
+  Share,
+} from "lucide-react"
 
 import { siteConfig } from "@/config/site"
 import HomeWhySection from "@/app/home-why-section"
 
-function OurMissionPage() {
+const PersonDonationItem = ({
+  name,
+  amount,
+  days,
+}: {
+  name: string
+  amount: number
+  days: number
+}) => {
   return (
     <>
-      <section className="flex flex-row justify-center gap-8">
+      <div className="flex flex-row gap-2">
+        <div className="w-10 h-10 bg-secondary dark:bg-muted rounded-full" />
+        <div className="flex-col flex">
+          <span className=" text-secondary dark:text-white font-normal ">
+            {name}
+          </span>
+          <div className="flex flex-row gap-2 items-center justify-center">
+            <span className="text-sm font-bold ">${amount}</span>
+            <div className="w-1.5 h-1.5 bg-secondary dark:bg-muted rounded-full" />
+            <span className="text-sm  ">{days} days ago</span>
+          </div>
+        </div>
+      </div>
+      <Separator className="my-2" />
+    </>
+  )
+}
+
+function OurMissionPage() {
+  return (
+    <div>
+      <section className="text-accent-foreground flex flex-row justify-center gap-8">
         <section className="max-w-[762px] items-center md:m-0 md:items-start container flex flex-col align-baseline w-full min-h-screen gap-2 p-4 py-8">
           <h1
-            className="text-slate-900
+            className="text-accent-foreground
 text-[30px]
 font-semibold
 leading-9"
@@ -35,15 +70,16 @@ leading-9"
             <br />
             <span>by 1,000 people</span>
           </div>
-          <div className="h-[240px] w-[360px] lg:w-fit  p-2 flex gap-1 flex-col text-sky-950 bg-zinc-100 rounded-xl border border-neutral-200">
+          <div className="h-[240px] w-[360px] lg:w-fit  p-2 flex gap-1 flex-col text-accent-foreground bg-accent rounded-xl border border-neutral-200">
             <div className="text-center w-[225px] mx-auto  text-lg font-bold leading-snug">
               OUR AI CAMPAIGN FUND MANAGER’S GOAL
             </div>
             <div className="text-[12px] font-normal leading-relaxed line-clamp-6">
               Our goal with this campaign is to give the homeless a chance to
-              get off the street and get their life back on track. With the
-              money raised, we will give homeless temporary accommodation and a
-              chance to find a job and ultimately get off the streets.
+              get off the street and get their life back on track.
+              <br /> With the money raised, we will give homeless temporary
+              accommodation and a chance to find a job and ultimately get off
+              the streets.
             </div>
             <Button variant="secondary" className="m-auto w-fit">
               Read More <ChevronDown />
@@ -60,10 +96,10 @@ leading-9"
           </div>
           <Separator className="my-4" />
           <div className="flex flex-col gap-2">
-            <span className="text-slate-900 scroll-m-20 text-2xl font-semibold tracking-tight">
+            <span className=" scroll-m-20 text-2xl font-semibold tracking-tight">
               Updates (1)
             </span>
-            <span className="text-slate-900 scroll-m-20 text-xl font-semibold tracking-tight">
+            <span className=" scroll-m-20 text-xl font-semibold tracking-tight">
               18 Jan 2023
             </span>
             <p className="leading-7 [&:not(:first-child)]:mt-2">
@@ -71,7 +107,7 @@ leading-9"
               organisations. The Red Cross (33%), World Vision (18%), Help
               Homeless (20%) and Save Young Homeless (29%).
               <br />
-              <span className="text-slate-900 underline font-bold italic">
+              <span className=" underline font-bold italic">
                 Read more about why.
               </span>
             </p>
@@ -88,7 +124,7 @@ leading-9"
               Learn about previous donations
             </Button>
           </div>
-          <span className="md:hidden text-center sm:hidden text-slate-900 scroll-m-20 text-2xl font-semibold tracking-tight">
+          <span className="md:hidden text-center sm:hidden scroll-m-20 text-2xl font-semibold tracking-tight">
             Share now to
           </span>
           <div className="md:hidden flex flex-row gap-2 justify-center">
@@ -98,8 +134,10 @@ leading-9"
             <div className="w-12 h-12 bg-zinc-300 rounded-full" />
           </div>
         </section>
-        <section className="hidden md:flex flex-col h-fit gap-4 w-[300px] shadow sticky top-16 right-0">
-          <small className="text-muted italic">Created by George Clooney</small>
+        <section className="hidden mt-[4.7rem] md:flex bg-accent text-accent-foreground rounded-md flex-col h-fit gap-4 w-[300px] shadow sticky top-20 mb-5 right-0 p-2 py-4">
+          <small className="text-muted-foreground italic">
+            Created by George Clooney
+          </small>
           <div className="">
             <span className="text-sm font-normal leading-9">
               <span className="text-xl font-bold leading-9">$18,439 </span>
@@ -115,33 +153,44 @@ leading-9"
             <MessagesSquare className="mr-2" />
             Chat live now
           </Button>
-          <div className="w-[341px] h-[82px] relative">
-            <div className="w-[341px] h-[66px] left-0 top-[16px] absolute text-center">
-              <span className="text-zinc-600 text-[12px] font-normal leading-tight">
-                Ada is the{" "}
-              </span>
-              <span className="text-zinc-600 text-[12px] font-normal leading-tight">
-                clarity-first
-              </span>
-              <span className="text-zinc-600 text-[12px] font-normal leading-tight">
-                {" "}
-                donation platform. <br />
-                Chat real-time with the AI allocation manager who actually
-                allocates{" "}
-              </span>
-              <span className="text-zinc-600 text-[12px] font-normal leading-tight">
-                all{" "}
-              </span>
-              <span className="text-zinc-600 text-[12px] font-normal leading-tight">
-                donations.
-              </span>
-            </div>
+          <div className="bg-popover  text-popover-foreground rounded-sm relative p-2">
+            <ChevronUp className="absolute h-8 w-8 left-4 -top-5 stroke-popover text-popover fill-popover  " />
+            <span className="font-normal  text-sm text-start leading-tight">
+              Ada is the clarity-first donation platform. Chat real-time with
+              the AI allocation manager who actually allocates all donations.
+            </span>
+          </div>
+
+          <PersonDonationItem name="John Doe" amount={100} days={4} />
+          <PersonDonationItem name="John Doe" amount={100} days={4} />
+          <PersonDonationItem name="John Doe" amount={100} days={4} />
+          <div className="flex flex-row gap-2 mb-1">
+            <Button>
+              <Share className="mr-2" />
+              Share
+            </Button>
+            <Button variant="secondary" className="flex-1  grow">
+              How it works
+            </Button>
           </div>
         </section>
       </section>
 
       <HomeWhySection />
-    </>
+      <div className="md:hidden bottom-0 flex flex-col bg-white p-2 gap-2 sticky z-10">
+        <Button
+          size="xs"
+          variant="secondary"
+          className="w-full py-6 rounded-full"
+        >
+          <MessagesSquare className="mr-2" />
+          Chat with our AI Fundraiser Manager Live
+        </Button>
+        <Button size="xs" className="w-full py-6 rounded-full">
+          Donate <HelpingHand className="ml-2" />
+        </Button>
+      </div>
+    </div>
   )
 }
 
