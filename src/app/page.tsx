@@ -1,11 +1,7 @@
-import { Suspense } from "react"
-import Link from "next/link"
 import { getServerAuthSession } from "@/server/auth"
 import { api } from "@/trpc/server"
-import { Skeleton } from "@ui/skeleton"
+import { ChevronRight } from "lucide-react"
 
-import { siteConfig } from "@/config/site"
-import { buttonVariants } from "@/components/ui/button"
 import { MissionCard } from "@/components/cards"
 
 import CandidateCard from "./candidate-card"
@@ -28,20 +24,67 @@ const CandidatesCard = async () => {
 
 export default function IndexPage() {
   return (
-    <main className="flex items-stretch flex-col gap-3 sm:gap-6">
+    <main className="flex items-stretch flex-col gap-3 sm:gap-6 md:gap-10 lg:gap-20 ">
       <HomeHero />
       <CardsContainer
         title="Latest fundraisers"
         link={{
           href: "/fundraisers",
-          label: "see more",
+          label: (
+            <>
+              See more <ChevronRight className="w-4 h-4 ml-1" />
+            </>
+          ),
         }}
       >
         {/* <MissionCard /> */}
-        <MissionCard />
-        <MissionCard isMobile />
-        <MissionCard isMobile />
-        <MissionCard isMobile />
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+        />
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+          isMobile
+        />
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+          isMobile
+        />
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+          isMobile
+        />
         {/* <Suspense
           fallback={new Array(10).fill(0).map((_, i) => (
             <Skeleton className="h-[337px] w-[350px]" key={`skeleton-${i}`} />

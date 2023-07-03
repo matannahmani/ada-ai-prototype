@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { cn } from "@lib/utils"
 import { AspectRatio } from "@ui/aspect-ratio"
+import { Badge } from "@ui/badge"
 import { Button } from "@ui/button"
 import {
   Info,
@@ -10,8 +11,17 @@ import {
   MessageSquareIcon,
 } from "lucide-react"
 
+type MissionCardData = {
+  title: string
+  description: string
+  image: string
+  id: string | number
+  isUrgent?: boolean
+}
+
 type MissionCardProps = {
   isMobile?: boolean
+  data: MissionCardData
 }
 
 const MissionCard = (props: MissionCardProps) => (
@@ -23,41 +33,56 @@ const MissionCard = (props: MissionCardProps) => (
   >
     <div
       className={cn(
-        "relative w-[310px] md:w[420px] xl:w-[534px] h-[160px] sm:h-[406px]",
-        props.isMobile && "!h-[160px]"
+        "relative w-[310px] md:w[420px] xl:w-[534px] h-[200px] md:h-[320px] xl:h-[406px]",
+        props.isMobile && "!h-[200px] w-full"
       )}
     >
+      <Badge variant="secondary" className="absolute top-2 left-2 z-10">
+        Urgent cause
+      </Badge>
       <Image
-        src="/card.jpg"
+        src={props.data.image}
         fill
         alt="Image"
         className="object-fill	rounded-none"
       />
     </div>
     <div className="flex-1 flex gap-2 flex-wrap p-2 md:p-4 justify-center ">
-      <div className="">
-        <span className="text-lg font-semibold w-full">
-          HELP HOMELESS IN LOS ANGELAS
+      <div className="text-secondary-950">
+        <span className="text-lg  font-semibold w-full">
+          {props.data.title}
         </span>
         <br />
-        <span
-          className={cn("hidden sm:line-clamp-6", props.isMobile && "!hidden")}
+        <p
+          className={cn(
+            "line-clamp-6 mt-4 lg:pr-10",
+            props.isMobile && "line-clamp-4 !pr-0"
+          )}
         >
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sunt hic
-          doloribus dolore quasi, labore magni! Soluta doloremque omnis tempora,
-          eaque perspiciatis quod amet illum vitae dicta neque, sunt nam ipsum!
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorem
-          minus sit aspernatur nihil a cumque deleniti saepe quia at autem
-          error, animi consequatur, fuga, eum mollitia eius vitae sed in.
-        </span>
+          {props.data.description}
+        </p>
       </div>
-      <div className="gap-4 flex flex-wrap items-center justify-center py-2">
-        <Button className="rounded-full drop-shadow-md">
+      <div className="gap-4 flex flex-wrap items-center justify-center py-2 w-full xl:w-fit">
+        <Button
+          className={cn(
+            "rounded-full drop-shadow-md w-full xl:w-fit",
+            !props.isMobile && "w-fit"
+          )}
+        >
           Chat with AI
           <MessageCircle className="ml-2 h-4 w-4" />
         </Button>
-        <Link href="/mission/1">
-          <Button variant="secondary" className="rounded-full drop-shadow-md">
+        <Link
+          href="/mission/1"
+          className={cn("w-full xl:w-fit", !props.isMobile && "w-fit")}
+        >
+          <Button
+            variant="secondary"
+            className={cn(
+              "rounded-full drop-shadow-md w-full xl:w-fit",
+              !props.isMobile && "w-fit"
+            )}
+          >
             Learn more
             <Info className="ml-2 h-4 w-4" />
           </Button>

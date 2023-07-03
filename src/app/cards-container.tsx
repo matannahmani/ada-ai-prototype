@@ -10,7 +10,7 @@ type CardsContainerProps = {
   title: string
   link?: {
     href: string
-    label: string
+    label: string | React.ReactNode
   }
 }
 
@@ -36,7 +36,7 @@ const CardsContainer = ({ ...props }: CardsContainerProps) => {
       </div>
       {/* @ts-expect-error - can only be list */}
       <MobileCardsContainer>{props.children}</MobileCardsContainer>
-      <div className="hidden sm:flex flex-wrap gap-4  max-w-[1086px]">
+      <div className="hidden sm:flex flex-wrap gap-4 md:gap-8  max-w-[1086px]">
         {props.children}
       </div>
     </div>

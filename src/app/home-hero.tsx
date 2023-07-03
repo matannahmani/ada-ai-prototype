@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { cn } from "@lib/utils"
 import { buttonVariants } from "@ui/button"
+import { ChevronRight } from "lucide-react"
 
 import { LogoSymbol } from "@/components/logo-symbol"
 
@@ -46,11 +47,18 @@ const HomeHero = () => (
             <br />
             fundraising.
           </h1>
-          <HeroHeadLine width={260} className="-mt-2 drop-shadow-md" />
+          <HeroHeadLine
+            width={150}
+            className="-mt-1 block md:hidden drop-shadow-md w-full ml-4 "
+          />
+          <HeroHeadLine
+            width={280}
+            className="-mt-0.5 hidden md:block drop-shadow-md w-full md:w-[110%]"
+          />
         </div>
-        <p className="[text-shadow:1px_1px_6px_black] max-w-[420px] md:max-w-[700px] text-lg">
-          Welcome to Ada. Solving clarity problems, hidden agendas and much more
-          when it comes to donations.
+        <p className="[text-shadow:1px_1px_6px_black] max-w-[420px] md:max-w-[700px] text-xl">
+          Solving clarity problems, hidden agendas and much more when it comes
+          to donations.
         </p>
 
         <div className="md:hidden w-full px-2 text-black">
@@ -62,11 +70,11 @@ const HomeHero = () => (
           href={"#candidate-container"}
           rel="noreferrer"
           className={cn(
-            buttonVariants({}),
-            "self-center md:self-start shadow-md font-bold drop-shadow-lg "
+            buttonVariants({ size: "xl" }),
+            "self-center md:self-start shadow-md  font-bold drop-shadow-lg rounded-full "
           )}
         >
-          View active fundraisers
+          View active fundraisers <ChevronRight className="w-4 h-4 ml-2" />
         </Link>
       </div>
       <div className="hidden md:flex justify-center basis-full md:basis-6/12 text-black">
