@@ -63,7 +63,7 @@ const HomeHero = () => (
           rel="noreferrer"
           className={cn(
             buttonVariants({}),
-            "self-center sm:self-start shadow-md font-bold drop-shadow-lg "
+            "self-center md:self-start shadow-md font-bold drop-shadow-lg "
           )}
         >
           View active fundraisers

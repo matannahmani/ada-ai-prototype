@@ -17,13 +17,13 @@ type MissionCardProps = {
 const MissionCard = (props: MissionCardProps) => (
   <div
     className={cn(
-      "flex flex-wrap gap-0 flex-1 sm:basis-full bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[310px] md:max-w-[calc(100vw-16px)] lg:w-[1086px]",
+      "flex flex-wrap gap-0 flex-1 sm:basis-full bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[310px] sm:max-w-[calc(100vw-16px)] xl:w-[1086px]",
       props.isMobile && "!flex-[1_1_0]"
     )}
   >
     <div
       className={cn(
-        "relative w-[310px] md:w[420px] lg:w-[534px] h-[160px] sm:h-[406px]",
+        "relative w-[310px] md:w[420px] xl:w-[534px] h-[160px] sm:h-[406px]",
         props.isMobile && "!h-[160px]"
       )}
     >
@@ -34,7 +34,7 @@ const MissionCard = (props: MissionCardProps) => (
         className="object-fill	rounded-none"
       />
     </div>
-    <div className="flex-1 flex gap-2 flex-wrap p-4 justify-center ">
+    <div className="flex-1 flex gap-2 flex-wrap p-2 md:p-4 justify-center ">
       <div className="">
         <span className="text-lg font-semibold w-full">
           HELP HOMELESS IN LOS ANGELAS
@@ -51,7 +51,7 @@ const MissionCard = (props: MissionCardProps) => (
           error, animi consequatur, fuga, eum mollitia eius vitae sed in.
         </span>
       </div>
-      <div className="gap-4 flex items-center justify-center py-2">
+      <div className="gap-4 flex flex-wrap items-center justify-center py-2">
         <Button className="rounded-full drop-shadow-md">
           Chat with AI
           <MessageCircle className="ml-2 h-4 w-4" />

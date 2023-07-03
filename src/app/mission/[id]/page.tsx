@@ -44,8 +44,8 @@ const PersonDonationItem = ({
 function OurMissionPage() {
   return (
     <div>
-      <section className="text-accent-foreground flex flex-row justify-center gap-8">
-        <section className="max-w-[762px] items-center md:m-0 md:items-start container flex flex-col align-baseline w-full min-h-screen gap-2 p-4 py-8">
+      <section className="text-accent-foreground flex flex-row justify-center md:gap-4  lg:gap-8">
+        <section className="max-w-[420px] lg:max-w-[540px] xl:max-w-[762px] items-center md:m-0 md:items-start container flex flex-col align-baseline w-full min-h-screen gap-2 p-4 py-8">
           <h1
             className="text-accent-foreground
 text-[30px]
@@ -55,11 +55,11 @@ leading-9"
             HELP HOMELESS IN LOS ANGELAS
           </h1>
           <img
-            className="w-[360px] h-[281px] lg:hidden rounded-lg"
+            className="w-[360px] h-[281px] md:hidden rounded-lg"
             src="https://via.placeholder.com/360x281"
           />
           <img
-            className="w-[762px] h-[412px] hidden lg:block"
+            className="w-[762px] h-[412px] hidden md:block"
             src="https://via.placeholder.com/762x412"
           />
           <div className="md:hidden">
@@ -70,7 +70,7 @@ leading-9"
             <br />
             <span>by 1,000 people</span>
           </div>
-          <div className="h-[240px] w-[360px] lg:w-fit  p-2 flex gap-1 flex-col text-accent-foreground bg-accent rounded-xl border border-neutral-200">
+          <div className="h-[240px] max-w-[360px] md:w-fit  p-2 flex gap-1 flex-col text-accent-foreground bg-accent rounded-xl border border-neutral-200">
             <div className="text-center w-[225px] mx-auto  text-lg font-bold leading-snug">
               OUR AI CAMPAIGN FUND MANAGER’S GOAL
             </div>
@@ -117,10 +117,10 @@ leading-9"
             />
           </div>
           <div className="flex flex-row gap-2">
-            <Button className="hidden md:inline-flex w-[300px] gap-2">
+            <Button className="hidden md:inline-flex xl:w-[300px] gap-2">
               Donate <HelpingHand />
             </Button>
-            <Button variant="secondary" className="w-full md:w-[300px]">
+            <Button variant="secondary" className="w-full xl:md:w-[300px]">
               Learn about previous donations
             </Button>
           </div>

@@ -46,7 +46,7 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
             "min-h-screen bg-background font-serif antialiased "
           )}
         >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="light">
             <SessionProvider>
               <div className="relative min-h-screen">
                 <>
