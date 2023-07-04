@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { revalidatePath, revalidateTag } from "next/cache"
 import { env } from "@/env.mjs"
 import { prisma } from "@/server/db"
 import { api } from "@/trpc/server"
+import { generateCacheTag } from "@trpc/next/dist/app-dir/shared"
 import { TRPCError } from "@trpc/server"
 import { observable } from "@trpc/server/observable"
 import { OpenAI } from "openai-streams"
@@ -43,28 +45,48 @@ const chatRouter = createTRPCRouter({
           vistorId: ctx?.visitor?.id ?? "",
         },
       })
+      await api.chats.byUserId.revalidate({
+        userId: ctx?.session?.user?.id || ctx?.visitor?.id,
+      })
       return chat
     }),
-  myChats: protectedUserOrVistorProcedure.query(async ({ ctx }) => {
-    const chats = await prisma.chat.findMany({
-      where: {
-        AND: {
-          OR: [
-            {
-              userId: ctx?.session?.user?.id,
-            },
-            {
-              vistorId: ctx?.visitor?.id ?? "",
-            },
-          ],
+  byUserId: protectedUserOrVistorProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      if (
+        !(
+          input.userId === ctx.session?.user?.id ||
+          input.userId === ctx?.visitor?.id
+        )
+      ) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Unauthorized - userId does not match session or visitor",
+        })
+      }
+      const chats = await prisma.chat.findMany({
+        where: {
+          AND: {
+            OR: [
+              {
+                userId: ctx?.session?.user?.id,
+              },
+              {
+                vistorId: ctx?.visitor?.id ?? "",
+              },
+            ],
+          },
         },
-      },
-      include: {
-        mission: true,
-      },
-    })
-    return chats
-  }),
+        include: {
+          mission: true,
+        },
+      })
+      return chats
+    }),
   showOrCreate: protectedUserOrVistorProcedure
     .input(
       z.object({
@@ -101,6 +123,7 @@ const chatRouter = createTRPCRouter({
         },
         include: {
           mission: true,
+          messages: true,
         },
       })
       const lastChatPromise = prisma.chat.findFirst({
@@ -119,6 +142,7 @@ const chatRouter = createTRPCRouter({
         },
         include: {
           mission: true,
+          messages: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -137,6 +161,7 @@ const chatRouter = createTRPCRouter({
           },
           include: {
             mission: true,
+            messages: true,
           },
         })
         return newChat
@@ -195,6 +220,7 @@ const chatRouter = createTRPCRouter({
     )
     .subscription(async ({ input, ctx }) => {
       const { chatId, message } = input
+
       const chat = await prisma.chat.findFirst({
         where: {
           id: chatId,
@@ -226,6 +252,7 @@ const chatRouter = createTRPCRouter({
         })
       }
       const { mission } = chat
+
       const moreInformationKeyword = "**I need more information**"
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       const data = await OpenAI(
@@ -252,6 +279,7 @@ const chatRouter = createTRPCRouter({
 
       let content = ""
       let whileDecoding = true
+
       return observable<string>((sub) => {
         void (async () => {
           while (whileDecoding) {
@@ -276,8 +304,11 @@ const chatRouter = createTRPCRouter({
                   },
                 ],
               })
-              void api.chats.show.revalidate({ chatId })
-
+              revalidatePath(`mission/${mission.id}/chats/${chat.id}`)
+              void api.chats.showOrCreate.revalidate({
+                chatId: chat.id,
+                missionId: mission.id,
+              })
               //   // we revalidate the path on demand after every message.
               //   // this is bugged on nextjs 14.4.4
               //   // @see https://github.com/vercel/next.js/issues/50714

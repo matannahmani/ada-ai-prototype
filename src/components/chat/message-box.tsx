@@ -75,7 +75,8 @@ const MessagePlaceholder = () => {
 }
 
 async function ChatHistory({ ...props }: TChat) {
-  const chat = await api.chats.show.query({
+  const chat = await api.chats.showOrCreate.query({
+    missionId: props.mission.id,
     chatId: props.chatId,
   })
   return (

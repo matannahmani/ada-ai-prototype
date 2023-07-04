@@ -11,8 +11,7 @@ import { Disclosure } from "@headlessui/react"
 import { Skeleton } from "@ui/skeleton"
 import { Menu as MenuIcon, X } from "lucide-react"
 
-import { ChatSidebarTrigger } from "@/app/mission/[missionId]/chat/[chatId]/sidebar"
-
+import { ChatSidebarTrigger } from "../chat/sidebar"
 // ChatSidebarTrigger
 
 import { LogoFull } from "../logo-full"

@@ -1,7 +1,7 @@
 import { cache, memo, Suspense } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { getServerAuthSession } from "@/server/auth"
+import { getServerAuthSession, getVisitorSession } from "@/server/auth"
 import { api } from "@/trpc/server"
 import { AspectRatio } from "@ui/aspect-ratio"
 import { Skeleton } from "@ui/skeleton"
@@ -14,8 +14,14 @@ import SidebarCandidateBtn from "./sidebar-candidate-btn"
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 async function ChatCandidateSidebar() {
-  const chats = await api.chats.myChats.query()
-  const session = await getServerAuthSession()
+  const [session, vistor] = await Promise.all([
+    getServerAuthSession(),
+    getVisitorSession(),
+  ])
+  const userId = session?.user?.id || vistor?.id || "null"
+  const chats = await api.chats.byUserId.query({
+    userId,
+  })
   return chats?.map((chat, i) => (
     <SidebarCandidateBtn chatId={chat.id} key={`btn-${i}`}>
       <Link href={`./${chat.id}`} key={`link-${i}`}>

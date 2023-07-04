@@ -5,10 +5,11 @@ import { appRouter, type AppRouter } from "@/server/api/root"
 import { getServerAuthSession } from "@/server/auth"
 import { httpLink, loggerLink } from "@trpc/client"
 import { experimental_nextCacheLink } from "@trpc/next/app-dir/links/nextCache"
-import { experimental_nextHttpLink } from "@trpc/next/app-dir/links/nextHttp"
-import { experimental_createTRPCNextAppDirServer } from "@trpc/next/app-dir/server"
+import { AnyRouter } from "@trpc/server"
 import SuperJSON from "superjson"
 
+import { experimental_createTRPCNextAppDirServer } from "./experimental_createTRPCNextAppDirServer"
+import { experimental_nextHttpLink } from "./experimental_nextHttpLink"
 import { generateCacheTag, getUrl, transformer } from "./shared"
 
 /**

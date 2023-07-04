@@ -1,7 +1,5 @@
-import { Suspense } from "react"
-
-import Sidebar from "./sidebar"
-import SidebarContent from "./sidebar-content"
+import Sidebar from "@/components/chat/sidebar"
+import SidebarContent from "@/components/chat/sidebar-content"
 
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   return (

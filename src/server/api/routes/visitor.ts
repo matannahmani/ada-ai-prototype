@@ -18,7 +18,7 @@ export const vistorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       const cookie = cookies()
-      const visitorCookie = cookie.get("visitor")
+      const visitorCookie = cookie.get("visitorId")
       if (visitorCookie?.value) {
         return
       }

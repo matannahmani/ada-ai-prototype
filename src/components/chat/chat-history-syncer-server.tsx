@@ -4,12 +4,13 @@ import { ChatHistorySyncerClient } from "./chat-history-syncer-client"
 import { type TChat } from "./message-box"
 
 async function ChatHistorySyncerServer({ ...props }: TChat) {
-  const chat = await api.chats.show.query({
+  const chat = await api.chats.showOrCreate.query({
+    missionId: props.mission.id,
     chatId: props.chatId,
   })
   return (
     <ChatHistorySyncerClient
-      initalMessagesCount={chat.messages.length / 2 ?? 0}
+      initalMessagesCount={chat.messages?.length / 2 ?? 0}
     />
   )
 }

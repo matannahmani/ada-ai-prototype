@@ -50,9 +50,9 @@ const CurrentConversationSection = () => {
       <span className="text-xl font-semibold tracking-tight text-center ">
         Current Conversation
       </span>
-      <span className="italic font-semibold text-sm text-muted-foreground">
+      <div className="italic flex font-semibold text-sm text-muted-foreground">
         {messages} / 25 Messages Sent
-      </span>
+      </div>
       <NewChatBTN />
     </div>
   )
