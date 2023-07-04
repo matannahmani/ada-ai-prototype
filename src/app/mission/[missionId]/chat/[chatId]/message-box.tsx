@@ -4,14 +4,17 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { forwardRef, memo, Suspense } from "react"
 import { api } from "@/trpc/server"
-import { type Candidate } from "@prisma/client"
+import { type Mission } from "@prisma/client"
 import { Avatar, AvatarImage } from "@ui/avatar"
 import { Separator } from "@ui/separator"
-import type { Session } from "next-auth"
 
 export type TChat = {
-  candidate: Candidate
-  session: Session
+  mission: Mission
+  chatId: number
+  user: {
+    name?: string
+    image?: string
+  }
 }
 
 const ChatAvatar = memo(({ image }: { image: string | undefined }) => {
@@ -72,8 +75,8 @@ const MessagePlaceholder = () => {
 }
 
 async function ChatHistory({ ...props }: TChat) {
-  const chat = await api.candidates.chatHistory.query({
-    candidateId: props.candidate.id,
+  const chat = await api.chats.show.query({
+    chatId: props.chatId,
   })
   return (
     <>
@@ -82,14 +85,12 @@ async function ChatHistory({ ...props }: TChat) {
           key={`message-${message.id}`}
           message={message.content}
           name={
-            message.isResponse
-              ? props.candidate.name
-              : props.session.user?.name ?? ""
+            message.isResponse ? props.mission.name : props.user?.name ?? ""
           }
           image={
             message.isResponse
-              ? props.candidate.image
-              : props.session.user?.image ?? undefined
+              ? props.mission.image
+              : props.user?.image ?? undefined
           }
           id={`message-${message.id}`}
         />
@@ -99,9 +100,10 @@ async function ChatHistory({ ...props }: TChat) {
 }
 
 const MessageBox = ({
-  candidate,
-  session,
+  mission: candidate,
+  user,
   children,
+  chatId,
 }: TChat & {
   children: React.ReactNode
 }) => {
@@ -112,12 +114,13 @@ const MessageBox = ({
     >
       <ChatMessage
         name={candidate?.name}
-        message={`Hello and welcome! I'm ${candidate?.name}, and I'm
-            representing the ${candidate?.party}. As a chatbot, I'm here to
+        message={`Hello and welcome! I'm ${
+          candidate?.name
+        } personalized chatbot. As a chatbot, I'm here to
             assist you and provide information about our campaign and political
             agendas. Whether you have questions, concerns, or simply want to learn
             more about what we do, feel free to ask. I'm here to help! So,
-            ${session?.user?.name ?? ""}, how can I assist you today?`}
+            ${user?.name ?? ""}, how can I assist you today?`}
         image={candidate?.image ?? undefined}
         id={"opening-message"}
       />
@@ -126,7 +129,7 @@ const MessageBox = ({
           <MessagePlaceholder key={`placeholder-${i}`} />
         ))}
       >
-        <ChatHistory candidate={candidate} session={session} />
+        <ChatHistory chatId={chatId} mission={candidate} user={user} />
         {children}
       </Suspense>
     </div>

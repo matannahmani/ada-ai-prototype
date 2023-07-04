@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { cn } from "@lib/utils"
 import { Button, buttonVariants } from "@ui/button"
 import { Separator } from "@ui/separator"
 import {
@@ -41,7 +42,7 @@ const PersonDonationItem = ({
   )
 }
 
-function OurMissionPage() {
+function OurMissionPage({ params }: { params: { missionId: string } }) {
   return (
     <div>
       <section className="text-accent-foreground flex flex-row justify-center md:gap-4  lg:gap-8">
@@ -70,16 +71,15 @@ leading-9"
             <br />
             <span>by 1,000 people</span>
           </div>
-          <div className="h-[240px] max-w-[360px] md:w-fit  p-2 flex gap-1 flex-col text-accent-foreground bg-accent rounded-xl border border-neutral-200">
-            <div className="text-center w-[225px] mx-auto  text-lg font-bold leading-snug">
+          <div className="h-[240px] max-w-[360px] md:max-w-full  p-2 flex gap-1 flex-col text-accent-foreground">
+            <div className="text-center mx-auto  text-lg font-bold leading-snug">
               OUR AI CAMPAIGN FUND MANAGER’S GOAL
             </div>
-            <div className="text-[12px] font-normal leading-relaxed line-clamp-6">
+            <div className="leading-7 px-2  font-normal line-clamp-6">
               Our goal with this campaign is to give the homeless a chance to
-              get off the street and get their life back on track.
-              <br /> With the money raised, we will give homeless temporary
-              accommodation and a chance to find a job and ultimately get off
-              the streets.
+              get off the street and get their life back on track. With the
+              money raised, we will give homeless temporary accommodation and a
+              chance to find a job and ultimately get off the streets.
             </div>
             <Button variant="secondary" className="m-auto w-fit">
               Read More <ChevronDown />
@@ -149,10 +149,13 @@ leading-9"
           <Button className="w-full">
             Donate <HelpingHand className="ml-2" />
           </Button>
-          <Button variant="secondary" className="w-full">
+          <Link
+            className={cn(buttonVariants({ variant: "secondary" }), "w-full")}
+            href={`./${params?.missionId}/chat/-1`}
+          >
             <MessagesSquare className="mr-2" />
             Chat live now
-          </Button>
+          </Link>
           <div className="bg-popover  text-popover-foreground rounded-sm relative p-2">
             <ChevronUp className="absolute h-8 w-8 left-4 -top-5 stroke-popover text-popover fill-popover  " />
             <span className="font-normal  text-sm text-start leading-tight">

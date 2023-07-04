@@ -42,7 +42,7 @@ export const streamApi = experimental_createTRPCNextAppDirClient<AppRouter>({
       transformer,
       links: [
         httpSseLink({
-          baseUrl: getUrl(true),
+          baseUrl: getUrl(),
         }),
       ],
     }

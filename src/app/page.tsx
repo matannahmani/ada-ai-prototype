@@ -4,23 +4,9 @@ import { ChevronRight } from "lucide-react"
 
 import { MissionCard } from "@/components/cards"
 
-import CandidateCard from "./candidate-card"
 import CardsContainer from "./cards-container"
 import HomeHero from "./home-hero"
 import HomeWhySection from "./home-why-section"
-
-const CandidatesCard = async () => {
-  const candidates = await api.candidates.list.query()
-  const session = await getServerAuthSession()
-  return candidates.map((candidate, index) => (
-    <CandidateCard
-      fullCard={index === 0}
-      userId={session?.user?.id ?? "-1"}
-      key={`candidate-${candidate.id}`}
-      candidate={candidate}
-    />
-  ))
-}
 
 export default function IndexPage() {
   return (

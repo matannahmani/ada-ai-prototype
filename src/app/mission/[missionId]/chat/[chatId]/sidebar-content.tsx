@@ -13,42 +13,13 @@ import SidebarCandidateBtn from "./sidebar-candidate-btn"
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
-/**
- * @experimental trying to use rsc offical cache api
- */
-export const getCandidates = api.candidates.list.query
-
-const MemoedCandidateImage = memo(function CandidateImage({
-  candidate,
-}: {
-  candidate: Awaited<ReturnType<typeof getCandidates>>[number]
-}) {
-  return (
-    <div className="mr-2 h-8 w-8">
-      <AspectRatio ratio={1 / 1}>
-        <Image
-          alt={`${candidate.name} profile picture`}
-          src={candidate.image}
-          sizes="32px,32px"
-          fill
-          className="rounded-sm object-cover"
-        />
-      </AspectRatio>
-    </div>
-  )
-})
-
 async function ChatCandidateSidebar() {
-  const candidates = await api.candidates.list.query()
+  const chats = await api.chats.myChats.query()
   const session = await getServerAuthSession()
-  return candidates?.map((candidate, i) => (
-    <SidebarCandidateBtn candidateId={candidate.id} key={`btn-${i}`}>
-      <Link
-        href={`/chat/user/${session?.user.id ?? -1}/candidate/${candidate.id}`}
-        key={`link-${i}`}
-      >
-        {/* <MemoedCandidateImage candidate={candidate} /> */}
-        {candidate.name}
+  return chats?.map((chat, i) => (
+    <SidebarCandidateBtn chatId={chat.id} key={`btn-${i}`}>
+      <Link href={`./${chat.id}`} key={`link-${i}`}>
+        {chat.mission.name}
       </Link>
     </SidebarCandidateBtn>
   ))
@@ -60,7 +31,7 @@ function SidebarContent({ className }: SidebarProps) {
       <div className="">
         <div className="py-2">
           <h2 className="relative px-6 text-lg font-semibold tracking-tight">
-            Candidates
+            Previous Chats
           </h2>
           <ScrollArea className="h-[540px] px-2">
             <div className="space-y-1 p-2">

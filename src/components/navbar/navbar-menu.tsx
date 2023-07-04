@@ -11,7 +11,9 @@ import { Disclosure } from "@headlessui/react"
 import { Skeleton } from "@ui/skeleton"
 import { Menu as MenuIcon, X } from "lucide-react"
 
-import { ChatSidebarTrigger } from "@/app/chat/user/[userId]/candidate/[candidateId]/sidebar"
+import { ChatSidebarTrigger } from "@/app/mission/[missionId]/chat/[chatId]/sidebar"
+
+// ChatSidebarTrigger
 
 import { LogoFull } from "../logo-full"
 import { ThemeSwitcher } from "./theme-switcher"

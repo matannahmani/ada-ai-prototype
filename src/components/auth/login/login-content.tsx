@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { SiApple, SiFacebook, SiGoogle } from "@icons-pack/react-simple-icons"
+import { signIn } from "next-auth/react"
 
 import { Button } from "@/components/ui/button"
 import { LogoFull } from "@/components/logo-full"
@@ -21,7 +22,11 @@ export const LoginContent = ({
         <SiFacebook className="mr-auto" />
         <span className="mr-auto">Continue with Facebook</span>
       </Button>
-      <Button className="w-[240px]" variant="google">
+      <Button
+        onClick={() => signIn("google")}
+        className="w-[240px]"
+        variant="google"
+      >
         <SiGoogle className="mr-auto" />
         <span className="mr-auto">Continue with Google</span>
       </Button>

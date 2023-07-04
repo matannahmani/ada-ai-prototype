@@ -9,6 +9,7 @@ import AuthModal from "@/components/auth/modal/auth-modal"
 import { Footer } from "@/components/footer"
 import Navbar from "@/components/navbar/navbar"
 import SessionProvider from "@/components/session-provider"
+import FingerPrintLayout from "@/components/shells/fingerprint-layout"
 import Sidebar from "@/components/sidebar"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -51,7 +52,7 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
               <div className="relative min-h-screen">
                 <>
                   <Navbar />
-                  {children}
+                  <FingerPrintLayout>{children}</FingerPrintLayout>
                   <AuthModal>{authModal}</AuthModal>
                   <Footer />
                 </>

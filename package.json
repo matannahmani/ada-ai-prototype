@@ -13,6 +13,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^3.4.1",
     "@formkit/auto-animate": "1.0.0-beta.6",
     "@headlessui/react": "^1.7.15",
     "@hookform/resolvers": "^3.1.1",
@@ -55,6 +56,7 @@
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
     "eventsource": "^2.0.2",
+    "fingerprintjs": "^0.5.3",
     "framer-motion": "^10.12.17",
     "jotai": "^2.2.1",
     "jotai-optics": "^0.3.0",

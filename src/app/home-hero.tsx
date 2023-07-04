@@ -38,7 +38,7 @@ const Browser = (props: { children: React.ReactNode | React.ReactNode[] }) => (
 
 const HomeHero = () => (
   <section className="text-white py-6 relative lg:h-[700px]">
-    <Image src="/hero-bg.png" fill alt="hero-bg" className="-z-10" />
+    <Image priority src="/hero-bg.png" fill alt="hero-bg" className="-z-10" />
     <div className="sm:container justify-center md:justify-start flex-wrap flex gap-6 pb-8 pt-6 md:py-10 ">
       <div className="basis-12/12 md:basis-4/12 items-center text-center justify-center flex max-w-[980px] flex-col md:text-start md:items-start gap-8">
         <div>

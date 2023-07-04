@@ -3,7 +3,7 @@ import Link from "next/link"
 import { cn } from "@lib/utils"
 import { AspectRatio } from "@ui/aspect-ratio"
 import { Badge } from "@ui/badge"
-import { Button } from "@ui/button"
+import { Button, buttonVariants } from "@ui/button"
 import {
   Info,
   MessageCircle,
@@ -63,29 +63,30 @@ const MissionCard = (props: MissionCardProps) => (
         </p>
       </div>
       <div className="gap-4 flex flex-wrap items-center justify-center py-2 w-full xl:w-fit">
-        <Button
+        <Link
           className={cn(
+            buttonVariants(),
             "rounded-full drop-shadow-md w-full xl:w-fit",
             !props.isMobile && "w-fit"
           )}
+          href={`/mission/${props.data.id}/chat/-1`}
         >
           Chat with AI
           <MessageCircle className="ml-2 h-4 w-4" />
-        </Button>
+        </Link>
+
         <Link
-          href="/mission/1"
-          className={cn("w-full xl:w-fit", !props.isMobile && "w-fit")}
+          className={cn(
+            buttonVariants({
+              variant: "secondary",
+            }),
+            "rounded-full drop-shadow-md w-full xl:w-fit",
+            !props.isMobile && "w-fit"
+          )}
+          href={`/mission/${props.data.id}`}
         >
-          <Button
-            variant="secondary"
-            className={cn(
-              "rounded-full drop-shadow-md w-full xl:w-fit",
-              !props.isMobile && "w-fit"
-            )}
-          >
-            Learn more
-            <Info className="ml-2 h-4 w-4" />
-          </Button>
+          Learn more
+          <Info className="ml-2 h-4 w-4" />
         </Link>
       </div>
     </div>
