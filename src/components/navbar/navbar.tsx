@@ -13,7 +13,6 @@ async function NavbarSuspense() {
 
   return (
     <NavbarMenu
-      // @ts-expect-error async component is not supported by typescript
       profileComponent={<NavbarProfileMenu />}
       navigation={NavbarRoutes.filter(
         (route) => (route.requiresAuth && !!session) || !route.requiresAuth
@@ -29,7 +28,6 @@ async function NavbarSuspense() {
 function NavbarUnAuthanticated() {
   return (
     <NavbarMenu
-      // @ts-expect-error async component is not supported by typescript
       profileComponent={<NavbarProfileMenu />}
       navigation={NavbarRoutes.map((route) => ({
         name: route.text,
@@ -46,7 +44,6 @@ function NavbarUnAuthanticated() {
 function Navbar() {
   return (
     <Suspense fallback={<NavbarUnAuthanticated />}>
-      {/* @ts-expect-error async compoennt - not supported by typescript */}
       <NavbarSuspense />
     </Suspense>
   );

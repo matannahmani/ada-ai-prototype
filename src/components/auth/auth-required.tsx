@@ -1,17 +1,18 @@
-import Link from "next/link";
-import AuthButtons from "./auth-buttons";
-import { getServerAuthSession } from "@/server/auth";
+import Link from "next/link"
+import { getServerAuthSession } from "@/server/auth"
+
+import AuthButtons from "./auth-buttons"
 
 type AuthRequiredPageProps = {
-  title?: string;
-  description?: string;
-  children: React.ReactNode;
-};
+  title?: string
+  description?: string
+  children: React.ReactNode
+}
 
 export default async function AuthRequiredPage(props: AuthRequiredPageProps) {
-  const session = await getServerAuthSession();
+  const session = await getServerAuthSession()
   if (session) {
-    return <>{props.children}</>;
+    return <>{props.children}</>
   }
   return (
     <>
@@ -46,5 +47,5 @@ export default async function AuthRequiredPage(props: AuthRequiredPageProps) {
         </div>
       </div>
     </>
-  );
+  )
 }

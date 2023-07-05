@@ -1,27 +1,41 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-"use client";
+"use client"
 
-import React, { Suspense, useMemo } from "react";
-import { Disclosure } from "@headlessui/react";
-import { X, Menu as MenuIcon } from "lucide-react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import Image from "next/image";
-import { Skeleton } from "@ui/skeleton";
-import { ChatSidebarTrigger } from "@/app/chat/user/[userId]/candidate/[candidateId]/sidebar";
-import { ThemeSwitcher } from "./theme-switcher";
+import React, { Suspense, useMemo } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useAutoAnimate } from "@formkit/auto-animate/react"
+import { Disclosure } from "@headlessui/react"
+import { Skeleton } from "@ui/skeleton"
+import { Menu as MenuIcon, X } from "lucide-react"
+
+import { ChatSidebarTrigger } from "../chat/sidebar"
+// ChatSidebarTrigger
+
+import { LogoFull } from "../logo-full"
+import { ThemeSwitcher } from "./theme-switcher"
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(" ")
 }
 
+const navItemStyle = (isCurrent: boolean) =>
+  classNames(
+    isCurrent
+      ? "text-primary dark:text-primary font-bold"
+      : "text-gray-500 dark:text-gray-500 ",
+    "rounded-md px-3 py-2 text-sm font-medium",
+    // hover make effect
+    "hover:text-primary dark:hover:text-primary transition-colors"
+  )
+
 type Navigations = {
-  name: string;
-  href: string;
-  current?: boolean;
-}[];
+  name: string
+  href: string
+  current?: boolean
+}[]
 
 function NavbarMenu({
   navigation,
@@ -31,37 +45,35 @@ function NavbarMenu({
    * @explaination NavbarProfileMenu is a rsc component which we stream down to NavbarMenu
    * @see NavbarProfileMenu
    */
-  profileComponent: React.ReactNode;
-  navigation: Navigations;
+  profileComponent: React.ReactNode
+  navigation: Navigations
 }) {
-  const [menuIconRef] = useAutoAnimate();
-  const [menuConRef] = useAutoAnimate();
-  const pathname = usePathname();
+  const [menuIconRef] = useAutoAnimate()
+  const [menuConRef] = useAutoAnimate()
+  const pathname = usePathname()
   const currentPathIndex = useMemo(
     () => navigation.findIndex((nav) => nav.href === pathname),
     [navigation, pathname]
-  );
+  )
 
   return (
-    <nav className="z-40 h-fit basis-full">
+    <nav className="z-40 h-fit basis-full top-0 sticky">
       <Disclosure
         as="div"
-        className="supports-backdrop-blur:bg-background/60 relative border-b bg-background/80 backdrop-blur"
+        className="supports-backdrop-blur:bg-background/80 relative border-b bg-background backdrop-blur"
       >
         {({ open }) => (
           <>
+            {/* logo only on desktop */}
+            <LogoFull
+              //  width={40}
+              //  height={40}
+              className=" absolute inset-1/2	transform -translate-y-2/4 -translate-x-2/4 md:h-8 w-auto h-6"
+            />
             <div className=" px-2 sm:px-6 lg:px-8">
               <div className="relative flex h-16 items-center justify-between">
                 <div className="flex flex-shrink-0 items-center">
-                  {/* logo only on desktop */}
-                  <Image
-                    priority
-                    src="/logo.png"
-                    alt="ada-ai logo"
-                    width={40}
-                    height={40}
-                    className="hidden h-8 w-auto md:block"
-                  />
+                  {/* <ThemeSwitcher /> */}
                 </div>
                 <div className="inset-y-0 left-0 flex items-center ">
                   {/* Mobile menu button*/}
@@ -83,29 +95,22 @@ function NavbarMenu({
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
                       {navigation.map((item, index) => {
-                        const isCurrent = index === currentPathIndex;
+                        const isCurrent = index === currentPathIndex
                         return (
                           <Link
                             key={item.name}
                             href={item.href}
-                            className={classNames(
-                              isCurrent
-                                ? "bg-gray-800 text-white dark:bg-gray-900"
-                                : "text-gray-500 hover:bg-gray-800 hover:text-white dark:text-gray-500 dark:hover:bg-gray-900 dark:hover:text-white",
-                              "rounded-md px-3 py-2 text-sm font-medium"
-                            )}
+                            className={navItemStyle(isCurrent)}
                             aria-current={isCurrent ? "page" : undefined}
                           >
                             {item.name}
                           </Link>
-                        );
+                        )
                       })}
                     </div>
                   </div>
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  <ThemeSwitcher />
-
                   <Suspense
                     fallback={<Skeleton className="h-8 w-8 rounded-full" />}
                   >
@@ -119,26 +124,26 @@ function NavbarMenu({
               id="mobile-menu"
               ref={menuConRef}
             >
+              {/* mobile toggled on navbar menu */}
               <Disclosure.Panel className="sm:hidden">
-                <div className="space-y-1 px-2 pb-3 pt-2">
+                <div
+                  className="space-y-1 px-2 pb-3 pt-2
+                  supports-backdrop-blur:bg-background/60 relative border-b bg-background/80 backdrop-blur
+                "
+                >
                   {navigation.map((item, index) => {
-                    const isCurrent = index === currentPathIndex;
+                    const isCurrent = index === currentPathIndex
                     return (
                       <Disclosure.Button
                         key={item.name}
                         as={Link}
                         href={item.href}
-                        className={classNames(
-                          isCurrent
-                            ? "bg-gray-900 text-white"
-                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "block rounded-md px-3 py-2 text-base font-medium"
-                        )}
+                        className={classNames(navItemStyle(isCurrent), "block")}
                         aria-current={isCurrent ? "page" : undefined}
                       >
                         {item.name}
                       </Disclosure.Button>
-                    );
+                    )
                   })}
                 </div>
               </Disclosure.Panel>
@@ -147,7 +152,7 @@ function NavbarMenu({
         )}
       </Disclosure>
     </nav>
-  );
+  )
 }
 
-export default NavbarMenu;
+export default NavbarMenu

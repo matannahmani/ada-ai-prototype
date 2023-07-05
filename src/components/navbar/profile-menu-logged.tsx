@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import { Menu, Transition } from "@headlessui/react";
-import { type Session } from "next-auth";
-import { signOut } from "next-auth/react";
-import { Fragment } from "react";
+import { Fragment } from "react"
+import { Menu, Transition } from "@headlessui/react"
+import { type Session } from "next-auth"
+import { signOut } from "next-auth/react"
+
+import { cn } from "@/lib/utils"
 
 /**
  *
@@ -16,11 +17,12 @@ const ProfileMenuLogged = ({ session }: { session: Session }) => {
   return (
     <Menu as="div" className="relative ml-3">
       <div>
-        <Menu.Button className="flex rounded-full bg-background/80 text-sm backdrop-blur backdrop-blur focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+        <Menu.Button className="flex rounded-full bg-background/80 text-sm  backdrop-blur focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
           {session.user.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
+              referrerPolicy="no-referrer"
               className="h-8 w-8 rounded-full"
               src={session.user.image}
               alt="profile picture"
@@ -70,7 +72,7 @@ const ProfileMenuLogged = ({ session }: { session: Session }) => {
             {({ active }) => (
               <button
                 onClick={() => {
-                  void signOut();
+                  void signOut()
                 }}
                 className={cn(
                   "w-full text-left",
@@ -85,7 +87,7 @@ const ProfileMenuLogged = ({ session }: { session: Session }) => {
         </Menu.Items>
       </Transition>
     </Menu>
-  );
-};
+  )
+}
 
-export default ProfileMenuLogged;
+export default ProfileMenuLogged

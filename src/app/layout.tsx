@@ -1,14 +1,18 @@
-import "@/styles/globals.css";
-import { type Metadata } from "next";
+import "@/styles/globals.css"
 
-import { siteConfig } from "@/config/site";
-import { fontSans } from "@/lib/fonts";
-import { cn } from "@/lib/utils";
-import { TailwindIndicator } from "@/components/tailwind-indicator";
-import { ThemeProvider } from "@/components/theme-provider";
-import Sidebar from "@/components/sidebar";
-import Navbar from "@/components/navbar/navbar";
-import SessionProvider from "@/components/session-provider";
+import { type Metadata } from "next"
+
+import { siteConfig } from "@/config/site"
+import { fontSans, fontSerif } from "@/lib/fonts"
+import { cn } from "@/lib/utils"
+import AuthModal from "@/components/auth/modal/auth-modal"
+import { Footer } from "@/components/footer"
+import Navbar from "@/components/navbar/navbar"
+import SessionProvider from "@/components/session-provider"
+import FingerPrintLayout from "@/components/shells/fingerprint-layout"
+import Sidebar from "@/components/sidebar"
+import { TailwindIndicator } from "@/components/tailwind-indicator"
+import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
   title: {
@@ -25,29 +29,32 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
-};
-
-interface RootLayoutProps {
-  children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+interface RootLayoutProps {
+  children: React.ReactNode
+  authModal: React.ReactNode
+}
+
+export default function RootLayout({ children, authModal }: RootLayoutProps) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
         <head />
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
+            fontSerif.variable,
+            "min-h-screen bg-background font-serif antialiased "
           )}
         >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="light">
             <SessionProvider>
-              <div className="relative flex min-h-screen flex-wrap content-baseline">
+              <div className="relative min-h-screen">
                 <>
                   <Navbar />
-                  <div className="flex-1">{children}</div>
+                  <FingerPrintLayout>{children}</FingerPrintLayout>
+                  <AuthModal>{authModal}</AuthModal>
+                  <Footer />
                 </>
               </div>
             </SessionProvider>
@@ -56,5 +63,5 @@ export default function RootLayout({ children }: RootLayoutProps) {
         </body>
       </html>
     </>
-  );
+  )
 }

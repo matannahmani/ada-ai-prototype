@@ -1,72 +1,81 @@
-import Link from "next/link";
+import { getServerAuthSession } from "@/server/auth"
+import { api } from "@/trpc/server"
+import { ChevronRight } from "lucide-react"
 
-import { siteConfig } from "@/config/site";
-import { buttonVariants } from "@/components/ui/button";
-import CardsContainer from "./cards-container";
-import CandidateCard from "./candidate-card";
-import { Suspense } from "react";
-import { Skeleton } from "@ui/skeleton";
-import { api } from "@/trpc/server";
-import { getServerAuthSession } from "@/server/auth";
+import { MissionCard } from "@/components/cards"
 
-const CandidatesCard = async () => {
-  const candidates = await api.candidates.list.query();
-  const session = await getServerAuthSession();
-  return candidates.map((candidate) => (
-    <CandidateCard
-      userId={session?.user?.id ?? "-1"}
-      key={`candidate-${candidate.id}`}
-      candidate={candidate}
-    />
-  ));
-};
+import CardsContainer from "./cards-container"
+import HomeHero from "./home-hero"
+import HomeWhySection from "./home-why-section"
 
 export default function IndexPage() {
   return (
-    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-      <div className="flex max-w-[980px] flex-col items-start gap-2">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-          Explore, Engage, Empower
-        </h1>
-        <p className="max-w-[700px] text-lg text-muted-foreground">
-          Welcome to Ada-AI&apos;s hub of dynamic public figures. Browse through
-          candidates and their impactful campaigns, engage with personalized AI
-          chatbots, and lend your support to the causes that resonate with you.
-          Each click, each conversation, each contribution brings us one step
-          closer to a brighter future.
-        </p>
-      </div>
-      <div className="flex gap-4">
-        <Link
-          href={"#candidate-container"}
-          target="_blank"
-          rel="noreferrer"
-          className={buttonVariants()}
-        >
-          View candidates
-        </Link>
-        <Link
-          target="_blank"
-          rel="noreferrer"
-          href={"#"}
-          className={buttonVariants({ variant: "outline" })}
-        >
-          View Campaigns
-        </Link>
-      </div>
+    <main className="flex items-stretch flex-col gap-3 sm:gap-6 md:gap-10 lg:gap-20 ">
+      <HomeHero />
       <CardsContainer
-        title="Candidates"
-        description="Explore the top candidates."
+        title="Latest fundraisers"
+        link={{
+          href: "/fundraisers",
+          label: <>See more {">"}</>,
+        }}
       >
-        <Suspense
+        {/* <MissionCard /> */}
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+        />
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+          isMobile
+        />
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+          isMobile
+        />
+        <MissionCard
+          data={{
+            id: "1",
+            title: "HELP HOMELESS IN LOS ANGELAS",
+            description:
+              "By recent estimates, LA's population of people experiencing homelessness has surpassed New York City's to become the largest in the nation—and it is still growing, with about one in 150 Angelenos, or 69,000 people, experiencing homelessness.",
+            image:
+              "https://res.cloudinary.com/ddqtnp0ic/image/upload/v1688365834/pexels-sarwer-e-kainat-welfare-3996723_1_1_1_fl3vth.png",
+            isUrgent: true,
+          }}
+          isMobile
+        />
+        {/* <Suspense
           fallback={new Array(10).fill(0).map((_, i) => (
             <Skeleton className="h-[337px] w-[350px]" key={`skeleton-${i}`} />
           ))}
         >
-          {/* @ts-expect-error async component not support by typescript yet */}
           <CandidatesCard />
-        </Suspense>
+        </Suspense> */}
       </CardsContainer>
-    </section>
-  );
+      <HomeWhySection />
+    </main>
+  )
 }

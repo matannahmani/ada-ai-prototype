@@ -1,17 +1,17 @@
 type NavbarRoute = {
-  path: string | (() => string);
-  i18nKey: string;
+  path: string | (() => string)
+  i18nKey: string
   /**
    * @default false
    * @description If true, the user must be authenticated to view this route.
    */
-  requiresAuth?: boolean;
-  icon?: string;
+  requiresAuth?: boolean
+  icon?: string
   /**
    * @deprecated text will be removed in the future in favor of i18nKey
    */
-  text: string;
-};
+  text: string
+}
 
 const NavbarRoutes: NavbarRoute[] = [
   {
@@ -19,23 +19,13 @@ const NavbarRoutes: NavbarRoute[] = [
     text: "Home",
     i18nKey: "navbar.home",
   },
-  {
-    path: "#",
-    text: "Chat",
-    i18nKey: "navbar.chat",
-    requiresAuth: true,
-  },
-  {
-    path: "#",
-    text: "Donate",
-    i18nKey: "navbar.donate",
-    requiresAuth: true,
-  },
-  {
-    path: "#",
-    text: "Our Mission",
-    i18nKey: "navbar.ourMission",
-  },
-];
 
-export default NavbarRoutes;
+  {
+    path: "#",
+    text: "What is Ada",
+    i18nKey: "navbar.what_is_ada",
+    requiresAuth: false,
+  },
+]
+
+export default NavbarRoutes

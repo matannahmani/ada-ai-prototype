@@ -19,6 +19,7 @@
     "baseUrl": ".",
     "paths": {
       "@ui/*": ["./src/components/ui/*"],
+      "@lib/*": ["./src/lib/*"],
       "@/*": ["./src/*"]
     },
     "plugins": [{ "name": "next" }]

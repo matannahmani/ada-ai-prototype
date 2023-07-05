@@ -1,4 +1,4 @@
-import "./src/env.mjs";
+import "./src/env.mjs"
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -6,6 +6,9 @@ const config = {
   images: {
     domains: ["res.cloudinary.com"],
   },
+  // modularizeImports: {
+  //   ""
+  // },
   experimental: { serverActions: true },
-};
-export default config;
+}
+export default config

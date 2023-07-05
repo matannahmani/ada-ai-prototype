@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
  * 1. You want to modify request context (see Part 1).
@@ -7,15 +10,16 @@
  * need to use are documented accordingly near the end.
  */
 
-import { experimental_createServerActionHandler } from "@trpc/next/app-dir/server";
-import { initTRPC, TRPCError } from "@trpc/server";
-import { type FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { headers } from "next/headers";
-import superjson from "superjson";
-import { ZodError } from "zod";
-import { getServerAuthSession } from "@/server/auth";
-import { prisma } from "@/server/db";
-import { type Session } from "next-auth";
+import { createHash } from "crypto"
+import { cookies, headers } from "next/headers"
+import { getServerAuthSession } from "@/server/auth"
+import { prisma } from "@/server/db"
+import { experimental_createServerActionHandler } from "@trpc/next/app-dir/server"
+import { initTRPC, TRPCError } from "@trpc/server"
+import { type FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch"
+import { type Session } from "next-auth"
+import superjson from "superjson"
+import { ZodError } from "zod"
 
 /**
  * 1. CONTEXT
@@ -26,12 +30,12 @@ import { type Session } from "next-auth";
  */
 
 type CreateContextOptions = {
-  headers: Headers;
-};
+  headers: Headers
+}
 
 export type CreateOldContextOptions = {
-  session: Session | null;
-};
+  session: Session | null
+}
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -44,14 +48,14 @@ export type CreateOldContextOptions = {
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
 export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
-  const session = await getServerAuthSession();
+  const session = await getServerAuthSession()
 
   return {
     session,
     headers: opts.headers,
     prisma,
-  };
-};
+  }
+}
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -64,8 +68,8 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
 
   return await createInnerTRPCContext({
     headers: opts.req.headers,
-  });
-};
+  })
+}
 
 /**
  * 2. INITIALIZATION
@@ -85,9 +89,9 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         zodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
-    };
+    }
   },
-});
+})
 
 /**
  * Helper to create validated server actions from trpc procedures, or build inline actions using the
@@ -97,10 +101,10 @@ export const createAction = experimental_createServerActionHandler(t, {
   async createContext() {
     const ctx = await createInnerTRPCContext({
       headers: headers(),
-    });
-    return ctx;
+    })
+    return ctx
   },
-});
+})
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -114,7 +118,7 @@ export const createAction = experimental_createServerActionHandler(t, {
  *
  * @see https://trpc.io/docs/router
  */
-export const createTRPCRouter = t.router;
+export const createTRPCRouter = t.router
 
 /**
  * Public (unauthenticated) procedure
@@ -123,20 +127,77 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure
+
+// const extractVisitor = t.middleware(async ({ ctx, next }) => {
+//   const cookiejar = cookies()
+//   const visitorId = cookiejar.get("visitorId")
+//   if (typeof visitorId === "string") {
+//     const visitor = await ctx.prisma.vistor.findUnique({
+//       where: {
+//         id: visitorId as string,
+//       },
+//     })
+//     if (visitor) {
+//       return next({
+//         ctx: {
+//           ...ctx,
+//           visitor: visitor,
+//         },
+//       })
+//     }
+//   }
+//   return next({
+//     ctx: {
+//       ...ctx,
+//       visitor: undefined,
+//     },
+//   })
+// })
+
+const enforceVistorOrUserIsAuthed = t.middleware(async ({ ctx, next }) => {
+  const cookiesJar = cookies()
+  const visitorId = cookiesJar.get("visitorId")
+
+  const visitorEntity = await ctx.prisma.vistor.findUnique({
+    where: {
+      id: (visitorId?.value as string) ?? "",
+    },
+  })
+  if ((!visitorId || !visitorEntity) && (!ctx.session || !ctx.session.user)) {
+    throw new TRPCError({ code: "UNAUTHORIZED" })
+  }
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx?.session?.user },
+      visitor: visitorEntity,
+    },
+  })
+})
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+    throw new TRPCError({ code: "UNAUTHORIZED" })
   }
   return next({
     ctx: {
       // infers the `session` as non-nullable
       session: { ...ctx.session, user: ctx.session.user },
     },
-  });
-});
+  })
+})
+
+/**
+ * Protected (authenticated) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged/visitors in users, use this. It verifies
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const protectedUserOrVistorProcedure = t.procedure.use(
+  enforceVistorOrUserIsAuthed
+)
 
 /**
  * Protected (authenticated) procedure
@@ -146,4 +207,4 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const protectedProcedure = t.procedure.use(enforceUserIsAuthed)

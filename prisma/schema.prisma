@@ -30,6 +30,15 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+// vistor is a temporary model to store the fingerprint of the user
+model Vistor {
+  id          String   @id @default(cuid())
+  fingerprintHash String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  chats       Chat[]
+}
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
@@ -38,29 +47,44 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Candidate {
-  // we will use ID to store information about the candidate in pinecone vector db
-  id        Int        @id @default(autoincrement())
-  name      String
-  party     String
-  image     String
-  aiModel   String? // Could represent the file or URL of the AI model for the chatbot (if we go with fine-tuning)
-  campaigns Campaign[]
-  Chat      Chat[]
+model Mission {
+  // we will use ID to store information about the mission in pinecone vector db
+  id             Int              @id @default(autoincrement())
+  name           String
+  party          String?
+  description    String
+  goalText      String?
+  subtitle       String?
+  isUrget        Boolean          @default(false)
+  image          String
+  aiModel        String? // Could represent the file or URL of the AI model for the chatbot (if we go with fine-tuning)
+  Chat           Chat[]
+  createdAt      DateTime         @default(now())
+  creatorId      String
+  updatedAt      DateTime         @updatedAt
+  creator        User             @relation(fields: [creatorId], references: [id])
+  MissionUpdates MissionUpdates[]
+  Donation       Donation[]
 }
 
 model Chat {
-  id          Int        @id @default(autoincrement())
-  userId      String
-  user        User       @relation(fields: [userId], references: [id])
-  candidateId Int?
-  candidate   Candidate? @relation(fields: [candidateId], references: [id])
-  campaignId  Int?
-  campaign    Campaign?  @relation(fields: [campaignId], references: [id])
-  messages    Message[]
-  accountId   String?
+  id        Int       @id @default(autoincrement())
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
+  vistorId  String?
+  vistor    Vistor?   @relation(fields: [vistorId], references: [id])
+  missionId Int
+  mission   Mission  @relation(fields: [missionId], references: [id])
+  messages  Message[]
+  accountId String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  @@index([userId, candidateId], name: "candidate_user_chat_index")
+  @@index([userId, missionId], name: "mission_user_chat_index")
+  @@index([vistorId, missionId], name: "mission_vistor_chat_index")
+  // index createdAt and updatedAt
+  @@index([createdAt], name: "chat_createdAt_index")
+  @@index([updatedAt], name: "chat_updatedAt_index")
 }
 
 /// this should also be stored in vector database for now we will use it as a reference to the pinecone
@@ -75,26 +99,36 @@ model Message {
   @@index([chatId, timestamp], name: "chat_timestamp_index")
 }
 
-model Campaign {
-  id             Int        @id @default(autoincrement())
-  title          String
-  description    String
-  candidateId    Int
-  totalDonations Float      @default(0) // better ways to do this but for now it's okay.
-  donationCap    Float      @default(1000) // max amount of donations allowed
-  donationCount  Int        @default(0) // number of donations
-  candidate      Candidate  @relation(fields: [candidateId], references: [id])
-  donations      Donation[]
-  Chat           Chat[]
+model MissionUpdatesItem {
+  id              Int            @id @default(autoincrement())
+  missionUpdateId Int
+  missionUpdate   MissionUpdates @relation(fields: [missionUpdateId], references: [id])
+  content         String
+  link            String
+  logo            String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model MissionUpdates {
+  id                 Int                  @id @default(autoincrement())
+  missionId          Int
+  mission            Mission              @relation(fields: [missionId], references: [id])
+  content            String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  missionUpdatesItem MissionUpdatesItem[]
 }
 
 model Donation {
-  id         Int      @id @default(autoincrement())
-  amount     Float
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  campaignId Int
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  missionId Int
+  mission   Mission  @relation(fields: [missionId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -107,6 +141,7 @@ model User {
   sessions      Session[]
   donations     Donation[]
   Chat          Chat[]
+  Mission       Mission[]
 }
 
 model VerificationToken {

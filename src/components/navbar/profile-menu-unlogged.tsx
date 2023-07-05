@@ -1,7 +1,10 @@
-"use client";
-import { Button } from "@ui/button";
-import { signIn } from "next-auth/react";
-import Image from "next/image";
+"use client"
+
+import Image from "next/image"
+import Link from "next/link"
+import { cn } from "@lib/utils"
+import { Button, buttonVariants } from "@ui/button"
+import { signIn } from "next-auth/react"
 
 /**
  * @explaination - This component is a button that when clicked, will sign the user in with google
@@ -9,16 +12,21 @@ import Image from "next/image";
  * @clientonly
  */
 const ProfileMenuUnlogged = () => (
-  <Button onClick={() => signIn("google")} className="font-semibold">
-    <Image
-      className="mr-2"
-      src="/google.webp"
-      alt="Google Logo"
-      width={20}
-      height={20}
-    />
+  <Link
+    href="login"
+    className={cn(
+      buttonVariants({
+        size: "sm",
+        variant: "secondary",
+      }),
+      "font-semibold rounded-full md:px-12"
+    )}
+  >
     Login
-  </Button>
-);
+  </Link>
+  // <Button onClick={() => signIn("google")} className="font-semibold rounded-full px-8 " size="sm">
+  //   Login
+  // </Button>
+)
 
-export default ProfileMenuUnlogged;
+export default ProfileMenuUnlogged
