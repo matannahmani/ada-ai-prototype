@@ -14,15 +14,15 @@ const Browser = (props: { children: React.ReactNode | React.ReactNode[] }) => (
     <div className="flex items-center pt-4">
       {/* dots */}
       <div className="flex gap-1 mr-auto ml-4">
-        {/* green */}
-        <div className="w-[12px] h-[12px] rounded-full border-2 border-green-500 bg-green-400" />
-        {/* yellow */}
-        <div className="w-[12px] h-[12px] rounded-full border-2 border-amber-400  bg-amber-300" />
         {/* red */}
-        <div className="w-[12px] h-[12px] rounded-full border-2 border-red-500  bg-red-400" />
+        <div className="w-[12px] h-[12px] rounded-full border-1 md:border-2 border-red-500  bg-red-400" />
+        {/* yellow */}
+        <div className="w-[12px] h-[12px] rounded-full border-1 md:border-2 border-amber-400  bg-amber-300" />
+        {/* green */}
+        <div className="w-[12px] h-[12px] rounded-full border-1 md:border-2 border-green-500 bg-green-400" />
       </div>
-      <div className="w-[240px] p-1.5 gap-1 ml-0 mr-auto text-center justify-center items-center bg-neutral-700 bg-opacity-20 rounded-lg flex">
-        <LogoSymbol className="w-4 h-4 " />
+      <div className="w-[220px] p-1.5 gap-1 ml-0 mr-auto text-center justify-center items-center bg-neutral-700 bg-opacity-20 rounded-lg flex">
+        <LogoSymbol className="w-3 h-3 md:w-4 md:h-4 " />
         <div className="text-neutral-700 text-[12px] font-normal tracking-wide">
           im-ada.ai
         </div>
@@ -45,7 +45,7 @@ const HomeHero = () => (
           <h1 className="[text-shadow:1px_1px_6px_black] font-extrabold leading-tight tracking-tighter text-4xl sm:text-5xl">
             The future of
             <br />
-            fundraising.
+            donations.
           </h1>
           <HeroHeadLine
             width={150}
@@ -56,12 +56,16 @@ const HomeHero = () => (
             className="-mt-0.5 hidden md:block drop-shadow-md w-full md:w-[110%]"
           />
         </div>
-        <p className="[text-shadow:1px_1px_6px_black] max-w-[420px] md:max-w-[700px] text-xl">
+        <p
+          className="[text-shadow:1px_1px_6px_black]
+        text-white font-bold leading-7
+        max-w-[420px] md:max-w-[700px] text-xl"
+        >
           Solving clarity problems, hidden agendas and much more when it comes
           to donations.
         </p>
 
-        <div className="md:hidden w-full px-2 text-black">
+        <div className="md:hidden w-full px-6 text-black">
           <Browser>
             <HomeHeroTypewriter />
           </Browser>
@@ -70,11 +74,11 @@ const HomeHero = () => (
           href={"#candidate-container"}
           rel="noreferrer"
           className={cn(
-            buttonVariants({ size: "xl" }),
+            buttonVariants({ size: "lg" }),
             "self-center md:self-start shadow-md  font-bold drop-shadow-lg rounded-full "
           )}
         >
-          View active fundraisers <ChevronRight className="w-4 h-4 ml-2" />
+          View active fundraisers {">"}
         </Link>
       </div>
       <div className="hidden md:flex justify-center basis-full md:basis-6/12 text-black">

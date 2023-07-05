@@ -48,10 +48,10 @@ const MobileCardsContainer = (props: MobileCardsContainerProps) => {
             data-active={active === i}
             key={`dot-${i}`}
             onClick={() => setActive(i)}
-            className="w-[25.12px] h-[25.12px] bg-primary-100
+            className="w-[25.12px] h-[25.12px] bg-muted
             transition-all
-            data-[active=true]:bg-primary
-            active:bg-primary rounded-full"
+            data-[active=true]:bg-secondary
+            active:bg-secondary rounded-full"
           />
         ))}
       </div>

@@ -17,8 +17,9 @@ const ProfileMenuUnlogged = () => (
     className={cn(
       buttonVariants({
         size: "sm",
+        variant: "secondary",
       }),
-      "font-semibold rounded-full px-8"
+      "font-semibold rounded-full md:px-12"
     )}
   >
     Login

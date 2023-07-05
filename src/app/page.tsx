@@ -16,11 +16,7 @@ export default function IndexPage() {
         title="Latest fundraisers"
         link={{
           href: "/fundraisers",
-          label: (
-            <>
-              See more <ChevronRight className="w-4 h-4 ml-1" />
-            </>
-          ),
+          label: <>See more {">"}</>,
         }}
       >
         {/* <MissionCard /> */}

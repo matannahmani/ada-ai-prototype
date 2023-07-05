@@ -33,11 +33,11 @@ const MissionCard = (props: MissionCardProps) => (
   >
     <div
       className={cn(
-        "relative w-[310px] md:w[420px] xl:w-[534px] h-[200px] md:h-[320px] xl:h-[406px]",
+        "relative w-[310px] lg:w[420px] xl:w-[534px] h-[200px] lg:h-[320px] xl:h-[406px]",
         props.isMobile && "!h-[200px] w-full"
       )}
     >
-      <Badge variant="secondary" className="absolute top-2 left-2 z-10">
+      <Badge variant="secondary" className="absolute top-4 left-4 z-10">
         Urgent cause
       </Badge>
       <Image
@@ -47,27 +47,37 @@ const MissionCard = (props: MissionCardProps) => (
         className="object-fill	rounded-none"
       />
     </div>
-    <div className="flex-1 flex gap-2 flex-wrap p-2 md:p-4 justify-center ">
-      <div className="text-secondary-950">
-        <span className="text-lg  font-semibold w-full">
+    <div className={cn("flex-1 flex flex-wrap  justify-center ")}>
+      <div
+        className={cn(
+          "text-secondary-950 p-2 lg:p-8",
+          props.isMobile && "!p-4"
+        )}
+      >
+        <span className="text-xl lg:text-2xl font-semibold w-full">
           {props.data.title}
         </span>
         <br />
         <p
           className={cn(
-            "line-clamp-6 mt-4 lg:pr-10",
-            props.isMobile && "line-clamp-4 !pr-0"
+            "line-clamp-4  lg:line-clamp-6 mt-2 lg:mt-6 text-md lg:pr-10",
+            props.isMobile && "line-clamp-4 !pr-0 lg:mt-4"
           )}
         >
           {props.data.description}
         </p>
       </div>
-      <div className="gap-4 flex flex-wrap items-center justify-center py-2 w-full xl:w-fit">
+      <div
+        className={cn(
+          "gap-4 mb-4 px-2 md:px-0 flex flex-col items-stretch md:flex-row flex-wrap lg:items-center justify-center py-2 w-full lg:px-2",
+          !props.isMobile && "lg:px-12"
+        )}
+      >
         <Link
           className={cn(
-            buttonVariants(),
-            "rounded-full drop-shadow-md w-full xl:w-fit",
-            !props.isMobile && "w-fit"
+            buttonVariants({}),
+            "rounded-full drop-shadow-md lg:flex-1"
+            // !props.isMobile && "w-fit"
           )}
           href={`/mission/${props.data.id}/chat/-1`}
         >
@@ -80,8 +90,7 @@ const MissionCard = (props: MissionCardProps) => (
             buttonVariants({
               variant: "secondary",
             }),
-            "rounded-full drop-shadow-md w-full xl:w-fit",
-            !props.isMobile && "w-fit"
+            "rounded-full drop-shadow-md lg:flex-1"
           )}
           href={`/mission/${props.data.id}`}
         >

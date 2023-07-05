@@ -14,7 +14,7 @@ const buttonVariants = cva(
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         success: "bg-success text-success-foreground hover:bg-success/90",
         outline:
-          "border-2 font-semibold border-input hover:bg-accent hover:text-accent-foreground",
+          "border-[3px] font-semibold border-input hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
@@ -24,19 +24,25 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 py-2 px-4",
-        sm: "h-9 px-3 rounded-md",
-        lg: "h-11 px-8 rounded-md",
-        xl: "h-12 px-10 rounded-md",
-        xs: "h-6 text-xs px-2 rounded-md",
+        sm: "h-9 px-3",
+        lg: "h-11 px-8",
+        xl: "h-12 px-10 text-lg",
+        "2xl": "h-14 px-12 text-xl",
+        "3xl": "h-16 px-14 text-xl",
+        xs: "h-6 text-xs px-2",
         icon: "h-10 w-10",
       },
       outlineColor: {
         default:
           "ring-primary text-primary border-primary hover:bg-primary/90 hover:text-primary-foreground",
-        destructive: "ring-destructive",
-        success: "ring-success",
-        accent: "ring-accent",
-        secondary: "ring-secondary",
+        destructive:
+          "ring-destructive text-destructive border-destructive hover:bg-destructive/90 hover:text-destructive-foreground",
+        success:
+          "ring-success text-success border-success hover:bg-success/90 hover:text-success-foreground",
+        accent:
+          "ring-accent text-accent border-accent hover:bg-accent/90 hover:text-accent-foreground",
+        secondary:
+          "ring-secondary text-secondary border-secondary hover:bg-secondary/80 hover:text-secondary-foreground",
       },
     },
     defaultVariants: {

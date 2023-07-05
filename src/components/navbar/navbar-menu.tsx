@@ -64,15 +64,15 @@ function NavbarMenu({
       >
         {({ open }) => (
           <>
+            {/* logo only on desktop */}
+            <LogoFull
+              //  width={40}
+              //  height={40}
+              className=" absolute inset-1/2	transform -translate-y-2/4 -translate-x-2/4 md:h-8 w-auto h-6"
+            />
             <div className=" px-2 sm:px-6 lg:px-8">
               <div className="relative flex h-16 items-center justify-between">
                 <div className="flex flex-shrink-0 items-center">
-                  {/* logo only on desktop */}
-                  <LogoFull
-                    //  width={40}
-                    //  height={40}
-                    className="hidden h-8 w-auto md:block"
-                  />
                   {/* <ThemeSwitcher /> */}
                 </div>
                 <div className="inset-y-0 left-0 flex items-center ">
@@ -109,17 +109,6 @@ function NavbarMenu({
                       })}
                     </div>
                   </div>
-                </div>
-                <div
-                  id="mobile-logo"
-                  className="-ml-3 fixed inset-x-1/2	inset-y-1/2	 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-16 h-8 rounded-full bg-background/80 backdrop-blur z-10 sm:hidden"
-                >
-                  {/* logo only on mobile */}
-                  <LogoFull
-                    //  width={40}
-                    //  height={40}
-                    className=" h-8 w-full justify-center flex md:hidden"
-                  />
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <Suspense
