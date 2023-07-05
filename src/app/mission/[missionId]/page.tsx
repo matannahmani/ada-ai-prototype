@@ -78,7 +78,7 @@ leading-9"
             <span>by 1,000 people</span>
           </div>
           <MissionGoalCard description="Our goal with this campaign is to give the homeless a chance to get off the street and get their life back on track. With the money raised, we will give homeless temporary accommodation and a chance to find a job and ultimately get off the streets." />
-          <div className="flex md:hidden flex-row gap-4 justify-center mt-2">
+          <div className="flex w-full md:hidden flex-row gap-4 justify-center mt-2">
             <Button variant="outline" outlineColor="default">
               <ShareIcon className="mr-2" />
               Share
@@ -170,10 +170,11 @@ leading-9"
               the AI allocation manager who actually allocates all donations.
             </span>
           </div>
-
-          <PersonDonationItem name="John Doe" amount={100} days={4} />
-          <PersonDonationItem name="John Doe" amount={100} days={4} />
-          <PersonDonationItem name="John Doe" amount={100} days={4} />
+          <div className="flex flex-col gap-2 mb-1">
+            <PersonDonationItem name="John Doe" amount={100} days={4} />
+            <PersonDonationItem name="John Doe" amount={100} days={4} />
+            <PersonDonationItem name="John Doe" amount={100} days={4} />
+          </div>
           <div className="flex flex-row gap-2 mb-1">
             <Button variant="outline" outlineColor="default">
               <ShareIcon className="mr-2" />

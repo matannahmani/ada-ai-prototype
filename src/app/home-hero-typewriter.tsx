@@ -5,7 +5,6 @@ import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { Typewriter } from "react-simple-typewriter"
 
 const sentences = [
-  "hidden agendas",
   "clarity",
   "transparency",
   "accountability",
