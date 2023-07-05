@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import mission from "@/server/api/routes/mission"
 import { api } from "@/trpc/server"
 
+import MissionGoalCard from "../cards/mission-goal"
 import MissionGoal from "./mission-goal"
 import PreviousUpdatesSection from "./previous-updates-section"
 
@@ -23,7 +24,9 @@ const ChatPageHeroAsync = async ({
         {mission?.name} Allocation Manager
       </h1>
       <h3 className="text-lg">{mission?.subtitle}</h3>
-      <MissionGoal mission={mission} />
+      <div className="max-w-[280px] mx-auto md:max-w-full">
+        <MissionGoalCard donateEnabled description={mission.description} />
+      </div>
       <PreviousUpdatesSection missionId={mission.id} />
     </div>
   )

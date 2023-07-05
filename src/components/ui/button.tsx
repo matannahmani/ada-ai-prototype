@@ -34,7 +34,7 @@ const buttonVariants = cva(
       },
       outlineColor: {
         default:
-          "ring-primary text-primary border-primary hover:bg-primary/90 hover:text-primary-foreground",
+          "ring-primary hover:fill-primary-foreground fill-primary text-primary border-primary hover:bg-primary/90 hover:text-primary-foreground",
         destructive:
           "ring-destructive text-destructive border-destructive hover:bg-destructive/90 hover:text-destructive-foreground",
         success:

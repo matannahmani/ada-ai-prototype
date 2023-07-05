@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { cn } from "@lib/utils"
+import { Badge } from "@ui/badge"
 import { Button, buttonVariants } from "@ui/button"
 import { Separator } from "@ui/separator"
 import {
@@ -11,6 +12,8 @@ import {
 } from "lucide-react"
 
 import { siteConfig } from "@/config/site"
+import MissionGoalCard from "@/components/cards/mission-goal"
+import { ChatIcon, DonateIcon, ShareIcon } from "@/components/icons"
 import HomeWhySection from "@/app/home-why-section"
 
 const PersonDonationItem = ({
@@ -53,15 +56,20 @@ leading-9"
           >
             HELP HOMELESS IN LOS ANGELAS
           </h1>
-          <img
-            className="w-[360px] h-[281px] md:hidden rounded-lg"
-            src="https://via.placeholder.com/360x281"
-          />
-          <img
-            className="w-[762px] h-[412px] hidden md:block"
-            src="https://via.placeholder.com/762x412"
-          />
-          <div className="md:hidden">
+          <div className="relative">
+            <Badge variant="secondary" className="absolute top-4 left-4 z-10">
+              Urgent cause
+            </Badge>
+            <img
+              className="w-[360px] h-[281px] md:hidden rounded-lg"
+              src="https://via.placeholder.com/360x281"
+            />
+            <img
+              className="w-[762px] h-[412px] hidden md:block"
+              src="https://via.placeholder.com/762x412"
+            />
+          </div>
+          <div className="md:hidden mr-auto">
             <span className="text-sm font-normal leading-9">
               <span className="text-xl font-bold leading-9">$18,439 </span>
               raised in 44 days
@@ -69,23 +77,10 @@ leading-9"
             <br />
             <span>by 1,000 people</span>
           </div>
-          <div className="h-[240px] max-w-[360px] md:max-w-full bg-[#F1F1F1] border border-[#E5E5E5] rounded-lg  p-2 flex gap-1 flex-col text-accent-foreground">
-            <div className="text-center mx-auto  text-lg font-bold leading-snug">
-              OUR AI CAMPAIGN FUND MANAGER’S GOAL
-            </div>
-            <div className="leading-7 px-2  font-normal line-clamp-6">
-              Our goal with this campaign is to give the homeless a chance to
-              get off the street and get their life back on track. With the
-              money raised, we will give homeless temporary accommodation and a
-              chance to find a job and ultimately get off the streets.
-            </div>
-            <Button variant="secondary" className="m-auto w-fit">
-              Read More <ChevronDown />
-            </Button>
-          </div>
+          <MissionGoalCard description="Our goal with this campaign is to give the homeless a chance to get off the street and get their life back on track. With the money raised, we will give homeless temporary accommodation and a chance to find a job and ultimately get off the streets." />
           <div className="flex md:hidden flex-row gap-4 justify-center mt-2">
             <Button variant="outline" outlineColor="default">
-              <Share className="mr-2" />
+              <ShareIcon className="mr-2" />
               Share
             </Button>
             <Button
@@ -123,7 +118,7 @@ leading-9"
               size="lg"
               className="hidden md:inline-flex xl:w-[300px] gap-2"
             >
-              Donate <HelpingHand />
+              Donate <DonateIcon />
             </Button>
             <Button
               size="lg"
@@ -156,7 +151,7 @@ leading-9"
             <span>47 donations</span>
           </div>
           <Button size="3xl" className="w-full">
-            Donate <HelpingHand className="ml-2" />
+            Donate <DonateIcon className="ml-2" />
           </Button>
           <Link
             className={cn(
@@ -165,7 +160,7 @@ leading-9"
             )}
             href={`./${params?.missionId}/chat/-1`}
           >
-            <MessagesSquare className="mr-2" />
+            <ChatIcon className="mr-4 transform scale-150" />
             Chat live now
           </Link>
           <div className="-mt-1 mb-1 bg-[#EAEAEA] border-[1px] border-[#CCCCCC]  text-popover-foreground rounded-sm relative p-2">
@@ -181,7 +176,7 @@ leading-9"
           <PersonDonationItem name="John Doe" amount={100} days={4} />
           <div className="flex flex-row gap-2 mb-1">
             <Button variant="outline" outlineColor="default">
-              <Share className="mr-2" />
+              <ShareIcon className="mr-2" />
               Share
             </Button>
             <Button
@@ -202,11 +197,11 @@ leading-9"
           variant="secondary"
           className="w-full py-6 rounded-full"
         >
-          <MessagesSquare className="mr-2" />
+          <ChatIcon className="mr-2" />
           Chat with our AI Fundraiser Manager Live
         </Button>
         <Button size="xs" className="w-full py-6 rounded-full">
-          Donate <HelpingHand className="ml-2" />
+          Donate <DonateIcon className="ml-2" />
         </Button>
       </div>
     </div>

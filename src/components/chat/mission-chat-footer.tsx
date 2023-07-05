@@ -1,6 +1,7 @@
 import { Button } from "@ui/button"
 import { HelpingHand, Share } from "lucide-react"
 
+import { DonateIcon, ShareIcon } from "../icons"
 import { type TChat } from "./message-box"
 
 const MissionChatFooter = (props: TChat) => {
@@ -15,11 +16,11 @@ const MissionChatFooter = (props: TChat) => {
       />
       <Button>
         Donate
-        <HelpingHand className="ml-2 h-4 w-4" />
+        <DonateIcon className="ml-2" />
       </Button>
       <Button variant="secondary">Learn about previous donations</Button>
       <Button variant="outline" outlineColor="default">
-        <Share className="mr-2 h-4 w-4" />
+        <ShareIcon className="mr-2 h-4 w-4" />
         Share your chat
       </Button>
       <span className="basis-full text-center font-semibold text-sm text-muted-foreground">
