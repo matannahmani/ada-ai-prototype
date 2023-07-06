@@ -5,6 +5,11 @@ import { cn } from "@lib/utils"
 import { Button, buttonVariants } from "@ui/button"
 import { CircleOff } from "lucide-react"
 
+export const dynamic = "force-dynamic"
+export const fetchCache = "force-no-store"
+export const runtime = "nodejs"
+export const preferredRegion = "auto"
+
 const ChatPage = async () => {
   const lastChat = await api.chats.getLastChat.query()
   if (lastChat) {
