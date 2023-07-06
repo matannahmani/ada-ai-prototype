@@ -66,8 +66,8 @@ export function LoginForm() {
         description: "Your account has been logged in.",
       })
       const lastRoute = findLastNonAuthRoute(history)
+      router.refresh()
       if (lastRoute) {
-        router.refresh()
         router.push(lastRoute)
       } else router.push(`/`)
     } else {
