@@ -16,9 +16,10 @@ const MissionGoalCard = ({
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
-    <div className="min-h-[240px] max-w-[360px] md:max-w-full bg-[#F1F1F1] border border-[#E5E5E5] rounded-lg  p-2 flex gap-1 flex-col text-accent-foreground">
+    <div className="min-h-[240px] max-w-3xl bg-[#F1F1F1] border border-[#E5E5E5] rounded-lg  p-2 flex gap-1 flex-col text-accent-foreground">
       <div className="text-center mx-auto  text-lg font-bold leading-snug">
-        OUR AI CAMPAIGN FUND MANAGER’S GOAL
+        OUR AI CAMPAIGN FUND <br className="sm:hidden" />
+        MANAGER’S GOAL
       </div>
       <div
         className={cn(

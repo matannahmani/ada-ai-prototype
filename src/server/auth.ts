@@ -1,16 +1,21 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { GetServerSidePropsContext } from "next"
 import { cookies } from "next/headers"
 import { env } from "@/env.mjs"
 import { prisma } from "@/server/db"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { compare, genSalt, hash } from "bcrypt"
+import { type User as PrismaUser } from "@prisma/client"
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth"
+import { DefaultJWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
+
+import { comparePassword } from "./lib/auth"
+import { getVisitorId } from "./lib/visitor"
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,17 +25,13 @@ import GoogleProvider from "next-auth/providers/google"
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      id: string
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"]
+    user: Omit<PrismaUser, "password">
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User extends Omit<PrismaUser, "password"> {}
+}
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT extends PrismaUser {}
 }
 
 /**
@@ -40,14 +41,34 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: ({ session, user, token }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          ...user,
+          ...token,
+        },
+      }
+    },
+    jwt: async ({ token, user, account, profile }) => {
+      const userData = await prisma.user.findUnique({
+        where: {
+          id: token.id || user?.id || token.sub,
+        },
+      })
+      if (!userData) throw new Error("User not found")
+      if (userData?.password) {
+        // @ts-expect-error - We don't want to store the password in the JWT
+        delete userData?.password
+      }
+      return {
+        ...token,
+        ...userData,
+      }
+    },
   },
+  secret: env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -64,6 +85,7 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "email", type: "email", placeholder: "jsmith@ada.com" },
         password: { label: "Password", type: "password" },
+        // remember: { label: "Remember me", type: "checkbox" },
       },
       async authorize(credentials, req) {
         // You need to provide your own logic here that takes the credentials
@@ -81,12 +103,14 @@ export const authOptions: NextAuthOptions = {
         })
         if (!user || typeof user.password !== "string" || !user.password)
           return null
-        const passwordMatch = await compare(
+        const passwordMatch = await comparePassword(
           credentials.password,
-          user.password as string
+          user.password
         )
-        if (!passwordMatch) return null
-        return user
+        if (passwordMatch) {
+          return user
+        }
+        return null
       },
     }),
     /**
@@ -99,6 +123,42 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  events: {
+    createUser: async ({ user }) => {
+      const visitorId = getVisitorId()
+      if (!!visitorId) {
+        const updateChatPromise = prisma.chat.updateMany({
+          where: {
+            vistorId: visitorId,
+          },
+          data: {
+            userId: user.id,
+          },
+        })
+        const updateUserPromise = prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            visitorId: visitorId,
+          },
+        })
+        await Promise.all([updateChatPromise, updateUserPromise])
+      }
+    },
+  },
+  debug: process.env.NODE_ENV === "development",
+  session: {
+    // Set to jwt in order to CredentialsProvider works properly
+    strategy: "jwt",
+    // Seconds - How long until an idle session expires and is no longer valid.
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+
+    // Seconds - Throttle how frequently to write to database to extend a session.
+    // Use it to limit write operations. Set to 0 to always update the database.
+    // Note: This option is ignored if using JSON Web Tokens
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
 }
 
 /**
@@ -120,12 +180,11 @@ export const getPagesServerAuthSession = (ctx: {
 }
 
 export const getVisitorSession = async () => {
-  const cookiesJar = cookies()
-  const visitorId = cookiesJar.get("visitorId")
-  if (visitorId && typeof visitorId.value === "string") {
+  const visitorId = getVisitorId()
+  if (!!visitorId) {
     const visitor = await prisma.vistor.findUnique({
       where: {
-        id: visitorId.value ?? "null",
+        id: visitorId,
       },
     })
     if (visitor) {

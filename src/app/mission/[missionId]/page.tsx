@@ -47,7 +47,7 @@ function OurMissionPage({ params }: { params: { missionId: string } }) {
   return (
     <div>
       <section className="text-[#021444] flex flex-row justify-center md:gap-4  lg:gap-8">
-        <section className="max-w-[420px] lg:max-w-[540px] xl:max-w-[762px] items-center md:m-0 md:items-start container flex flex-col align-baseline w-full min-h-screen gap-2 p-4 py-8">
+        <section className="max-w-[420px] lg:max-w-[540px] xl:max-w-[762px] items-center md:m-0 md:items-start container flex flex-col align-baseline w-full gap-2 p-4 py-8">
           <h1
             className="
 text-2xl
@@ -193,14 +193,19 @@ leading-9"
 
       <HomeWhySection />
       <div className="md:hidden bottom-0 flex flex-col bg-white p-2 gap-2 sticky z-10">
-        <Button
-          size="xs"
-          variant="secondary"
-          className="w-full py-6 rounded-full"
+        <Link
+          href={`./${params?.missionId}/chat/-1`}
+          className={cn(
+            buttonVariants({
+              variant: "secondary",
+              size: "xs",
+            }),
+            "w-full py-6 rounded-full"
+          )}
         >
           <ChatIcon className="mr-2" />
           Chat with our AI Fundraiser Manager Live
-        </Button>
+        </Link>
         <Button size="xs" className="w-full py-6 rounded-full">
           Donate <DonateIcon className="ml-2" />
         </Button>

@@ -43,6 +43,8 @@ const buttonVariants = cva(
           "ring-accent text-accent border-accent hover:bg-accent/90 hover:text-accent-foreground",
         secondary:
           "ring-secondary text-secondary border-secondary hover:bg-secondary/80 hover:text-secondary-foreground",
+        warning:
+          "ring-yellow-500 text-yellow-500 border-yellow-500 hover:bg-yellow-500/90 hover:text-yellow-50",
       },
     },
     defaultVariants: {

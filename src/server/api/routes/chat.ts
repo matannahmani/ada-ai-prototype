@@ -42,7 +42,7 @@ const chatRouter = createTRPCRouter({
         data: {
           missionId: mission.id,
           userId: ctx?.session?.user?.id,
-          vistorId: ctx?.visitor?.id ?? "",
+          vistorId: ctx?.visitor?.id,
         },
       })
       await api.chats.byUserId.revalidate({
@@ -50,6 +50,26 @@ const chatRouter = createTRPCRouter({
       })
       return chat
     }),
+  getLastChat: protectedUserOrVistorProcedure.query(async ({ ctx }) => {
+    const chat = await prisma.chat.findFirst({
+      where: {
+        AND: {
+          OR: [
+            {
+              userId: ctx?.session?.user?.id,
+            },
+            {
+              vistorId: ctx?.visitor?.id,
+            },
+          ],
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+    return chat
+  }),
   byUserId: protectedUserOrVistorProcedure
     .input(
       z.object({
@@ -76,7 +96,7 @@ const chatRouter = createTRPCRouter({
                 userId: ctx?.session?.user?.id,
               },
               {
-                vistorId: ctx?.visitor?.id ?? "",
+                vistorId: ctx?.visitor?.id,
               },
             ],
           },
@@ -116,7 +136,7 @@ const chatRouter = createTRPCRouter({
                 userId: ctx?.session?.user?.id,
               },
               {
-                vistorId: ctx?.visitor?.id ?? "",
+                vistorId: ctx?.visitor?.id,
               },
             ],
           },
@@ -135,7 +155,7 @@ const chatRouter = createTRPCRouter({
                 userId: ctx?.session?.user?.id,
               },
               {
-                vistorId: ctx?.visitor?.id ?? "",
+                vistorId: ctx?.visitor?.id,
               },
             ],
           },
@@ -157,7 +177,7 @@ const chatRouter = createTRPCRouter({
           data: {
             missionId: mission.id,
             userId: ctx?.session?.user?.id,
-            vistorId: ctx?.visitor?.id ?? "",
+            vistorId: ctx?.visitor?.id,
           },
           include: {
             mission: true,
@@ -192,7 +212,7 @@ const chatRouter = createTRPCRouter({
                 userId: ctx?.session?.user?.id,
               },
               {
-                vistorId: ctx?.visitor?.id ?? "",
+                vistorId: ctx?.visitor?.id,
               },
             ],
           },
@@ -230,7 +250,7 @@ const chatRouter = createTRPCRouter({
                 userId: ctx?.session?.user?.id,
               },
               {
-                vistorId: ctx?.visitor?.id ?? "",
+                vistorId: ctx?.visitor?.id,
               },
             ],
           },

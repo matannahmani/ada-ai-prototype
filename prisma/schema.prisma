@@ -32,11 +32,12 @@ model Account {
 
 // vistor is a temporary model to store the fingerprint of the user
 model Vistor {
-  id          String   @id @default(cuid())
+  id              String   @id @default(cuid())
   fingerprintHash String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  chats       Chat[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  chats           Chat[]
+  User            User[]
 }
 
 model Session {
@@ -53,7 +54,7 @@ model Mission {
   name           String
   party          String?
   description    String
-  goalText      String?
+  goalText       String?
   subtitle       String?
   isUrget        Boolean          @default(false)
   image          String
@@ -74,7 +75,7 @@ model Chat {
   vistorId  String?
   vistor    Vistor?   @relation(fields: [vistorId], references: [id])
   missionId Int
-  mission   Mission  @relation(fields: [missionId], references: [id])
+  mission   Mission   @relation(fields: [missionId], references: [id])
   messages  Message[]
   accountId String?
   createdAt DateTime  @default(now())
@@ -137,12 +138,17 @@ model User {
   email         String?    @unique
   password      String?
   emailVerified DateTime?
+  visitorId     String?
   image         String?
+  visitor       Vistor?    @relation(fields: [visitorId], references: [id])
   accounts      Account[]
   sessions      Session[]
   donations     Donation[]
   Chat          Chat[]
   Mission       Mission[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
   @@index([email])
   @@index([email, password])
 }

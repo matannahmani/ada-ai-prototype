@@ -1,9 +1,11 @@
 "use client"
 
+import { useMemo } from "react"
 import Link from "next/link"
 import { SiApple, SiFacebook, SiGoogle } from "@icons-pack/react-simple-icons"
 import { signIn } from "next-auth/react"
 
+import { useRouterHistory } from "@/hooks/use-router-history"
 import { Button } from "@/components/ui/button"
 import { LogoFull } from "@/components/logo-full"
 import { LogoSymbol } from "@/components/logo-symbol"
@@ -15,6 +17,16 @@ export const LoginContent = ({
 }: {
   linkAsReplace?: boolean
 }) => {
+  const history = useRouterHistory()
+  const lastRoute = useMemo(() => {
+    const lastRoute = history[history.length - 1]
+    if (lastRoute?.includes("login")) {
+      const lastRouteBeforeLogin = history[history.length - 2]
+      if (lastRouteBeforeLogin) return lastRouteBeforeLogin
+      else return "/"
+    } else if (lastRoute) return lastRoute
+    else return "/"
+  }, [history])
   return (
     <div className="flex flex-col items-center gap-2">
       <LogoFull className="w-20 my-2 h-fit" />
@@ -23,7 +35,11 @@ export const LoginContent = ({
         <span className="mr-auto">Continue with Facebook</span>
       </Button>
       <Button
-        onClick={() => signIn("google")}
+        onClick={() =>
+          signIn("google", {
+            callbackUrl: lastRoute,
+          })
+        }
         className="w-[240px]"
         variant="google"
       >

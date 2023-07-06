@@ -1,7 +1,12 @@
 "use client"
 
 import { type AppRouter } from "@/server/api/root"
-import { httpBatchLink, loggerLink, splitLink } from "@trpc/client"
+import {
+  httpBatchLink,
+  loggerLink,
+  splitLink,
+  TRPCClientError,
+} from "@trpc/client"
 import {
   experimental_createActionHook,
   experimental_createTRPCNextAppDirClient,
@@ -52,6 +57,12 @@ export const useAction = experimental_createActionHook({
   links: [loggerLink(), experimental_serverActionLink()],
   transformer,
 })
+
+export function isTRPCClientError(
+  cause: unknown
+): cause is TRPCClientError<AppRouter> {
+  return cause instanceof TRPCClientError
+}
 
 /** Export type helpers */
 export type * from "./shared"

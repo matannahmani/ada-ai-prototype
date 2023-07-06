@@ -11,8 +11,6 @@ import CurrentConversationSection from "@/components/chat/current-conversation-s
 import MessageBox, { type TChat } from "@/components/chat/message-box"
 import MessageStream from "@/components/chat/message-stream"
 import MissionChatFooter from "@/components/chat/mission-chat-footer"
-import MissionGoal from "@/components/chat/mission-goal"
-import PreviousUpdatesSection from "@/components/chat/previous-updates-section"
 
 export const dynamic = "force-dynamic"
 export const fetchCache = "force-no-store"
@@ -52,7 +50,7 @@ async function ChatPage({
   return (
     <>
       <ChatHistorySyncerServer {...chatProps} />
-      <div className="mr-auto  max-w-full container px-2 ">
+      <div className="mr-auto  container px-2 ">
         <ChatPageHero {...params} />
         <Separator className="my-4 md:my-6" />
         <CurrentConversationSection />

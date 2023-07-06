@@ -22,6 +22,7 @@ export const ClientChatMessages = ({ ...props }: TChat) => {
             <ChatMessage
               image={props.mission.image}
               id={messageKeyTemplate(index.toString(), "response")}
+              isResponse
               name={props.mission.name}
               message={message.answer}
             />

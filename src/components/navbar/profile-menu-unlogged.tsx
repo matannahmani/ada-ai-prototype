@@ -13,7 +13,7 @@ import { signIn } from "next-auth/react"
  */
 const ProfileMenuUnlogged = () => (
   <Link
-    href="login"
+    href="/login"
     className={cn(
       buttonVariants({
         size: "sm",

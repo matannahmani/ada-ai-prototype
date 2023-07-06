@@ -5,6 +5,7 @@
 import { createHash } from "crypto"
 import { cookies } from "next/headers"
 import { prisma } from "@/server/db"
+import { getVisitorId, setVisitor } from "@/server/lib/visitor"
 import { z } from "zod"
 
 import { createTRPCRouter, publicProcedure } from "../trpc"
@@ -17,9 +18,8 @@ export const vistorRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const cookie = cookies()
-      const visitorCookie = cookie.get("visitorId")
-      if (visitorCookie?.value) {
+      const visitorId = getVisitorId()
+      if (!visitorId) {
         return
       }
       const fingerprintHash = createHash("sha256")
@@ -30,9 +30,6 @@ export const vistorRouter = createTRPCRouter({
           fingerprintHash,
         },
       })
-      cookie.set("visitorId", visitor.id, {
-        httpOnly: true,
-        maxAge: 60 * 60 * 24 * 365 * 10,
-      })
+      setVisitor(visitor.id)
     }),
 })

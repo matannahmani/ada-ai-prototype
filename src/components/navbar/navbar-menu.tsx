@@ -8,6 +8,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { Disclosure } from "@headlessui/react"
+import { cn } from "@lib/utils"
 import { Skeleton } from "@ui/skeleton"
 import { Menu as MenuIcon, X } from "lucide-react"
 
@@ -28,12 +29,13 @@ const navItemStyle = (isCurrent: boolean) =>
       : "text-gray-500 dark:text-gray-500 ",
     "rounded-md px-3 py-2 text-sm font-medium",
     // hover make effect
-    "hover:text-primary dark:hover:text-primary transition-colors"
+    "block hover:text-primary dark:hover:text-primary transition-colors"
   )
 
 type Navigations = {
   name: string
   href: string
+  mobileOnly?: boolean
   current?: boolean
 }[]
 
@@ -51,6 +53,7 @@ function NavbarMenu({
   const [menuIconRef] = useAutoAnimate()
   const [menuConRef] = useAutoAnimate()
   const pathname = usePathname()
+  const isChatPage = useMemo(() => pathname.includes("chat"), [pathname])
   const currentPathIndex = useMemo(
     () => navigation.findIndex((nav) => nav.href === pathname),
     [navigation, pathname]
@@ -96,11 +99,15 @@ function NavbarMenu({
                     <div className="flex space-x-4">
                       {navigation.map((item, index) => {
                         const isCurrent = index === currentPathIndex
+
                         return (
                           <Link
                             key={item.name}
                             href={item.href}
-                            className={navItemStyle(isCurrent)}
+                            className={cn(
+                              navItemStyle(isCurrent),
+                              item.mobileOnly && "hidden"
+                            )}
                             aria-current={isCurrent ? "page" : undefined}
                           >
                             {item.name}
@@ -111,6 +118,16 @@ function NavbarMenu({
                   </div>
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  <Link
+                    className={cn(
+                      navItemStyle(isChatPage),
+                      "hidden sm:block mr-7"
+                    )}
+                    href="/chat"
+                  >
+                    Chat
+                  </Link>
+
                   <Suspense
                     fallback={<Skeleton className="h-8 w-8 rounded-full" />}
                   >
@@ -138,7 +155,10 @@ function NavbarMenu({
                         key={item.name}
                         as={Link}
                         href={item.href}
-                        className={classNames(navItemStyle(isCurrent), "block")}
+                        className={cn(
+                          navItemStyle(isCurrent),
+                          item.mobileOnly && "block !sm:hidden"
+                        )}
                         aria-current={isCurrent ? "page" : undefined}
                       >
                         {item.name}

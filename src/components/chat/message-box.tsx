@@ -7,6 +7,9 @@ import { api } from "@/trpc/server"
 import { type Mission } from "@prisma/client"
 import { Avatar, AvatarImage } from "@ui/avatar"
 import { Separator } from "@ui/separator"
+import { Share2Icon, ThumbsDown, ThumbsUp } from "lucide-react"
+
+import { ShareIcon } from "../icons"
 
 export type TChat = {
   mission: Mission
@@ -46,16 +49,29 @@ type ChatMessageProps = {
   image?: string
   name: string
   message: string
+  isResponse?: boolean
 }
 
+const ChatMessageFooter = memo(() => {
+  return (
+    <div className="flex flex-row flex-wrap gap-2 items-center justify-end">
+      <Share2Icon className="w-5 h-5 cursor-pointer" />
+      <ThumbsUp className="w-5 h-5 cursor-pointer" />
+      <ThumbsDown className="w-5 h-5 cursor-pointer" />
+    </div>
+  )
+})
+ChatMessageFooter.displayName = "ChatMessageFooter"
+
 const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
-  ({ id, image, name, message }, ref) => {
+  ({ id, image, name, message, isResponse }, ref) => {
     return (
       <div ref={ref} id={id} className="flex gap-2">
         <ChatAvatar image={image} />
-        <div>
+        <div className="relative">
           <ChatMessageHeader name={name} />
           <ChatMessageBody message={message} />
+          {isResponse && <ChatMessageFooter />}
         </div>
       </div>
     )
@@ -88,6 +104,7 @@ async function ChatHistory({ ...props }: TChat) {
           name={
             message.isResponse ? props.mission.name : props.user?.name ?? ""
           }
+          isResponse={message.isResponse}
           image={
             message.isResponse
               ? props.mission.image
