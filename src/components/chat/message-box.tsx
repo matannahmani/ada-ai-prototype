@@ -54,7 +54,7 @@ type ChatMessageProps = {
 
 const ChatMessageFooter = memo(() => {
   return (
-    <div className="flex flex-row flex-wrap gap-2 items-center justify-end">
+    <div className="flex flex-row flex-wrap gap-2 items-center justify-end mt-4">
       <Share2Icon className="w-5 h-5 cursor-pointer" />
       <ThumbsUp className="w-5 h-5 cursor-pointer" />
       <ThumbsDown className="w-5 h-5 cursor-pointer" />
