@@ -41,7 +41,7 @@ const VerifyEmailPage = async ({
 
   if (isSuccessful) {
     return (
-      <div className=" flex flex-wrap gap-4 items-center justify-center ">
+      <div className="flex-1 content-center flex flex-wrap gap-4 items-center justify-center ">
         <ClientToast {...toastProps} />
         <MailCheck className="w-12 h-12 flex-1 basis-full" />
         <span className="sr-only">Email verified</span>
@@ -52,7 +52,7 @@ const VerifyEmailPage = async ({
     )
   }
   return (
-    <div className=" flex flex-wrap gap-4 items-center justify-center  my-auto">
+    <div className="flex-1 content-center flex flex-wrap gap-4 items-center justify-center  my-auto">
       <ClientToast {...toastProps} />
       <MailWarning className="w-12 h-12  flex-1 basis-full" />
       <span className="sr-only">Email not verified</span>
