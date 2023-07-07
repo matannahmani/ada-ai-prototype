@@ -57,12 +57,12 @@ const ChatBox = () => {
             setChatMessagesCounter((pre) => pre + 1)
           },
           onData: (data) => {
-            if (!!parseStreamOutput(data)) {
+            const streamData = parseStreamOutput(data)
+            if (!!streamData) {
               try {
-                const parsedData = JSON.parse(data) as {
+                const parsedData = JSON.parse(streamData) as {
                   id: number
                 }
-                console.log(parsedData)
                 if (parsedData?.id) setChatResponseId(parsedData.id)
               } catch (err) {
                 console.error(err)

@@ -70,7 +70,7 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
   ({ id, image, name, message, isResponse }, ref) => {
     return (
       <div ref={ref} id={id} className="flex gap-2 text-[#1C1C1C]">
-        <ChatAvatar name={name} image={image}></ChatAvatar>
+        <ChatAvatar name={isResponse ? "AI" : name} image={image}></ChatAvatar>
         <div className="relative w-full">
           <ChatMessageHeader name={name} />
           <ChatMessageBody message={message} />
