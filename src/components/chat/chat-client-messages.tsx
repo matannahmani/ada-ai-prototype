@@ -6,11 +6,19 @@ import { useAtomValue } from "jotai"
 import { chatMessagesAtom, messageKeyTemplate } from "./chat-utils"
 import { ChatMessage, TChat } from "./message-box"
 
-export const ClientChatMessages = ({ ...props }: TChat) => {
+export const ClientChatMessages = ({
+  ...props
+}: TChat & {
+  ids: number[]
+}) => {
   const messages = useAtomValue(chatMessagesAtom)
+  const messagesToShow = messages.filter(
+    (message) => !props.ids.includes(message.id)
+  )
+
   return (
     <>
-      {messages.map((message, index) => {
+      {messagesToShow.map((message, index) => {
         return (
           <>
             <ChatMessage

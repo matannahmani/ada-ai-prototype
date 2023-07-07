@@ -73,7 +73,7 @@ model Chat {
   userId    String?
   user      User?     @relation(fields: [userId], references: [id])
   vistorId  String?
-  vistor    Vistor?   @relation(fields: [vistorId], references: [id])
+  vistor    Vistor?   @relation(fields: [vistorId], references: [id],onDelete: Cascade)
   missionId Int
   mission   Mission   @relation(fields: [missionId], references: [id])
   messages  Message[]
@@ -91,11 +91,12 @@ model Chat {
 /// this should also be stored in vector database for now we will use it as a reference to the pinecone
 model Message {
   id         Int      @id @default(autoincrement())
-  content    String
   timestamp  DateTime @default(now())
-  isResponse Boolean  @default(false)
+  questionText String
+  answerText String
+  isError    Boolean  @default(false)
   chatId     Int
-  chat       Chat     @relation(fields: [chatId], references: [id])
+  chat       Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@index([chatId, timestamp], name: "chat_timestamp_index")
 }
@@ -138,9 +139,10 @@ model User {
   email         String?    @unique
   password      String?
   emailVerified DateTime?
+  requiresEmailVerification Boolean @default(false)
   visitorId     String?
   image         String?
-  visitor       Vistor?    @relation(fields: [visitorId], references: [id])
+  visitor       Vistor?    @relation(fields: [visitorId], references: [id], onDelete: Cascade)
   accounts      Account[]
   sessions      Session[]
   donations     Donation[]

@@ -40,7 +40,7 @@ export const accountRouter = createTRPCRouter({
           email: input.email,
           password: await hashPassword(input.password),
           name: input.fullName,
-
+          requiresEmailVerification: true,
           visitorId: visitorEntity?.id,
         },
       })

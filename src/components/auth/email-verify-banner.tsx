@@ -3,7 +3,11 @@ import { AlertTriangle } from "lucide-react"
 
 const EmailVerifyBanner = async () => {
   const user = await getServerAuthSession()
-  if (!user || !!user.user.emailVerified) {
+  if (
+    !user ||
+    !user.user.requiresEmailVerification ||
+    (user.user.requiresEmailVerification && !!user.user.emailVerified)
+  ) {
     return null
   }
   return (

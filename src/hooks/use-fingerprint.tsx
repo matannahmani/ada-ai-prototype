@@ -2,13 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-"use client;"
+"use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { api } from "@/trpc/client"
 
 export const useFingerprint = () => {
   const [fpHash, setFpHash] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const setFp = async () => {
@@ -18,9 +20,10 @@ export const useFingerprint = () => {
       const fp = await FingerprintJS.load()
 
       const { visitorId } = await fp.get()
-      void api.visitor.visitor.mutate({
+      await api.visitor.visitor.mutate({
         fp: visitorId,
       })
+      router.refresh()
       setFpHash(visitorId)
     }
 

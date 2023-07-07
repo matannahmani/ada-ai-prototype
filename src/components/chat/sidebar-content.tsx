@@ -19,12 +19,10 @@ async function ChatCandidateSidebar() {
     getVisitorSession(),
   ])
   const userId = session?.user?.id || vistor?.id || "null"
-  const chats = await api.chats.byUserId.query({
-    userId,
-  })
+  const chats = await api.chats.byUserId.query()
   return chats?.map((chat, i) => (
     <SidebarCandidateBtn chatId={chat.id} key={`btn-${i}`}>
-      <Link href={`./${chat.id}`} key={`link-${i}`}>
+      <Link prefetch={false} href={`./${chat.id}`} key={`link-${i}`}>
         {chat.mission.name}
       </Link>
     </SidebarCandidateBtn>
@@ -36,7 +34,7 @@ function SidebarContent({ className }: SidebarProps) {
     <div className={cn("pb-12", className)}>
       <div className="">
         <div className="py-2">
-          <h2 className="relative px-6 text-lg font-semibold tracking-tight">
+          <h2 className="relative px-6 text-lg font-semibold tracking-tight text-[#021444]">
             Previous Chats
           </h2>
           <ScrollArea className="h-[540px] px-2">

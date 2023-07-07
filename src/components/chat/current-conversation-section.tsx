@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { api } from "@/trpc/client"
+import { useQueryClient } from "@tanstack/react-query"
 import { Button } from "@ui/button"
 import { useAtomValue } from "jotai"
 import { Loader2 } from "lucide-react"
@@ -20,6 +21,7 @@ const NewChatBTN = () => {
         missionId: Number(params?.missionId) ?? -1,
       })
       if (data) {
+        router.refresh()
         router.push(`./${data.id}`)
       }
     } catch (err) {

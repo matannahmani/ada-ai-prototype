@@ -11,6 +11,9 @@ import { z } from "zod"
 import { createTRPCRouter, publicProcedure } from "../trpc"
 
 export const vistorRouter = createTRPCRouter({
+  isVisitorInitialized: publicProcedure.query(() => {
+    return !!getVisitorId()
+  }),
   visitor: publicProcedure
     .input(
       z.object({
@@ -19,7 +22,7 @@ export const vistorRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       const visitorId = getVisitorId()
-      if (!visitorId) {
+      if (!!visitorId) {
         return
       }
       const fingerprintHash = createHash("sha256")

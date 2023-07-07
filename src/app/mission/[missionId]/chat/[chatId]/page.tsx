@@ -1,3 +1,4 @@
+import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { getServerAuthSession } from "@/server/auth"
 import { api } from "@/trpc/server"
@@ -12,16 +13,16 @@ import MessageBox, { type TChat } from "@/components/chat/message-box"
 import MessageStream from "@/components/chat/message-stream"
 import MissionChatFooter from "@/components/chat/mission-chat-footer"
 
-export const dynamic = "force-dynamic"
-export const fetchCache = "force-no-store"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
+export const fetchCache = "only-no-store"
 
 async function ChatPage({
   params,
 }: {
   params: { missionId: string; chatId: string }
 }) {
+  headers()
   const chat = await api.chats.showOrCreate.query({
     missionId: Number(params.missionId),
     chatId: Number(params.chatId),
@@ -58,7 +59,6 @@ async function ChatPage({
           {/* <ScrollArea className="h-[calc(100vh-240px)] py-2 "> */}
           <MessageBox {...chatProps}>
             <>
-              <ClientChatMessages {...chatProps} />
               <MessageStream {...chatProps} />
             </>
           </MessageBox>

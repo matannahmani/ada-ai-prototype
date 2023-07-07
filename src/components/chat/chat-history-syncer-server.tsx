@@ -9,9 +9,7 @@ async function ChatHistorySyncerServer({ ...props }: TChat) {
     chatId: props.chatId,
   })
   return (
-    <ChatHistorySyncerClient
-      initalMessagesCount={chat.messages?.length / 2 ?? 0}
-    />
+    <ChatHistorySyncerClient initalMessagesCount={chat.messages?.length ?? 0} />
   )
 }
 

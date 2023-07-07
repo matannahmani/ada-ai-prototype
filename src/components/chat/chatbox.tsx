@@ -3,6 +3,8 @@
 import { useCallback, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { streamApi } from "@/trpc/client"
+import { parseStreamOutput } from "@/trpc/generateStreamOutput"
+import { type Chat } from "@prisma/client"
 import {
   HoverCard,
   HoverCardArrow,
@@ -18,6 +20,7 @@ import {
   chatCompletionResAtom,
   chatCompletionStatusAtom,
   chatMessagesCounterAtom,
+  chatResponseIdAtom,
   useOnResponseComplete,
 } from "./chat-utils"
 
@@ -27,6 +30,7 @@ const ChatBox = () => {
   const setChatCompletionStatus = useSetAtom(chatCompletionStatusAtom)
   const setChatCompletionPrompt = useSetAtom(chatCompletionPromptAtom)
   const setChatMessagesCounter = useSetAtom(chatMessagesCounterAtom)
+  const setChatResponseId = useSetAtom(chatResponseIdAtom)
   const setChatCompletionRes = useSetAtom(chatCompletionResAtom)
   const params = useParams()
   const router = useRouter()
@@ -49,14 +53,28 @@ const ChatBox = () => {
             setChatCompletionStatus("streaming")
             setChatCompletionPrompt(text)
             setChatCompletionRes("")
+            setChatResponseId(-1)
             setChatMessagesCounter((pre) => pre + 1)
           },
           onData: (data) => {
+            if (!!parseStreamOutput(data)) {
+              try {
+                const parsedData = JSON.parse(data) as {
+                  id: number
+                }
+                console.log(parsedData)
+                if (parsedData?.id) setChatResponseId(parsedData.id)
+              } catch (err) {
+                console.error(err)
+              }
+              return
+            }
             setChatCompletionRes((pre) => pre + data)
           },
           onComplete: () => {
             setChatCompletionStatus("complete")
             appendMessageHandler()
+            router.refresh()
             setIsLoading(false)
           },
           onStopped() {

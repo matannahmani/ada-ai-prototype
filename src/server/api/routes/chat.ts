@@ -5,6 +5,7 @@
 import { revalidatePath, revalidateTag } from "next/cache"
 import { env } from "@/env.mjs"
 import { prisma } from "@/server/db"
+import { generateStreamOutput } from "@/trpc/generateStreamOutput"
 import { api } from "@/trpc/server"
 import { generateCacheTag } from "@trpc/next/dist/app-dir/shared"
 import { TRPCError } from "@trpc/server"
@@ -45,9 +46,9 @@ const chatRouter = createTRPCRouter({
           vistorId: ctx?.visitor?.id,
         },
       })
-      await api.chats.byUserId.revalidate({
-        userId: ctx?.session?.user?.id || ctx?.visitor?.id,
-      })
+      // await api.chats.byUserId.revalidate({
+      //   userId: ctx?.session?.user?.id || ctx?.visitor?.id,
+      // })
       return chat
     }),
   getLastChat: protectedUserOrVistorProcedure.query(async ({ ctx }) => {
@@ -70,43 +71,26 @@ const chatRouter = createTRPCRouter({
     })
     return chat
   }),
-  byUserId: protectedUserOrVistorProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      if (
-        !(
-          input.userId === ctx.session?.user?.id ||
-          input.userId === ctx?.visitor?.id
-        )
-      ) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Unauthorized - userId does not match session or visitor",
-        })
-      }
-      const chats = await prisma.chat.findMany({
-        where: {
-          AND: {
-            OR: [
-              {
-                userId: ctx?.session?.user?.id,
-              },
-              {
-                vistorId: ctx?.visitor?.id,
-              },
-            ],
-          },
+  byUserId: protectedUserOrVistorProcedure.query(async ({ input, ctx }) => {
+    const chats = await prisma.chat.findMany({
+      where: {
+        AND: {
+          OR: [
+            {
+              userId: ctx?.session?.user?.id,
+            },
+            {
+              vistorId: ctx?.visitor?.id,
+            },
+          ],
         },
-        include: {
-          mission: true,
-        },
-      })
-      return chats
-    }),
+      },
+      include: {
+        mission: true,
+      },
+    })
+    return chats
+  }),
   showOrCreate: protectedUserOrVistorProcedure
     .input(
       z.object({
@@ -308,24 +292,24 @@ const chatRouter = createTRPCRouter({
             content += decoded
             sub.next(decoded)
             if (done) {
-              await prisma.message.createMany({
-                data: [
-                  // user message first
-                  {
-                    chatId: chat.id,
-                    content: message,
-                  },
-                  // bot message second
-                  {
-                    chatId: chat.id,
-                    content,
-
-                    isResponse: true,
-                  },
-                ],
+              const result = await prisma.message.create({
+                data: {
+                  chatId: chat.id,
+                  questionText: message,
+                  answerText: content,
+                },
               })
-              revalidatePath(`mission/${mission.id}/chats/${chat.id}`)
-              void api.chats.showOrCreate.revalidate({
+              // we also send the message id to the client
+              sub.next(
+                generateStreamOutput(
+                  JSON.stringify({
+                    id: result.id,
+                  })
+                )
+              )
+              // we revalidate the path on demand after every message.
+              revalidatePath(`mission/${mission.id}/chat/${chat.id}`)
+              await api.chats.showOrCreate.revalidate({
                 chatId: chat.id,
                 missionId: mission.id,
               })

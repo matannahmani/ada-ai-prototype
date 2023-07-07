@@ -29,7 +29,7 @@ type MissionCardProps = {
 const MissionCard = (props: MissionCardProps) => (
   <div
     className={cn(
-      "flex flex-wrap gap-0 flex-1 sm:basis-full bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[310px] sm:max-w-[calc(100vw-16px)] xl:w-[1086px]",
+      "flex flex-wrap gap-0 flex-1 sm:basis-full bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[310px] sm:max-w-[calc(100vw-16px)] xl:w-full",
       props.isMobile && "!flex-[1_1_0]"
     )}
   >

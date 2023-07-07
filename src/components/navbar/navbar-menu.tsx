@@ -24,9 +24,7 @@ function classNames(...classes: string[]) {
 
 const navItemStyle = (isCurrent: boolean) =>
   classNames(
-    isCurrent
-      ? "text-primary dark:text-primary font-bold"
-      : "text-gray-500 dark:text-gray-500 ",
+    isCurrent ? "font-bold" : "text-gray-500 dark:text-gray-500 ",
     "rounded-md px-3 py-2 text-sm font-medium",
     // hover make effect
     "block hover:text-primary dark:hover:text-primary transition-colors"
@@ -102,6 +100,7 @@ function NavbarMenu({
 
                         return (
                           <Link
+                            prefetch={false}
                             key={item.name}
                             href={item.href}
                             className={cn(
@@ -119,6 +118,7 @@ function NavbarMenu({
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <Link
+                    prefetch={false}
                     className={cn(
                       navItemStyle(isChatPage),
                       "hidden sm:block mr-7"

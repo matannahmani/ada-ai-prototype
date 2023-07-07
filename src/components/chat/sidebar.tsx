@@ -4,7 +4,7 @@ import { memo } from "react"
 import { usePathname } from "next/navigation"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { atom, useAtom } from "jotai"
-import { SidebarClose, SidebarOpen } from "lucide-react"
+import { PanelRightClose, PanelRightOpen } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -22,7 +22,7 @@ export const ChatSidebarTrigger = () => {
   return (
     <div className="mx-2 flex h-10 w-10 lg:hidden">
       <button ref={ref} onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <SidebarClose /> : <SidebarOpen />}
+        {isOpen ? <PanelRightOpen /> : <PanelRightClose />}
       </button>
     </div>
   )

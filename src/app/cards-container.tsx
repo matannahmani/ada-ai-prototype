@@ -16,7 +16,7 @@ type CardsContainerProps = {
 
 const CardsContainer = ({ ...props }: CardsContainerProps) => {
   return (
-    <div className="sm:container items-center sm:items-start  flex flex-col gap-6 py-4">
+    <div className="sm:container items-center sm:w-fit sm:items-start  flex flex-col gap-6 py-4">
       <div id="candidate-container" className="px-1 flex items-center gap-4">
         <h2 className="text-2xl font-bold  tracking-tight">{props.title}</h2>
         {props.link && (
@@ -36,7 +36,7 @@ const CardsContainer = ({ ...props }: CardsContainerProps) => {
       </div>
       {/* @ts-expect-error - can only be list */}
       <MobileCardsContainer>{props.children}</MobileCardsContainer>
-      <div className="hidden sm:flex flex-wrap gap-4 md:gap-8  max-w-[1086px]">
+      <div className="hidden sm:flex flex-wrap gap-4 md:gap-8  max-w-[1160px]">
         {props.children}
       </div>
     </div>

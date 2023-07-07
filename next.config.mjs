@@ -6,9 +6,12 @@ const config = {
   images: {
     domains: ["res.cloudinary.com"],
   },
-  // modularizeImports: {
-  //   ""
-  // },
+  transpilePackages: ["lucide-react"],
+  modularizeImports: {
+    "lucide-react": {
+      transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
+    },
+  },
   experimental: { serverActions: true },
 }
 export default config

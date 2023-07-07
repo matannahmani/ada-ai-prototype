@@ -7,9 +7,11 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { type User as PrismaUser } from "@prisma/client"
 import {
   getServerSession,
+  User,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth"
+import { AdapterUser } from "next-auth/adapters"
 import { DefaultJWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
@@ -124,27 +126,11 @@ export const authOptions: NextAuthOptions = {
      */
   ],
   events: {
+    signIn: async ({ user, account, profile, isNewUser }) => {
+      await importVisitorToAccount(user)
+    },
     createUser: async ({ user }) => {
-      const visitorId = getVisitorId()
-      if (!!visitorId) {
-        const updateChatPromise = prisma.chat.updateMany({
-          where: {
-            vistorId: visitorId,
-          },
-          data: {
-            userId: user.id,
-          },
-        })
-        const updateUserPromise = prisma.user.update({
-          where: {
-            id: user.id,
-          },
-          data: {
-            visitorId: visitorId,
-          },
-        })
-        await Promise.all([updateChatPromise, updateUserPromise])
-      }
+      await importVisitorToAccount(user)
     },
   },
   debug: process.env.NODE_ENV === "development",
@@ -177,6 +163,31 @@ export const getPagesServerAuthSession = (ctx: {
   res: GetServerSidePropsContext["res"]
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions)
+}
+
+const importVisitorToAccount = async (user: User) => {
+  const visitorId = getVisitorId()
+  if (!!visitorId) {
+    const updateChatPromise = prisma.chat.updateMany({
+      where: {
+        vistorId: visitorId,
+      },
+      data: {
+        userId: user.id,
+        vistorId: null,
+      },
+    })
+    const updateUserPromise = prisma.user.updateMany({
+      where: {
+        id: user.id,
+        visitorId: null,
+      },
+      data: {
+        visitorId: visitorId,
+      },
+    })
+    await Promise.all([updateChatPromise, updateUserPromise])
+  }
 }
 
 export const getVisitorSession = async () => {

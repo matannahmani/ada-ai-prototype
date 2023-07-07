@@ -20,7 +20,7 @@ const ChatPageHeroAsync = async ({
   const { mission } = chat
   return (
     <div className="w-full flex flex-col gap-4">
-      <h1 className="font-semibold text-2xl md:text-3xl lg:text-4xl">
+      <h1 className="font-semibold text-2xl md:text-3xl lg:text-4xl text-[#021444]">
         {mission?.name} Allocation Manager
       </h1>
       <h3 className="text-lg">{mission?.subtitle}</h3>
