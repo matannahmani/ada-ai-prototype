@@ -23,10 +23,6 @@ const MissionChatFooter = (props: TChat) => {
         <ShareIcon className="mr-2 h-4 w-4" />
         Share your chat
       </Button>
-      <span className="basis-full text-center font-semibold text-sm text-muted-foreground">
-        Ada’s AI’s are the first AI’s to have similar legal rights to a human.
-        Our AI owns donated funds and each AI is an expert towards each cause.
-      </span>
     </div>
   )
 }

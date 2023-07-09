@@ -1,7 +1,7 @@
 "use client"
 
-import { useCallback } from "react"
-import { atom, useSetAtom } from "jotai"
+import { useCallback, useMemo } from "react"
+import { atom, useAtomValue, useSetAtom } from "jotai"
 import { useAtomCallback } from "jotai/utils"
 
 /**
@@ -31,6 +31,17 @@ export const chatMessagesAtom = atom<
     answer: string
   }[]
 >([])
+
+export const chatMessageLimit = 25
+
+export const useIsChatDisabled = () => {
+  const messageCounter = useAtomValue(chatMessagesCounterAtom)
+  const isChatDisabled = useMemo(
+    () => messageCounter >= chatMessageLimit,
+    [messageCounter]
+  )
+  return isChatDisabled
+}
 
 export const chatIdAtom = atom<string>("")
 export const chatResponseIdAtom = atom<number>(-1)

@@ -6,6 +6,7 @@ import { forwardRef, memo, Suspense } from "react"
 import { api } from "@/trpc/server"
 import { type Mission } from "@prisma/client"
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar"
+import { Button } from "@ui/button"
 import { Separator } from "@ui/separator"
 import { Share2, ThumbsDown, ThumbsUp } from "lucide-react"
 
@@ -35,7 +36,9 @@ ChatAvatar.displayName = "ChatAvatar"
 const ChatMessageHeader = memo(({ name }: { name: string }) => {
   return (
     <div className="w-fit">
-      <p className="w-fit text-sm font-medium leading-none">{name}</p>
+      <p className="w-fit text-sm font-medium leading-none capitalize">
+        {name.toLowerCase()}
+      </p>
       <Separator className="my-1" />
     </div>
   )
@@ -57,10 +60,16 @@ type ChatMessageProps = {
 
 const ChatMessageFooter = memo(() => {
   return (
-    <div className="flex flex-row flex-wrap gap-2 items-center justify-end mt-2 md:mt-4">
-      <Share2 className="w-5 h-5 cursor-pointer" />
-      <ThumbsUp className="w-5 h-5 cursor-pointer" />
-      <ThumbsDown className="w-5 h-5 cursor-pointer" />
+    <div className="flex flex-row color-[#404040] flex-wrap gap-2 items-center justify-end mt-2 md:mt-4">
+      <Button className="rounded-md" variant="ghost">
+        <Share2 className="w-5 h-5 cursor-pointer" />
+      </Button>
+      <Button className="rounded-md" variant="ghost">
+        <ThumbsUp className="w-5 h-5 cursor-pointer" />
+      </Button>
+      <Button className="rounded-md" variant="ghost">
+        <ThumbsDown className="w-5 h-5 cursor-pointer" />
+      </Button>
     </div>
   )
 })

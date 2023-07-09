@@ -3,12 +3,17 @@
 import { useCallback, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { api } from "@/trpc/client"
+import { cn } from "@lib/utils"
 import { useQueryClient } from "@tanstack/react-query"
 import { Button } from "@ui/button"
 import { useAtomValue } from "jotai"
 import { Loader2 } from "lucide-react"
 
-import { chatMessagesCounterAtom } from "./chat-utils"
+import {
+  chatMessageLimit,
+  chatMessagesCounterAtom,
+  useIsChatDisabled,
+} from "./chat-utils"
 
 const NewChatBTN = () => {
   const params = useParams() // Get current route
@@ -34,6 +39,7 @@ const NewChatBTN = () => {
     <Button
       disabled={isLoading}
       variant="outline"
+      outlineColor="secondary"
       onClick={() => newChatHandler()}
       className="md:px-10 rounded-full"
       size="sm"
@@ -46,14 +52,20 @@ const NewChatBTN = () => {
 
 const CurrentConversationSection = () => {
   const messages = useAtomValue(chatMessagesCounterAtom)
+  const isChatDisabeld = useIsChatDisabled()
 
   return (
-    <div className="flex flex-wrap flex-row gap-4 items-center justify-start">
+    <div className="flex flex-wrap flex-row gap-4 items-center justify-start mb-4">
       <span className="text-xl font-semibold tracking-tight text-center ">
         Current Conversation
       </span>
-      <div className="italic flex font-semibold text-sm text-muted-foreground">
-        {messages} / 25 Messages Sent
+      <div
+        className={cn(
+          "italic flex font-semibold text-[0.75rem] text-[#9C9C9C]",
+          isChatDisabeld && "text-destructive"
+        )}
+      >
+        {messages} / {chatMessageLimit} Messages Sent
       </div>
       <NewChatBTN />
     </div>

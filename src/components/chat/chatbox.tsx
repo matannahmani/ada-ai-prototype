@@ -1,18 +1,21 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { streamApi } from "@/trpc/client"
 import { parseStreamOutput } from "@/trpc/generateStreamOutput"
+import { cn } from "@lib/utils"
 import { type Chat } from "@prisma/client"
+import { Button } from "@ui/button"
 import {
   HoverCard,
   HoverCardArrow,
   HoverCardContent,
   HoverCardTrigger,
 } from "@ui/hover-card"
+import { ScrollArea } from "@ui/scroll-area"
 import { Textarea } from "@ui/textarea"
-import { useSetAtom } from "jotai"
+import { useAtom, useSetAtom } from "jotai"
 import { Loader2, Send } from "lucide-react"
 
 import {
@@ -21,6 +24,7 @@ import {
   chatCompletionStatusAtom,
   chatMessagesCounterAtom,
   chatResponseIdAtom,
+  useIsChatDisabled,
   useOnResponseComplete,
 } from "./chat-utils"
 
@@ -33,9 +37,11 @@ const ChatBox = () => {
   const setChatResponseId = useSetAtom(chatResponseIdAtom)
   const setChatCompletionRes = useSetAtom(chatCompletionResAtom)
   const params = useParams()
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const buttonDivRef = useRef<HTMLAnchorElement>(null)
   const router = useRouter()
   const appendMessageHandler = useOnResponseComplete()
-
+  const isChatDisabled = useIsChatDisabled()
   const onSubmitHandler = useCallback(
     (text: string) => {
       setText("")
@@ -92,37 +98,82 @@ const ChatBox = () => {
     [params?.chatId]
   )
 
+  const onTextChangeHandler = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      // set text
+      setText(e.target.value)
+      // calculate height of textarea based on content and set it
+      if (textAreaRef.current) {
+        if (e.target.value.length === 0) {
+          // center textarea if empty and placeholder to center
+          textAreaRef.current.style.height = "auto"
+          textAreaRef.current.style.height = "2.5rem"
+          textAreaRef.current.style.paddingTop = "0.5rem"
+          buttonDivRef.current?.classList.remove("bottom-4")
+          return
+        }
+        if (textAreaRef.current.scrollHeight > 48) {
+          buttonDivRef.current?.classList.add("bottom-4")
+          textAreaRef.current.style.paddingTop = ""
+          textAreaRef.current.style.paddingBottom = ""
+          textAreaRef.current.style.height = "auto"
+          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+          textAreaRef.current.style.height =
+            textAreaRef.current.scrollHeight + "px"
+        }
+      }
+    },
+    [textAreaRef]
+  )
+
   return (
-    <div className="sticky bottom-4 flex items-center shadow-xl z-10 bg-background mx-4">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSubmitHandler(text)
+      }}
+      className="
+      py-2
+      sticky bottom-4 flex items-center border-2 border-muted shadow-xl z-10 rounded-md bg-background mx-4 "
+    >
       <Textarea
+        disabled={isChatDisabled}
         value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Type your message here."
+        ref={textAreaRef}
+        className={cn(
+          "h-10 min-h-fit max-h-52 p-2 pr-20 w-full overflow-auto border-none resize-none",
+          isChatDisabled && "!placeholder-destructive"
+        )}
+        onChange={onTextChangeHandler}
+        placeholder={
+          isChatDisabled
+            ? "You have reached the maximum number of messages, please open a new chat."
+            : "Type your message"
+        }
       />
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          onSubmitHandler(text)
-        }}
-        className="absolute right-4"
-      >
-        <HoverCard openDelay={0}>
-          <HoverCardTrigger>
-            <button disabled={isLoading} onClick={() => onSubmitHandler(text)}>
-              {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="mr-2 h-4 w-4" />
-              )}
-            </button>
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <p>Send message</p>
-            <HoverCardArrow />
-          </HoverCardContent>
-        </HoverCard>
-      </form>
-    </div>
+
+      <HoverCard openDelay={0}>
+        <HoverCardTrigger ref={buttonDivRef} className="absolute right-2">
+          <Button
+            variant="default"
+            size="sm"
+            className="rounded-md"
+            disabled={isLoading || isChatDisabled}
+            onClick={() => onSubmitHandler(text)}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <p>Send message</p>
+          <HoverCardArrow />
+        </HoverCardContent>
+      </HoverCard>
+    </form>
   )
 }
 export default ChatBox

@@ -64,6 +64,11 @@ async function ChatPage({
           </MessageBox>
           <MissionChatFooter {...chatProps} />
           <ChatBox />
+          <span className="basis-full text-center my-2 mt-4 text-sm text-[#9C9C9C] italic">
+            Ada’s AI’s are the first AI’s to have similar legal rights to a
+            human. Our AI owns donated funds and each AI is an expert towards
+            each cause.
+          </span>
           {/* </ScrollArea> */}
         </div>
       </div>
