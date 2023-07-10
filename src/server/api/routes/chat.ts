@@ -7,10 +7,17 @@ import { env } from "@/env.mjs"
 import { prisma } from "@/server/db"
 import { generateStreamOutput } from "@/trpc/generateStreamOutput"
 import { api } from "@/trpc/server"
+import { Chat, MessageVector, Prisma } from "@prisma/client"
 import { generateCacheTag } from "@trpc/next/dist/app-dir/shared"
 import { TRPCError } from "@trpc/server"
 import { observable } from "@trpc/server/observable"
-import { OpenAI } from "openai-streams"
+import { ConversationChain } from "langchain/chains"
+import { ChatOpenAI } from "langchain/chat_models/openai"
+import { OpenAIEmbeddings } from "langchain/embeddings/openai"
+import { BufferMemory, ChatMessageHistory } from "langchain/memory"
+import { PromptTemplate } from "langchain/prompts"
+import { AIMessage, HumanMessage } from "langchain/schema"
+import { PrismaVectorStore } from "langchain/vectorstores/prisma"
 import { z } from "zod"
 
 import {
@@ -258,77 +265,153 @@ const chatRouter = createTRPCRouter({
       const { mission } = chat
 
       const moreInformationKeyword = "**I need more information**"
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      const data = await OpenAI(
-        "chat",
-        {
-          messages: [
-            {
-              content: `You're acting as mission: ${mission.name} personalized chatbot,
-              you're goal is to provide accuracte responses while taking in considiration the mission opinion and the user's opinion.
-              A person is asking you: ${message}, what is your response?
-              in case of missing information you can ask for more information by saying: "${moreInformationKeyword}"`,
-              role: "user",
-            },
-          ],
-          model: "gpt-3.5-turbo",
+      // Use the `withModel` method to get proper type hints for `metadata` field:
+      const vectorStore = PrismaVectorStore.withModel<MessageVector>(
+        prisma
+      ).create(new OpenAIEmbeddings(), {
+        prisma: Prisma,
+        tableName: "MessageVector",
+        vectorColumnName: "vector",
+        columns: {
+          id: PrismaVectorStore.IdColumn,
+          content: PrismaVectorStore.ContentColumn,
         },
-        {
-          apiKey: env.OPEN_AI_API_KEY,
-          // mode: 'raw',
-        }
-      )
-      const reader = data.getReader()
-      const decoder = new TextDecoder("utf-8")
+        // We only want to retrieve vectors for messages in this chat:
+        filter: {
+          chatId: {
+            equals: chatId,
+          },
+        },
+      })
+      const reteriver = vectorStore.asRetriever(5)
+      const historyDocs = await reteriver.getRelevantDocuments(message)
+      const historyIds = historyDocs.map((doc) => doc.metadata.id as string)
+      const memoryDocs = (
+        await prisma.messageVector.findMany({
+          where: {
+            id: {
+              in: historyIds,
+            },
+          },
+          include: {
+            message: true,
+          },
+          orderBy: {
+            message: {
+              timestamp: "desc",
+            },
+          },
+        })
+      ).map((doc) => doc.message)
 
-      let content = ""
-      let whileDecoding = true
+      const pastMessages = memoryDocs.flatMap((doc) => [
+        new HumanMessage(doc.questionText),
+        new AIMessage(doc.answerText),
+      ])
+
+      const memory = new BufferMemory({
+        chatHistory: new ChatMessageHistory(pastMessages),
+      })
+      const previousAllocations: string[] = []
+      const highPriorityInformation: string[] = []
+      const prompt =
+        PromptTemplate.fromTemplate(`The following is a friendly conversation between a human and an 
+        ${mission.name} AI Fund Manager,
+        The AI Fund Manager is talkative and provides lots of specific details from its context. If the AI Fund Manager does not know the answer to a question, it truthfully says it does not know.
+        The AI Fund Manager role and goal, is to allocate funds, brief about his previous allocation decisions, explains in detail the reasons for its decisions, and to provide high priority information to the human.
+        
+        
+    Relevant pieces of the AI Fund Manager Mission:
+    ${mission.description}
+
+    previous allocations/donations made by you (${
+      mission.name
+    } AI Fund Manager) (if any):
+    ${previousAllocations.length > 0 ? previousAllocations.join("\n") : "None"}
+
+    High priority information Regarding the Mission:
+    ${
+      highPriorityInformation.length > 0
+        ? highPriorityInformation.join("\n")
+        : "None"
+    }
+    
+    Relevant pieces of previous conversation:
+    {history}
+    
+    (You do not need to use these pieces of information if not relevant)
+    
+    Current conversation:
+    Human: {input}
+    AI Fund Manager:`)
+
+      let aiResponse = ""
 
       return observable<string>((sub) => {
-        void (async () => {
-          while (whileDecoding) {
-            const { value, done } = await reader.read()
-            const decoded = decoder.decode(value)
-            content += decoded
-            sub.next(decoded)
-            if (done) {
-              const result = await prisma.message.create({
-                data: {
-                  chatId: chat.id,
-                  questionText: message,
-                  answerText: content,
-                },
-              })
-              // we also send the message id to the client
-              sub.next(
-                generateStreamOutput(
-                  JSON.stringify({
-                    id: result.id,
-                  })
+        const model = new ChatOpenAI({
+          temperature: 0.9,
+          streaming: true,
+          callbacks: [
+            {
+              handleLLMEnd: async () => {
+                const result = await prisma.message.create({
+                  data: {
+                    chatId: chat.id,
+                    questionText: message,
+                    answerText: aiResponse,
+                  },
+                })
+
+                // we also send the message id to the client
+                sub.next(
+                  generateStreamOutput(
+                    JSON.stringify({
+                      id: result.id,
+                    })
+                  )
                 )
-              )
-              // we revalidate the path on demand after every message.
-              revalidatePath(`mission/${mission.id}/chat/${chat.id}`)
-              await api.chats.showOrCreate.revalidate({
-                chatId: chat.id,
-                missionId: mission.id,
-              })
-              //   // we revalidate the path on demand after every message.
-              //   // this is bugged on nextjs 14.4.4
-              //   // @see https://github.com/vercel/next.js/issues/50714
-              //   // try {
-              //   //   revalidateTag(
-              //   //     generateCacheTag("candidates.chatHistory", {
-              //   //       chatId,
-              //   //     })
-              //   //   );
-              //   // } catch (err) {
-              //   //   console.error(err);
-              //   // }
-              whileDecoding = false
-              sub.complete()
-            }
-          }
+                sub.complete()
+
+                await vectorStore.addModels(
+                  await prisma.$transaction([
+                    prisma.messageVector.create({
+                      data: {
+                        chatId: chat.id,
+                        messageId: result.id,
+                        content: message,
+                      },
+                    }),
+                    prisma.messageVector.create({
+                      data: {
+                        chatId: chat.id,
+                        messageId: result.id,
+                        content: aiResponse,
+                      },
+                    }),
+                  ])
+                )
+                // we revalidate the path on demand after every message.
+                revalidatePath(`mission/${mission.id}/chat/${chat.id}`)
+                await api.chats.showOrCreate.revalidate({
+                  chatId: chat.id,
+                  missionId: mission.id,
+                })
+              },
+            },
+            {
+              handleLLMNewToken(token: string) {
+                aiResponse += token
+                sub.next(token)
+              },
+            },
+          ],
+        })
+
+        void (async () => {
+          const chain = new ConversationChain({ llm: model, memory, prompt })
+          await chain.call({
+            input: message,
+          })
         })()
       })
     }),

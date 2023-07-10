@@ -117,9 +117,7 @@ const ChatBox = () => {
           textAreaRef.current.style.paddingTop = ""
           textAreaRef.current.style.paddingBottom = ""
           textAreaRef.current.style.height = "auto"
-          // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-          textAreaRef.current.style.height =
-            textAreaRef.current.scrollHeight + "px"
+          textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
         }
       }
     },
