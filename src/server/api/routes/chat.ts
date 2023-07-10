@@ -7,7 +7,7 @@ import { env } from "@/env.mjs"
 import { prisma } from "@/server/db"
 import { generateStreamOutput } from "@/trpc/generateStreamOutput"
 import { api } from "@/trpc/server"
-import { Chat, MessageVector, Prisma } from "@prisma/client"
+import { Chat, MessageVector, MissionVector, Prisma } from "@prisma/client"
 import { generateCacheTag } from "@trpc/next/dist/app-dir/shared"
 import { TRPCError } from "@trpc/server"
 import { observable } from "@trpc/server/observable"
@@ -266,7 +266,7 @@ const chatRouter = createTRPCRouter({
 
       const moreInformationKeyword = "**I need more information**"
       // Use the `withModel` method to get proper type hints for `metadata` field:
-      const vectorStore = PrismaVectorStore.withModel<MessageVector>(
+      const chatVectorStore = PrismaVectorStore.withModel<MessageVector>(
         prisma
       ).create(new OpenAIEmbeddings(), {
         prisma: Prisma,
@@ -283,7 +283,28 @@ const chatRouter = createTRPCRouter({
           },
         },
       })
-      const reteriver = vectorStore.asRetriever(5)
+      const missionVectorStore = PrismaVectorStore.withModel<MissionVector>(
+        prisma
+      ).create(new OpenAIEmbeddings(), {
+        prisma: Prisma,
+        tableName: "MissionVector",
+        vectorColumnName: "vector",
+        columns: {
+          id: PrismaVectorStore.IdColumn,
+          content: PrismaVectorStore.ContentColumn,
+        },
+        // We only want to retrieve vectors for messages in this chat:
+        filter: {
+          missionId: {
+            equals: mission.id,
+          },
+        },
+      })
+      const missionDocs = await missionVectorStore.similaritySearch(message, 5)
+      const missionMemoryContent = missionDocs.map(
+        (doc) => doc.metadata.content
+      )
+      const reteriver = chatVectorStore.asRetriever(5)
       const historyDocs = await reteriver.getRelevantDocuments(message)
       const historyIds = historyDocs.map((doc) => doc.metadata.id as string)
       const memoryDocs = (
@@ -309,8 +330,9 @@ const chatRouter = createTRPCRouter({
         new AIMessage(doc.answerText),
       ])
 
-      const memory = new BufferMemory({
+      const chatMemory = new BufferMemory({
         chatHistory: new ChatMessageHistory(pastMessages),
+        memoryKey: "history",
       })
       const previousAllocations: string[] = []
       const highPriorityInformation: string[] = []
@@ -319,12 +341,13 @@ const chatRouter = createTRPCRouter({
         ${mission.name} AI Fund Manager,
         The AI Fund Manager is talkative and provides lots of specific details from its context. If the AI Fund Manager does not know the answer to a question, it truthfully says it does not know.
         The AI Fund Manager role and goal, is to allocate funds, brief about his previous allocation decisions, explains in detail the reasons for its decisions, and to provide high priority information to the human.
-        
+
         
     Relevant pieces of the AI Fund Manager Mission:
-    ${mission.description}
+    ${mission.description}\n
+    ${missionMemoryContent.join("\n")}
 
-    previous allocations/donations made by you (${
+    Previous allocations/donations made by you (${
       mission.name
     } AI Fund Manager) (if any):
     ${previousAllocations.length > 0 ? previousAllocations.join("\n") : "None"}
@@ -370,9 +393,7 @@ const chatRouter = createTRPCRouter({
                     })
                   )
                 )
-                sub.complete()
-
-                await vectorStore.addModels(
+                await chatVectorStore.addModels(
                   await prisma.$transaction([
                     prisma.messageVector.create({
                       data: {
@@ -390,6 +411,7 @@ const chatRouter = createTRPCRouter({
                     }),
                   ])
                 )
+                sub.complete()
                 // we revalidate the path on demand after every message.
                 revalidatePath(`mission/${mission.id}/chat/${chat.id}`)
                 await api.chats.showOrCreate.revalidate({
@@ -408,7 +430,11 @@ const chatRouter = createTRPCRouter({
         })
 
         void (async () => {
-          const chain = new ConversationChain({ llm: model, memory, prompt })
+          const chain = new ConversationChain({
+            llm: model,
+            memory: chatMemory,
+            prompt,
+          })
           await chain.call({
             input: message,
           })

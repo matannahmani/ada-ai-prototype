@@ -66,6 +66,7 @@ model Mission {
   creator        User             @relation(fields: [creatorId], references: [id])
   MissionUpdates MissionUpdates[]
   Donation       Donation[]
+  MissionVector  MissionVector[]
 }
 
 model Chat {
@@ -90,8 +91,8 @@ model Chat {
 }
 
 model MessageVector {
-  id      String  @id @default(cuid())
-  messageId Int                    
+  id        String                 @id @default(cuid())
+  messageId Int
   chatId    Int
   content   String
   message   Message                @relation(fields: [messageId], references: [id], onDelete: Cascade)
@@ -113,6 +114,18 @@ model Message {
   MessageVector MessageVector[]
 
   @@index([chatId, timestamp], name: "chat_timestamp_index")
+}
+
+model MissionVector {
+  id           String                 @id @default(cuid())
+  vector       Unsupported("vector")?
+  missionId    Int
+  content String
+  qualityScore Float // 1-100
+  createdAt    DateTime               @default(now())
+  mission      Mission                @relation(fields: [missionId], references: [id], onDelete: Cascade)
+
+  @@index([missionId], name: "mission_memory_index")
 }
 
 model MissionUpdatesItem {
