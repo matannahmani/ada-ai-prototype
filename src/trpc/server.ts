@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers"
 import { type AppRouter } from "@/server/api/root"
+import { TRPCClientError } from "@trpc/client"
 import { experimental_nextHttpLink } from "@trpc/next/app-dir/links/nextHttp"
 import { experimental_createTRPCNextAppDirServer } from "@trpc/next/app-dir/server"
 import SuperJSON from "superjson"

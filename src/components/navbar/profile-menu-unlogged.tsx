@@ -14,6 +14,7 @@ import { signIn } from "next-auth/react"
 const ProfileMenuUnlogged = () => (
   <Link
     href="/login"
+    prefetch={false}
     className={cn(
       buttonVariants({
         size: "sm",

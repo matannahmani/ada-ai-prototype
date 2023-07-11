@@ -1,6 +1,5 @@
 "use client"
 
-import { getTransitionSizes } from "@formkit/auto-animate"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 
 import { Dialog, DialogContent } from "@/components/ui/dialog"

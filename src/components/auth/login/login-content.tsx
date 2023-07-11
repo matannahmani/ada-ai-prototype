@@ -3,10 +3,11 @@
 import { useMemo } from "react"
 import Link from "next/link"
 import { SiApple, SiFacebook, SiGoogle } from "@icons-pack/react-simple-icons"
+import { cn } from "@lib/utils"
 import { signIn } from "next-auth/react"
 
 import { useRouterHistory } from "@/hooks/use-router-history"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { LogoFull } from "@/components/logo-full"
 import { LogoSymbol } from "@/components/logo-symbol"
 
@@ -68,10 +69,17 @@ export const LoginContent = ({
         <div className="flex-1 h-[1px] bg-muted-foreground/30" />
       </div>
 
-      <Link replace={linkAsReplace} href="/signup">
-        <Button className="w-[240px]" variant="secondary">
-          <LogoSymbol className="mr-3 w-4 h-4" /> SIGN UP FOR ADA
-        </Button>
+      <Link
+        className={cn(
+          buttonVariants({
+            variant: "secondary",
+          }),
+          "w-[240px]"
+        )}
+        replace={linkAsReplace}
+        href="/signup"
+      >
+        <LogoSymbol className="mr-3 w-4 h-4" /> SIGN UP FOR ADA
       </Link>
     </div>
   )

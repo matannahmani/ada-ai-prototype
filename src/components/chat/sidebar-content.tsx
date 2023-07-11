@@ -1,7 +1,8 @@
 import { cache, memo, Suspense } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { getServerAuthSession, getVisitorSession } from "@/server/auth"
+import { redirect } from "next/navigation"
+import { isTRPCServerError, withErrorHandler } from "@/server/lib/utils"
 import { api } from "@/trpc/server"
 import { AspectRatio } from "@ui/aspect-ratio"
 import { Skeleton } from "@ui/skeleton"
@@ -14,14 +15,13 @@ import SidebarCandidateBtn from "./sidebar-candidate-btn"
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 async function ChatCandidateSidebar() {
-  const [session, vistor] = await Promise.all([
-    getServerAuthSession(),
-    getVisitorSession(),
-  ])
-  const userId = session?.user?.id || vistor?.id || "null"
-  const chats = await api.chats.byUserId.query()
+  const chats = await withErrorHandler(api.chats.byUserId.query(), (err) => {
+    if (isTRPCServerError(err)) {
+      if (err.data?.code === "UNAUTHORIZED") return redirect("/login")
+    }
+  })
   return chats?.map((chat, i) => (
-    <SidebarCandidateBtn chatId={chat.id} key={`btn-${i}`}>
+    <SidebarCandidateBtn chatId={chat.id} key={`btn-${chat.id}`}>
       <Link prefetch={false} href={`./${chat.id}`} key={`link-${i}`}>
         {chat.mission.name}
       </Link>

@@ -133,7 +133,6 @@ export const authOptions: NextAuthOptions = {
       await importVisitorToAccount(user)
     },
   },
-  debug: process.env.NODE_ENV === "development",
   session: {
     // Set to jwt in order to CredentialsProvider works properly
     strategy: "jwt",

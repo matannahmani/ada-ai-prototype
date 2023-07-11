@@ -112,14 +112,14 @@ async function ChatHistory({ ...props }: TChat) {
       {chat.messages.map((message) => (
         <>
           <ChatMessage
-            key={`message-${message.id}`}
+            key={`message-${message.id}-q`}
             message={message.questionText}
             name={props.user.name ?? "Anonymous"}
             image={props.user?.image ?? undefined}
             id={`message-${message.id}-q`}
           />
           <ChatMessage
-            key={`message-${message.id}`}
+            key={`message-${message.id}-a`}
             message={message.answerText}
             name={props.mission.name}
             isResponse={true}
