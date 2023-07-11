@@ -1,19 +1,52 @@
 "use client"
 
-import type React from "react"
-import { useEffect, useMemo } from "react"
-import { usePathname, useSelectedLayoutSegments } from "next/navigation"
+import { useEffect, useMemo, useState } from "react"
+import { useAtomValue } from "jotai"
 
+import { LoginContent } from "../login/login-content"
+import { SignupContent } from "../signup/signup-content"
 import AuthDialog from "./dialog"
+import { authModalOpenAtom, useAuthModalPage } from "./utils"
 
-export default function AuthModal(props: { children: React.ReactNode }) {
-  // broken https://github.com/vercel/next.js/issues/49662 https://github.com/vercel/next.js/issues/51711
-  const segment = useSelectedLayoutSegments("authModal")
-  const isOpen = segment.includes("(.)signup") || segment.includes("(.)login")
-  const pathname = usePathname()
-  const isVisible = useMemo(
-    () => pathname.includes("signup") || pathname.includes("login"),
-    [pathname]
+// const LoginContent = dynamic(() =>
+//   import("../login/login-content").then((mod) => mod.LoginContent)
+// )
+// const SignupContent = dynamic(() =>
+//   import("../signup/signup-content").then((mod) => mod.SignupContent)
+// )
+
+const DelayedUnmount = ({
+  children,
+  isMounted,
+}: {
+  children: React.ReactNode
+  isMounted: boolean
+}) => {
+  const [shouldRender, setShouldRender] = useState(isMounted)
+  useEffect(() => {
+    if (isMounted) {
+      setShouldRender(true)
+    } else {
+      setTimeout(() => setShouldRender(false), 200)
+    }
+  }, [isMounted])
+  return shouldRender ? children : null
+}
+
+export default function AuthModal() {
+  const isOpen = useAtomValue(authModalOpenAtom)
+  const modalPage = useAuthModalPage()
+  const modalChild = useMemo(() => {
+    if (modalPage === "sign-in") return <LoginContent />
+    if (modalPage === "sign-up") return <SignupContent />
+    return <LoginContent />
+  }, [modalPage])
+
+  return (
+    <>
+      <AuthDialog isOpen={isOpen}>
+        <>{modalChild}</>
+      </AuthDialog>
+    </>
   )
-  return <AuthDialog isOpen={isVisible && isOpen}>{props.children}</AuthDialog>
 }

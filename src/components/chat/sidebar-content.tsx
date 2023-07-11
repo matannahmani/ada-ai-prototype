@@ -17,7 +17,7 @@ type SidebarProps = React.HTMLAttributes<HTMLDivElement>
 async function ChatCandidateSidebar() {
   const chats = await withErrorHandler(api.chats.byUserId.query(), (err) => {
     if (isTRPCServerError(err)) {
-      if (err.data?.code === "UNAUTHORIZED") return redirect("/login")
+      if (err.data?.code === "UNAUTHORIZED") return redirect("/sign-in")
     }
   })
   return chats?.map((chat, i) => (

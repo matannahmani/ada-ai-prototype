@@ -2,9 +2,9 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
-import { SiApple, SiFacebook, SiGoogle } from "@icons-pack/react-simple-icons"
 import { cn } from "@lib/utils"
 import { signIn } from "next-auth/react"
+import { SiApple, SiFacebook, SiGoogle } from "react-icons/si"
 
 import { useRouterHistory } from "@/hooks/use-router-history"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -13,11 +13,7 @@ import { LogoSymbol } from "@/components/logo-symbol"
 
 import LoginForm from "./login-form"
 
-export const LoginContent = ({
-  linkAsReplace,
-}: {
-  linkAsReplace?: boolean
-}) => {
+export const LoginContent = () => {
   const history = useRouterHistory()
   const lastRoute = useMemo(() => {
     const lastRoute = history[history.length - 1]
@@ -76,8 +72,11 @@ export const LoginContent = ({
           }),
           "w-[240px]"
         )}
-        replace={linkAsReplace}
-        href="/signup"
+        href={{
+          query: {
+            modal: "sign-up",
+          },
+        }}
       >
         <LogoSymbol className="mr-3 w-4 h-4" /> SIGN UP FOR ADA
       </Link>

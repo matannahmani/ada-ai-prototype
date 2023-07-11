@@ -1,4 +1,5 @@
 import { ReactNode, Suspense } from "react"
+import Link from "next/link"
 import { getServerAuthSession } from "@/server/auth"
 import { Separator } from "@ui/separator"
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react"
@@ -7,8 +8,12 @@ import { LogoFull } from "../logo-full"
 
 const NonLoggedLinks = () => (
   <>
-    <span>Login</span>
-    <span>Sign Up</span>
+    <Link replace prefetch={false} href={"/sign-in"}>
+      Login
+    </Link>
+    <Link replace prefetch={false} href={"/sign-up"}>
+      Sign Up
+    </Link>
   </>
 )
 

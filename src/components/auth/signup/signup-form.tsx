@@ -37,7 +37,7 @@ export function SignupForm() {
         title: "Account created Successfully.",
         description: "Your account has been created, redirecting you to login.",
       })
-      void router.replace(`/login`)
+      void router.replace(`/sign-in`)
     } catch (cause) {
       if (isTRPCClientError(cause)) {
         toast({

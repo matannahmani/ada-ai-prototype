@@ -41,7 +41,7 @@ export const findLastNonAuthRoute = (routes: string[]) => {
     .slice()
     .reverse()
     .find(
-      (route) => !route.startsWith("/login") && !route.startsWith("/signup")
+      (route) => !route.startsWith("/sign-in") && !route.startsWith("/sign-up")
     )
   return lastNonAuthRoute
 }

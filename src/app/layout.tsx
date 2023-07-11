@@ -1,6 +1,6 @@
 import "@/styles/globals.css"
 
-import { Suspense } from "react"
+import React, { Suspense } from "react"
 import { type Metadata } from "next"
 import { Toaster } from "@ui/toaster"
 
@@ -36,10 +36,11 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: React.ReactNode
-  authModal: React.ReactNode
+  // authModal: React.ReactNode
+  modal: React.ReactNode
 }
 
-export default function RootLayout({ children, authModal }: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
@@ -63,7 +64,9 @@ export default function RootLayout({ children, authModal }: RootLayoutProps) {
                       <EmailVerifyBanner />
                     </Suspense>
                     <FingerPrintLayout>{children}</FingerPrintLayout>
-                    <AuthModal>{authModal}</AuthModal>
+                    <Suspense fallback={null}>
+                      <AuthModal />
+                    </Suspense>
                   </div>
                   <Footer />
                 </>

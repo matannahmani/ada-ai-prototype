@@ -336,6 +336,33 @@ const chatRouter = createTRPCRouter({
       })
       const previousAllocations: string[] = []
       const highPriorityInformation: string[] = []
+      const prompt2 = PromptTemplate.fromTemplate(
+        `The following is a friendly conversation between a human and an 
+        ${mission.name} AI Fund Manager,
+        The AI Fund Manager is talkative and provides lots of specific details from its context. If the AI Fund Manager does not know the answer to a question, it truthfully says it does not know.
+    
+    Relevant pieces of the AI Fund Manager Mission:
+    ${mission.description}
+
+    Relevant pieces of AI Fund Manager previous allocation decisions:
+    ${previousAllocations.length > 0 ? previousAllocations.join("\n") : "None"}
+
+    High priority information:
+    ${
+      highPriorityInformation.length > 0
+        ? highPriorityInformation.join("\n")
+        : "None"
+    }
+    
+    Relevant pieces of previous conversation:
+    {history}
+    
+    (You do not need to use these pieces of information if not relevant)
+    
+    Current conversation:
+    Human: {input}
+    AI Fund Manager:`
+      )
       const prompt =
         PromptTemplate.fromTemplate(`The following is a friendly conversation between a human and an 
         ${mission.name} AI Fund Manager,
@@ -433,7 +460,7 @@ const chatRouter = createTRPCRouter({
           const chain = new ConversationChain({
             llm: model,
             memory: chatMemory,
-            prompt,
+            prompt: prompt2,
           })
           await chain.call({
             input: message,

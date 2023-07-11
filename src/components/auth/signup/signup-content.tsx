@@ -1,11 +1,7 @@
-"use client"
-
-import Link from "next/link"
-import { SiApple, SiFacebook, SiGoogle } from "@icons-pack/react-simple-icons"
+import { SiApple, SiFacebook, SiGoogle } from "react-icons/si"
 
 import { Button } from "@/components/ui/button"
 import { LogoFull } from "@/components/logo-full"
-import { LogoSymbol } from "@/components/logo-symbol"
 
 import SignupForm from "./signup-form"
 

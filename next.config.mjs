@@ -11,6 +11,10 @@ const config = {
     "lucide-react": {
       transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
     },
+    "react-icons": {
+      transform: "react-icons/{{kebabCase member}}",
+      skipDefaultConversion: true,
+    },
   },
   experimental: { serverActions: true },
 }
