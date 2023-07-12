@@ -1,15 +1,18 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { SignupSchema } from "@/shared/zod/account/signup-schema"
+import { api, isTRPCClientError } from "@/trpc/client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Checkbox } from "@ui/checkbox"
+import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
+import type z from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,40 +21,39 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 
-const FormSchema = z
-  .object({
-    fullName: z.string().min(2, {
-      message: "Please enter your full name.",
-    }),
-    email: z.string().email().min(2, {
-      message: "Please enter a valid email address.",
-    }),
-    password: z.string().max(64).min(8, {
-      message: "Please enter a password with 8-64 characters.",
-    }),
-    repassword: z.string().max(64).min(8, {
-      message: "Please enter a password with 8-64 characters.",
-    }),
-  })
-  .refine((data) => data.password === data.repassword, {
-    message: "Passwords do not match.",
-    path: ["repassword"],
-  })
-
 export function SignupForm() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const form = useForm<z.infer<typeof SignupSchema>>({
+    resolver: zodResolver(SignupSchema),
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  async function onSubmit(data: z.infer<typeof SignupSchema>) {
+    setIsLoading(true)
+    try {
+      const res = await api.account.signup.mutate(data)
+      toast({
+        variant: "success",
+        title: "Account created Successfully.",
+        description: "Your account has been created, redirecting you to login.",
+      })
+      void router.replace(`/sign-in`)
+    } catch (cause) {
+      if (isTRPCClientError(cause)) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: cause.message,
+        })
+      } else
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+        })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -135,7 +137,8 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="px-16 w-full">
+        <Button disabled={isLoading} type="submit" className="px-16 w-full">
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Create Account
         </Button>
       </form>

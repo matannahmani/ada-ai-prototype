@@ -1,10 +1,11 @@
 import { type AppRouter } from "@/server/api/root"
+import { TRPCClientError } from "@trpc/client"
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server"
 import superjson from "superjson"
 
 export const transformer = superjson
 
-function getBaseUrl() {
+export function getBaseUrl() {
   if (typeof window !== "undefined") return ""
   const vc = process.env.VERCEL_URL
   if (vc) return "https://" + vc

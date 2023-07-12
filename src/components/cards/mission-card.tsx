@@ -11,6 +11,8 @@ import {
   MessageSquareIcon,
 } from "lucide-react"
 
+import { ChatIcon } from "../icons"
+
 type MissionCardData = {
   title: string
   description: string
@@ -27,7 +29,7 @@ type MissionCardProps = {
 const MissionCard = (props: MissionCardProps) => (
   <div
     className={cn(
-      "flex flex-wrap gap-0 flex-1 sm:basis-full bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[310px] sm:max-w-[calc(100vw-16px)] xl:w-[1086px]",
+      "flex flex-wrap gap-0 flex-1 sm:basis-full bg-slate-50 rounded-md overflow-hidden shadow-md max-w-[310px] sm:max-w-[calc(100vw-16px)] xl:w-full",
       props.isMobile && "!flex-[1_1_0]"
     )}
   >
@@ -82,7 +84,7 @@ const MissionCard = (props: MissionCardProps) => (
           href={`/mission/${props.data.id}/chat/-1`}
         >
           Chat with AI
-          <MessageCircle className="ml-2 h-4 w-4" />
+          <ChatIcon className="ml-2 h-4 w-5" />
         </Link>
 
         <Link
@@ -95,7 +97,7 @@ const MissionCard = (props: MissionCardProps) => (
           href={`/mission/${props.data.id}`}
         >
           Learn more
-          <Info className="ml-2 h-4 w-4" />
+          <Info className="ml-2 h-4 w-4 fill-white stroke-secondary" />
         </Link>
       </div>
     </div>

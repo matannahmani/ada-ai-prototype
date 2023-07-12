@@ -1,10 +1,18 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Checkbox } from "@ui/checkbox"
+import { Loader2 } from "lucide-react"
+import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import {
+  findLastNonAuthRoute,
+  useRouterHistory,
+} from "@/hooks/use-router-history"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -22,26 +30,53 @@ const FormSchema = z.object({
   email: z.string().email().min(2, {
     message: "Please enter a valid email address.",
   }),
-  remember: z.boolean().default(false).optional(),
+  // remember: z.boolean().default(false).optional(),
   password: z.string().max(64).min(8, {
     message: "Please enter a password with 8-64 characters.",
   }),
 })
 
 export function LoginForm() {
+  const [isLoading, setIsLoading] = useState(false)
+  const history = useRouterHistory()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
+  const router = useRouter()
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsLoading(true)
+    let res: Awaited<ReturnType<typeof signIn>>
+    try {
+      res = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+        // remember: data.remember ? "true" : "false",
+      })
+    } catch (err) {
+      console.error("Email or password is incorrect.")
+    } finally {
+      setIsLoading(false)
+    }
+    if (!res?.error) {
+      toast({
+        variant: "success",
+        title: "Login Successfully.",
+        description: "Your account has been logged in.",
+      })
+      const lastRoute = findLastNonAuthRoute(history)
+      router.refresh()
+      if (lastRoute) {
+        router.push(lastRoute)
+      } else router.push(`/`)
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "email or password is incorrect.",
+      })
+    }
   }
 
   return (
@@ -86,7 +121,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <div className="flex flex-wrap items-center justify-center gap-2 space-y-2">
+        {/* <div className="flex flex-wrap items-center justify-center gap-2 space-y-2">
           <FormField
             control={form.control}
             name="remember"
@@ -107,7 +142,10 @@ export function LoginForm() {
               </FormItem>
             )}
           />
+        </div> */}
+        <div className="flex mt-2 flex-wrap items-center justify-center gap-2 space-y-2">
           <Button type="submit" className="px-16">
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Login
           </Button>
         </div>

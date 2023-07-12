@@ -1,4 +1,4 @@
-import { fontFamily } from "tailwindcss/defaultTheme"
+import { fontFamily, screens } from "tailwindcss/defaultTheme"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -13,10 +13,13 @@ module.exports = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
     },
+    screens: {
+      ...screens,
+      "2xl": "1400px",
+      xs: { max: "320px" },
+    },
+
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -82,6 +85,21 @@ module.exports = {
           "800": "#5c29aa",
           "900": "#4c2986",
           "950": "#1c0f30",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+          "50": "#fffee7",
+          "100": "#fffec1",
+          "200": "#fff886",
+          "300": "#ffec41",
+          "400": "#ffdb0d",
+          "500": "#fdca00",
+          "600": "#d19500",
+          "700": "#a66a02",
+          "800": "#89520a",
+          "900": "#74430f",
+          "950": "#442304",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

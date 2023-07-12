@@ -7,8 +7,6 @@ import {
 } from "@trpc/client"
 import { AnyRouter } from "@trpc/server"
 
-import { generateCacheTag } from "./shared"
-
 type NextFetchLinkOptions<TBatch extends boolean> = (TBatch extends true
   ? HTTPBatchLinkOptions
   : HTTPLinkOptions) & {
@@ -24,7 +22,7 @@ export function experimental_nextHttpLink<
   return (runtime) => {
     return (ctx) => {
       const { path, input, context } = ctx.op
-      const cacheTag = generateCacheTag(path, input)
+      // const cacheTag = generateCacheTag(path, input)
 
       // Let per-request revalidate override global revalidate
       const requestRevalidate =
@@ -41,11 +39,12 @@ export function experimental_nextHttpLink<
         fetch: (url, fetchOpts) => {
           return fetch(url, {
             ...fetchOpts,
+
+            // cache: "no-store",
             // cache: 'no-cache',
-            next: {
-              revalidate,
-              tags: [cacheTag],
-            },
+            // next: {
+            //   tags: [cacheTag],
+            // },
           })
         },
       })(runtime)

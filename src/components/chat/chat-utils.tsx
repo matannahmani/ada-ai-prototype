@@ -1,7 +1,7 @@
 "use client"
 
-import { useCallback } from "react"
-import { atom, useSetAtom } from "jotai"
+import { useCallback, useMemo } from "react"
+import { atom, useAtomValue, useSetAtom } from "jotai"
 import { useAtomCallback } from "jotai/utils"
 
 /**
@@ -26,13 +26,25 @@ export const chatMessagesCounterAtom = atom<number>(0)
 
 export const chatMessagesAtom = atom<
   {
+    id: number
     question: string
     answer: string
   }[]
 >([])
 
-export const chatIdAtom = atom<string>("")
+export const chatMessageLimit = 25
 
+export const useIsChatDisabled = () => {
+  const messageCounter = useAtomValue(chatMessagesCounterAtom)
+  const isChatDisabled = useMemo(
+    () => messageCounter >= chatMessageLimit,
+    [messageCounter]
+  )
+  return isChatDisabled
+}
+
+export const chatIdAtom = atom<string>("")
+export const chatResponseIdAtom = atom<number>(-1)
 export const chatCompletionStatusAtom = atom<
   "error" | "streaming" | "complete" | "abort"
 >("complete")
@@ -46,6 +58,13 @@ export const useOnResponseComplete = () => {
       return currCount
     }, [])
   )
+  const readResponseId = useAtomCallback(
+    useCallback((get) => {
+      const currCount = get(chatResponseIdAtom)
+      console.log("current id", currCount)
+      return currCount
+    }, [])
+  )
   const readChatPrompt = useAtomCallback(
     useCallback((get) => {
       const currCount = get(chatCompletionPromptAtom)
@@ -55,16 +74,19 @@ export const useOnResponseComplete = () => {
   const appendMessageHandler = useCallback(() => {
     const prompt = readChatPrompt()
     const response = readChatResponse()
+    const id = readResponseId()
+    console.log("append current id", id)
 
     setClientMessages((prev) => {
       return [
         ...prev,
         {
+          id,
           question: prompt,
           answer: response,
         },
       ]
     })
-  }, [readChatResponse, readChatPrompt, setClientMessages])
+  }, [readChatPrompt, readChatResponse, readResponseId, setClientMessages])
   return appendMessageHandler
 }

@@ -1,20 +1,29 @@
 "use client"
 
+import { useMemo } from "react"
 import Link from "next/link"
-import { SiApple, SiFacebook, SiGoogle } from "@icons-pack/react-simple-icons"
+import { cn } from "@lib/utils"
 import { signIn } from "next-auth/react"
+import { SiApple, SiFacebook, SiGoogle } from "react-icons/si"
 
-import { Button } from "@/components/ui/button"
+import { useRouterHistory } from "@/hooks/use-router-history"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { LogoFull } from "@/components/logo-full"
 import { LogoSymbol } from "@/components/logo-symbol"
 
 import LoginForm from "./login-form"
 
-export const LoginContent = ({
-  linkAsReplace,
-}: {
-  linkAsReplace?: boolean
-}) => {
+export const LoginContent = () => {
+  const history = useRouterHistory()
+  const lastRoute = useMemo(() => {
+    const lastRoute = history[history.length - 1]
+    if (lastRoute?.includes("login")) {
+      const lastRouteBeforeLogin = history[history.length - 2]
+      if (lastRouteBeforeLogin) return lastRouteBeforeLogin
+      else return "/"
+    } else if (lastRoute) return lastRoute
+    else return "/"
+  }, [history])
   return (
     <div className="flex flex-col items-center gap-2">
       <LogoFull className="w-20 my-2 h-fit" />
@@ -23,7 +32,11 @@ export const LoginContent = ({
         <span className="mr-auto">Continue with Facebook</span>
       </Button>
       <Button
-        onClick={() => signIn("google")}
+        onClick={() =>
+          signIn("google", {
+            callbackUrl: lastRoute,
+          })
+        }
         className="w-[240px]"
         variant="google"
       >
@@ -52,10 +65,20 @@ export const LoginContent = ({
         <div className="flex-1 h-[1px] bg-muted-foreground/30" />
       </div>
 
-      <Link replace={linkAsReplace} href="/signup">
-        <Button className="w-[240px]" variant="secondary">
-          <LogoSymbol className="mr-3 w-4 h-4" /> SIGN UP FOR ADA
-        </Button>
+      <Link
+        className={cn(
+          buttonVariants({
+            variant: "secondary",
+          }),
+          "w-[240px]"
+        )}
+        href={{
+          query: {
+            modal: "sign-up",
+          },
+        }}
+      >
+        <LogoSymbol className="mr-3 w-4 h-4" /> SIGN UP FOR ADA
       </Link>
     </div>
   )

@@ -1,11 +1,10 @@
 "use client"
 
-import { getTransitionSizes } from "@formkit/auto-animate"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 
-import useCloseHelper from "./close-helper"
+import { useSetAuthModalState } from "./utils"
 
 function AuthDialog({
   children,
@@ -14,7 +13,7 @@ function AuthDialog({
   isOpen: boolean
   children: React.ReactNode
 }) {
-  const { close } = useCloseHelper()
+  const setAuthModalState = useSetAuthModalState()
   const [ref] = useAutoAnimate((el, action, oldCoords, newCoords) => {
     let keyframes: Record<string, string | number>[] = []
     // supply a different set of keyframes for each action
@@ -56,11 +55,11 @@ function AuthDialog({
       open={isOpen}
       onOpenChange={(e) => {
         if (!e) {
-          close()
+          setAuthModalState(null)
         }
       }}
     >
-      <DialogContent className="sm:max-w-[425px] h-screen sm:h-auto overflow-hidden">
+      <DialogContent className="sm:max-w-[425px] h-full sm:h-auto overflow-hidden">
         <div ref={ref}>{children}</div>
       </DialogContent>
     </Dialog>

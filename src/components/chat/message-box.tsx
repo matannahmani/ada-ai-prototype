@@ -5,8 +5,12 @@
 import { forwardRef, memo, Suspense } from "react"
 import { api } from "@/trpc/server"
 import { type Mission } from "@prisma/client"
-import { Avatar, AvatarImage } from "@ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar"
+import { Button } from "@ui/button"
 import { Separator } from "@ui/separator"
+import { Share2, ThumbsDown, ThumbsUp } from "lucide-react"
+
+import { ClientChatMessages } from "./chat-client-messages"
 
 export type TChat = {
   mission: Mission
@@ -17,19 +21,24 @@ export type TChat = {
   }
 }
 
-const ChatAvatar = memo(({ image }: { image: string | undefined }) => {
-  return (
-    <Avatar className="mr-2 h-12 w-12 rounded-sm">
-      <AvatarImage src={image} className="object-cover" />
-    </Avatar>
-  )
-})
+const ChatAvatar = memo(
+  ({ image, name }: { name: string; image: string | undefined }) => {
+    return (
+      <Avatar className="mr-2 h-12 w-12 rounded-sm">
+        <AvatarImage src={image} className="object-cover" />
+        <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
+      </Avatar>
+    )
+  }
+)
 ChatAvatar.displayName = "ChatAvatar"
 
 const ChatMessageHeader = memo(({ name }: { name: string }) => {
   return (
     <div className="w-fit">
-      <p className="w-fit text-sm font-medium leading-none">{name}</p>
+      <p className="w-fit text-sm font-medium leading-none capitalize">
+        {name.toLowerCase()}
+      </p>
       <Separator className="my-1" />
     </div>
   )
@@ -46,16 +55,35 @@ type ChatMessageProps = {
   image?: string
   name: string
   message: string
+  isResponse?: boolean
 }
 
+const ChatMessageFooter = memo(() => {
+  return (
+    <div className="flex flex-row color-[#404040] flex-wrap gap-2 items-center justify-end mt-2 md:mt-4">
+      <Button className="rounded-md" variant="ghost">
+        <Share2 className="w-5 h-5 cursor-pointer" />
+      </Button>
+      <Button className="rounded-md" variant="ghost">
+        <ThumbsUp className="w-5 h-5 cursor-pointer" />
+      </Button>
+      <Button className="rounded-md" variant="ghost">
+        <ThumbsDown className="w-5 h-5 cursor-pointer" />
+      </Button>
+    </div>
+  )
+})
+ChatMessageFooter.displayName = "ChatMessageFooter"
+
 const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
-  ({ id, image, name, message }, ref) => {
+  ({ id, image, name, message, isResponse }, ref) => {
     return (
-      <div ref={ref} id={id} className="flex gap-2">
-        <ChatAvatar image={image} />
-        <div>
+      <div ref={ref} id={id} className="flex gap-2 text-[#1C1C1C]">
+        <ChatAvatar name={isResponse ? "AI" : name} image={image}></ChatAvatar>
+        <div className="relative w-full">
           <ChatMessageHeader name={name} />
           <ChatMessageBody message={message} />
+          {isResponse && <ChatMessageFooter />}
         </div>
       </div>
     )
@@ -82,20 +110,28 @@ async function ChatHistory({ ...props }: TChat) {
   return (
     <>
       {chat.messages.map((message) => (
-        <ChatMessage
-          key={`message-${message.id}`}
-          message={message.content}
-          name={
-            message.isResponse ? props.mission.name : props.user?.name ?? ""
-          }
-          image={
-            message.isResponse
-              ? props.mission.image
-              : props.user?.image ?? undefined
-          }
-          id={`message-${message.id}`}
-        />
+        <>
+          <ChatMessage
+            key={`message-${message.id}-q`}
+            message={message.questionText}
+            name={props.user.name ?? "Anonymous"}
+            image={props.user?.image ?? undefined}
+            id={`message-${message.id}-q`}
+          />
+          <ChatMessage
+            key={`message-${message.id}-a`}
+            message={message.answerText}
+            name={props.mission.name}
+            isResponse={true}
+            image={props.mission.image}
+            id={`message-${message.id}-a`}
+          />
+        </>
       ))}
+      <ClientChatMessages
+        {...props}
+        ids={chat.messages.map((message) => message.id)}
+      />
     </>
   )
 }
@@ -111,7 +147,7 @@ const MessageBox = ({
   return (
     <div
       id="chat-container"
-      className=" backdrop-blur [&>*:nth-child(even)]:bg-muted/50  [&>*:nth-child(odd)]:bg-background [&>*]:p-4"
+      className=" backdrop-blur [&>*:nth-child(even)]:bg-[#EFF5FF]  [&>*:nth-child(odd)]:bg-[#FAFAFF] [&>*]:p-4"
     >
       <ChatMessage
         name={candidate?.name}

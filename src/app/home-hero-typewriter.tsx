@@ -5,7 +5,6 @@ import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { Typewriter } from "react-simple-typewriter"
 
 const sentences = [
-  "hidden agendas",
   "clarity",
   "transparency",
   "accountability",
@@ -31,7 +30,7 @@ const HomeHeroTypewriter = () => {
   const number = useTyperNumber(sentences.length)
   return (
     <span className="text-4xl leading-tight tracking-tighter font-bold text-center w-full h-[140px]">
-      Tired of lack of &nbsp;
+      Tired of no &nbsp;
       <br className="sm:hidden" />
       <span className="font-extrabold [&>*:first-child]:bg-primary-200">
         <Typewriter

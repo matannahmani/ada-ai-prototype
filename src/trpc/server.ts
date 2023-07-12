@@ -1,16 +1,14 @@
 "use server"
 
-import { cookies, headers } from "next/headers"
-import { appRouter, type AppRouter } from "@/server/api/root"
-import { getServerAuthSession } from "@/server/auth"
-import { httpLink, loggerLink } from "@trpc/client"
-import { experimental_nextCacheLink } from "@trpc/next/app-dir/links/nextCache"
-import { AnyRouter } from "@trpc/server"
+import { cookies } from "next/headers"
+import { type AppRouter } from "@/server/api/root"
+import { TRPCClientError } from "@trpc/client"
+import { experimental_nextHttpLink } from "@trpc/next/app-dir/links/nextHttp"
+import { experimental_createTRPCNextAppDirServer } from "@trpc/next/app-dir/server"
 import SuperJSON from "superjson"
 
-import { experimental_createTRPCNextAppDirServer } from "./experimental_createTRPCNextAppDirServer"
-import { experimental_nextHttpLink } from "./experimental_nextHttpLink"
-import { generateCacheTag, getUrl, transformer } from "./shared"
+// import { experimental_nextHttpLink } from "./experimental_nextHttpLink"
+import { getUrl } from "./shared"
 
 /**
  * This client invokes procedures directly on the server without fetching over HTTP.
@@ -29,6 +27,7 @@ export const api = experimental_createTRPCNextAppDirServer<AppRouter>({
           headers() {
             return {
               cookie: cookies().toString(),
+              rng: Math.random().toString(),
               "x-trpc-source": "rsc-http",
             }
           },

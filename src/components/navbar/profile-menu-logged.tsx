@@ -2,6 +2,7 @@
 
 import { Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
+import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar"
 import { type Session } from "next-auth"
 import { signOut } from "next-auth/react"
 
@@ -19,17 +20,15 @@ const ProfileMenuLogged = ({ session }: { session: Session }) => {
       <div>
         <Menu.Button className="flex rounded-full bg-background/80 text-sm  backdrop-blur focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="sr-only">Open user menu</span>
-          {session.user.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+          <Avatar>
+            <AvatarImage
               referrerPolicy="no-referrer"
-              className="h-8 w-8 rounded-full"
-              src={session.user.image}
-              alt="profile picture"
+              src={session.user.image ?? undefined}
             />
-          ) : (
-            <div className="h-8 w-8 rounded-full bg-gray-500"></div>
-          )}
+            <AvatarFallback>
+              {session?.user?.name?.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
         </Menu.Button>
       </div>
       <Transition

@@ -21,6 +21,8 @@ import { type Session } from "next-auth"
 import superjson from "superjson"
 import { ZodError } from "zod"
 
+import { getVisitorId } from "../lib/visitor"
+
 /**
  * 1. CONTEXT
  *
@@ -156,12 +158,11 @@ export const publicProcedure = t.procedure
 // })
 
 const enforceVistorOrUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-  const cookiesJar = cookies()
-  const visitorId = cookiesJar.get("visitorId")
+  const visitorId = getVisitorId()
 
   const visitorEntity = await ctx.prisma.vistor.findUnique({
     where: {
-      id: (visitorId?.value as string) ?? "",
+      id: (visitorId as string) ?? "",
     },
   })
   if ((!visitorId || !visitorEntity) && (!ctx.session || !ctx.session.user)) {

@@ -1,3 +1,4 @@
+import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { getServerAuthSession } from "@/server/auth"
 import { api } from "@/trpc/server"
@@ -11,19 +12,17 @@ import CurrentConversationSection from "@/components/chat/current-conversation-s
 import MessageBox, { type TChat } from "@/components/chat/message-box"
 import MessageStream from "@/components/chat/message-stream"
 import MissionChatFooter from "@/components/chat/mission-chat-footer"
-import MissionGoal from "@/components/chat/mission-goal"
-import PreviousUpdatesSection from "@/components/chat/previous-updates-section"
 
-export const dynamic = "force-dynamic"
-export const fetchCache = "force-no-store"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
+export const fetchCache = "only-no-store"
 
 async function ChatPage({
   params,
 }: {
   params: { missionId: string; chatId: string }
 }) {
+  headers()
   const chat = await api.chats.showOrCreate.query({
     missionId: Number(params.missionId),
     chatId: Number(params.chatId),
@@ -52,21 +51,29 @@ async function ChatPage({
   return (
     <>
       <ChatHistorySyncerServer {...chatProps} />
-      <div className="mr-auto  max-w-full container px-2 ">
-        <ChatPageHero {...params} />
-        <Separator className="my-4 md:my-6" />
-        <CurrentConversationSection />
-        <div className="flex flex-col gap-2 relative">
-          {/* <ScrollArea className="h-[calc(100vh-240px)] py-2 "> */}
+      <div className="mr-auto  sm:container sm:px-2 ">
+        <section className="px-2 sm:px-0">
+          <ChatPageHero {...params} />
+          <Separator className="my-4 md:my-6" />
+          <CurrentConversationSection />
+        </section>
+        <section className="flex flex-col gap-2 relative">
           <MessageBox {...chatProps}>
             <>
-              <ClientChatMessages {...chatProps} />
               <MessageStream {...chatProps} />
             </>
           </MessageBox>
+        </section>
+        <div className="px-2 sm:px-0 gap-2 my-2">
           <MissionChatFooter {...chatProps} />
-          <ChatBox />
-          {/* </ScrollArea> */}
+        </div>
+        <ChatBox />
+        <div className="px-2 sm:px-0 my-2">
+          <span className="basis-full text-center my-2 mt-4 text-sm text-[#9C9C9C] italic">
+            Ada’s AI’s are the first AI’s to have similar legal rights to a
+            human. Our AI owns donated funds and each AI is an expert towards
+            each cause.
+          </span>
         </div>
       </div>
     </>
