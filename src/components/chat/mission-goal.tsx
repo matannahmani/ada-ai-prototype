@@ -32,12 +32,12 @@ const MissionGoal = (props: MissionGoalProps) => {
         )}
       </div>
       <div className="flex flex-wrap gap-2 flex-row justify-center items-center">
-        <Button className="w-[160px] sm:w-[200px]">
+        <Button className="w-[160px] sm:w-[240px]">
           <span className="ml-auto">Donate</span>
 
           <DonateIcon className="ml-auto" />
         </Button>
-        <Button variant="secondary" className="w-[160px] sm:w-[200px]">
+        <Button variant="secondary" className="w-[160px] sm:w-[240px]">
           <span className="ml-auto">Read More</span>
 
           <ChevronDown className="ml-auto" />

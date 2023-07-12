@@ -108,14 +108,11 @@ const ChatBox = () => {
           // center textarea if empty and placeholder to center
           textAreaRef.current.style.height = "auto"
           textAreaRef.current.style.height = "2.5rem"
-          textAreaRef.current.style.paddingTop = "0.5rem"
-          buttonDivRef.current?.classList.remove("bottom-4")
+          buttonDivRef.current?.classList.remove("bottom-2")
           return
         }
         if (textAreaRef.current.scrollHeight > 48) {
-          buttonDivRef.current?.classList.add("bottom-4")
-          textAreaRef.current.style.paddingTop = ""
-          textAreaRef.current.style.paddingBottom = ""
+          buttonDivRef.current?.classList.add("bottom-2")
           textAreaRef.current.style.height = "auto"
           textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
         }
@@ -131,15 +128,19 @@ const ChatBox = () => {
         onSubmitHandler(text)
       }}
       className="
-      py-2
-      sticky bottom-4 flex items-center border-2 border-muted shadow-xl z-10 rounded-md bg-background mx-4 "
+      py-1
+      border border-input
+      overflow-hidden
+      ring-offset-background
+      focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2
+      sticky bottom-4 flex items-center shadow-xl  z-10 rounded-md bg-background mx-4 "
     >
       <Textarea
         disabled={isChatDisabled}
         value={text}
         ref={textAreaRef}
         className={cn(
-          "h-10 min-h-fit max-h-52 p-2 pr-20 w-full overflow-auto border-none resize-none",
+          "h-10 min-h-fit leading-6 max-h-52 p-2 pr-20 w-full overflow-auto border-none resize-none !outline-none !ring-0",
           isChatDisabled && "!placeholder-destructive"
         )}
         onChange={onTextChangeHandler}

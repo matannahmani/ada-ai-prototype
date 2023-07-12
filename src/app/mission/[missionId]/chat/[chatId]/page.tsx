@@ -51,25 +51,29 @@ async function ChatPage({
   return (
     <>
       <ChatHistorySyncerServer {...chatProps} />
-      <div className="mr-auto  container px-2 ">
-        <ChatPageHero {...params} />
-        <Separator className="my-4 md:my-6" />
-        <CurrentConversationSection />
-        <div className="flex flex-col gap-2 relative">
-          {/* <ScrollArea className="h-[calc(100vh-240px)] py-2 "> */}
+      <div className="mr-auto  sm:container sm:px-2 ">
+        <section className="px-2 sm:px-0">
+          <ChatPageHero {...params} />
+          <Separator className="my-4 md:my-6" />
+          <CurrentConversationSection />
+        </section>
+        <section className="flex flex-col gap-2 relative">
           <MessageBox {...chatProps}>
             <>
               <MessageStream {...chatProps} />
             </>
           </MessageBox>
+        </section>
+        <div className="px-2 sm:px-0 gap-2 my-2">
           <MissionChatFooter {...chatProps} />
-          <ChatBox />
+        </div>
+        <ChatBox />
+        <div className="px-2 sm:px-0 my-2">
           <span className="basis-full text-center my-2 mt-4 text-sm text-[#9C9C9C] italic">
             Ada’s AI’s are the first AI’s to have similar legal rights to a
             human. Our AI owns donated funds and each AI is an expert towards
             each cause.
           </span>
-          {/* </ScrollArea> */}
         </div>
       </div>
     </>

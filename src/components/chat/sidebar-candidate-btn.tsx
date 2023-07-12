@@ -18,7 +18,7 @@ const SidebarCandidateBtn = memo(
         asChild
         size="sm"
         className={cn(
-          "w-full justify-start font-normal text-[#021444] p-6 rounded-none",
+          "w-full justify-start font-normal h-auto text-[#021444] p-2 items-start rounded-none",
           `${chatIdParam}` === `${chatId}`
             ? "font-semibold opacity-100"
             : "opacity-90"

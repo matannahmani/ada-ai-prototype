@@ -8,9 +8,11 @@ import { ChevronJacob, DonateIcon } from "../icons"
 
 const MissionGoalCard = ({
   description,
-  donateEnabled,
+  donate,
 }: {
-  donateEnabled?: boolean
+  donate?: {
+    className?: string
+  }
   description: string
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -30,8 +32,8 @@ const MissionGoalCard = ({
         {description}
       </div>
       <div className="flex flex-wrap m-auto gap-4 items-center justify-center">
-        {donateEnabled && (
-          <Button className=" w-fit">
+        {!!donate && (
+          <Button className={cn("w-[160px] sm:w-[240px]", donate.className)}>
             Donate
             <DonateIcon className="ml-2" />
           </Button>
@@ -39,7 +41,7 @@ const MissionGoalCard = ({
         <Button
           onClick={() => setIsExpanded((pre) => !pre)}
           variant="secondary"
-          className=" w-fit"
+          className=" w-[160px] sm:w-[240px]"
         >
           Read More{" "}
           <ChevronJacob

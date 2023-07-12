@@ -147,7 +147,7 @@ const MessageBox = ({
   return (
     <div
       id="chat-container"
-      className=" backdrop-blur [&>*:nth-child(even)]:bg-[#EFF5FF]  [&>*:nth-child(odd)]:bg-background [&>*]:p-4"
+      className=" backdrop-blur [&>*:nth-child(even)]:bg-[#EFF5FF]  [&>*:nth-child(odd)]:bg-[#FAFAFF] [&>*]:p-4"
     >
       <ChatMessage
         name={candidate?.name}

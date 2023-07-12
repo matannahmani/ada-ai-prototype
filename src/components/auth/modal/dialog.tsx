@@ -59,7 +59,7 @@ function AuthDialog({
         }
       }}
     >
-      <DialogContent className="sm:max-w-[425px] h-screen sm:h-auto overflow-hidden">
+      <DialogContent className="sm:max-w-[425px] h-full sm:h-auto overflow-hidden">
         <div ref={ref}>{children}</div>
       </DialogContent>
     </Dialog>

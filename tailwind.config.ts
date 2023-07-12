@@ -1,4 +1,4 @@
-import { fontFamily } from "tailwindcss/defaultTheme"
+import { fontFamily, screens } from "tailwindcss/defaultTheme"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -13,10 +13,13 @@ module.exports = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
     },
+    screens: {
+      ...screens,
+      "2xl": "1400px",
+      xs: { max: "320px" },
+    },
+
     extend: {
       colors: {
         border: "hsl(var(--border))",
