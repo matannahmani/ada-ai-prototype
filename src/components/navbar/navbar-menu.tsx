@@ -76,6 +76,7 @@ function MobileMenu({
                   key={item.name}
                   as={Link}
                   href={item.href}
+                  prefetch={false}
                   className={cn(
                     navItemStyle(isCurrent),
                     item.mobileOnly && "block !sm:hidden"
@@ -107,7 +108,7 @@ function MobileMenuTriggers({
   return (
     <div
       id={NAVBAR_SYMBOL.toString()}
-      className="inset-y-0 left-0 flex items-center "
+      className="inset-y-0 left-0 items-center flex "
     >
       {/* Mobile menu button*/}
       <div ref={menuIconContainerRef}>
@@ -145,7 +146,12 @@ function NavbarMenu({ navigation, profileComponent }: NavbarMenuProps) {
   const pathname = usePathname()
   const isChatPage = useMemo(() => pathname.includes("chat"), [pathname])
   const currentPathIndex = useMemo(
-    () => navigation.findIndex((nav) => nav.href === pathname),
+    () =>
+      navigation.findIndex(
+        (nav) =>
+          nav.href === pathname ||
+          (nav.href !== "/" && pathname.includes(nav.href))
+      ),
     [navigation, pathname]
   )
 
@@ -167,34 +173,34 @@ function NavbarMenu({ navigation, profileComponent }: NavbarMenuProps) {
             {/* <LogoFull className="hidden md:block absolute inset-1/2	transform -translate-y-2/4 -translate-x-2/4 md:h-8 w-auto h-6" /> */}
             <div className=" px-2 sm:px-6 lg:px-8">
               <div className="relative flex h-16 items-center justify-between">
-                <div className="flex flex-shrink-0 items-center">
-                  {/* <ThemeSwitcher /> */}
-                </div>
-                <MobileMenuTriggers open={open} menuIconRef={menuIconRef} />
-                <div className="hidden sm:flex  items-center justify-center sm:items-stretch sm:justify-start">
-                  <div className=" sm:ml-6 sm:block">
-                    <div className="flex space-x-4">
-                      {navigation.map((item, index) => {
-                        const isCurrent = index === currentPathIndex
+                <div className="flex">
+                  <MobileMenuTriggers open={open} menuIconRef={menuIconRef} />
+                  <div className="hidden sm:flex  items-center justify-center sm:items-stretch sm:justify-start">
+                    <div className=" sm:ml-6 sm:block">
+                      <div className="flex space-x-4">
+                        {navigation.map((item, index) => {
+                          const isCurrent = index === currentPathIndex
 
-                        return (
-                          <Link
-                            prefetch={false}
-                            key={item.name}
-                            href={item.href}
-                            className={cn(
-                              navItemStyle(isCurrent),
-                              item.mobileOnly && "hidden"
-                            )}
-                            aria-current={isCurrent ? "page" : undefined}
-                          >
-                            {item.name}
-                          </Link>
-                        )
-                      })}
+                          return (
+                            <Link
+                              prefetch={false}
+                              key={item.name}
+                              href={item.href}
+                              className={cn(
+                                navItemStyle(isCurrent),
+                                item.mobileOnly && "hidden"
+                              )}
+                              aria-current={isCurrent ? "page" : undefined}
+                            >
+                              {item.name}
+                            </Link>
+                          )
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
+
                 <Link href="/">
                   <LogoFull className="block md:h-8 w-auto h-6 mr-auto ml-auto" />
                 </Link>

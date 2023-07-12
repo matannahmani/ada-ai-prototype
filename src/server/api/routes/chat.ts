@@ -96,7 +96,7 @@ const chatRouter = createTRPCRouter({
         mission: true,
       },
     })
-    return chats
+    return { chats, isUser: !!ctx?.session?.user?.id }
   }),
   showOrCreate: protectedUserOrVistorProcedure
     .input(
