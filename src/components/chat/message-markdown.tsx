@@ -62,11 +62,19 @@ export const ChatMessageMarkdown = ({ children }: { children: string }) => {
             className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold"
           />
         ),
+        table: ({ node, ...props }) => (
+          <div className="overflow-x-auto">
+            <table
+              {...props}
+              className="table-auto w-full overflow-scroll min-w-[480px]"
+            />
+          </div>
+        ),
         small: ({ node, ...props }) => (
           <small {...props} className="text-sm font-medium leading-none" />
         ),
       }}
-      className="prose prose-slate max-w-none"
+      className="prose prose-slate max-w-none overflow-hidden"
     >
       {children}
     </ReactMarkdown>
