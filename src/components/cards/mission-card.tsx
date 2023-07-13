@@ -71,7 +71,7 @@ const MissionCard = (props: MissionCardProps) => (
       </div>
       <div
         className={cn(
-          "gap-4 mb-4 px-2 md:px-0 flex flex-col items-stretch md:flex-row flex-wrap lg:items-center justify-center py-2 w-full lg:px-2",
+          "z-[3] gap-4 mb-4 px-2 md:px-0 flex flex-col items-stretch md:flex-row flex-wrap lg:items-center justify-center py-2 w-full lg:px-2",
           !props.isMobile && "lg:px-12"
         )}
       >

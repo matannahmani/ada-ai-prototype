@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { Disclosure } from "@headlessui/react"
 import { cn } from "@lib/utils"
+import { buttonVariants } from "@ui/button"
 import { Skeleton } from "@ui/skeleton"
 import { Menu as MenuIcon, X } from "lucide-react"
 import { useOnClickOutside } from "usehooks-ts"
@@ -47,8 +48,9 @@ function MobileMenu({
 }) {
   const [menuContainerWrapperRef] = useAutoAnimate()
   const menuContainerRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside<HTMLDivElement>(menuContainerRef, () => {
+  useOnClickOutside<HTMLDivElement>(menuContainerRef, (e) => {
     if (!menuIconRef.current) return
+    if (menuIconRef.current.contains(e.target as Node)) return
     if (menuIconRef.current.dataset["headlessuiState"] === "open") {
       menuIconRef.current.click()
     }
@@ -103,18 +105,21 @@ function MobileMenuTriggers({
   open: boolean
   menuIconRef: React.RefObject<HTMLButtonElement>
 }) {
-  const [menuIconContainerRef] = useAutoAnimate()
-
   return (
     <div
       id={NAVBAR_SYMBOL.toString()}
       className="inset-y-0 left-0 items-center flex "
     >
       {/* Mobile menu button*/}
-      <div ref={menuIconContainerRef}>
+      <div>
         <Disclosure.Button
           ref={menuIconRef}
-          className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white sm:hidden"
+          className={cn(
+            buttonVariants({
+              variant: "ghost",
+            }),
+            "sm:hidden rounded-md"
+          )}
         >
           <span className="sr-only">Open main menu</span>
           {open ? (

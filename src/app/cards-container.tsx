@@ -16,7 +16,7 @@ type CardsContainerProps = {
 
 const CardsContainer = ({ ...props }: CardsContainerProps) => {
   return (
-    <div className="sm:container items-center sm:w-fit sm:items-start  flex flex-col gap-6 py-4">
+    <div className="sm:container relative items-center sm:w-fit sm:items-start  flex flex-col gap-6 py-4">
       <div id="candidate-container" className="px-1 flex items-center gap-4">
         <h2 className="text-2xl font-bold  tracking-tight">{props.title}</h2>
         {props.link && (

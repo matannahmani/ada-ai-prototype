@@ -3,6 +3,7 @@
 import { memo, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { useAutoAnimate } from "@formkit/auto-animate/react"
+import { buttonVariants } from "@ui/button"
 import { atom, useAtom } from "jotai"
 import { PanelRightClose, PanelRightOpen } from "lucide-react"
 import { useOnClickOutside } from "usehooks-ts"
@@ -19,7 +20,6 @@ export const CHAT_SIDEBAR_SYMBOL = Symbol("CHAT_SIDEBAR")
 export const ChatSidebarTrigger = () => {
   const path = usePathname()
   const [isOpen, setIsOpen] = useAtom(sidebarAtom)
-  const [ref] = useAutoAnimate()
   const buttonContainerRef = useRef<HTMLDivElement>(null)
   useOnClickOutside<HTMLDivElement>(buttonContainerRef, (e) => {
     // check if the target is not the symbol of the sidebar if not close the sidebar
@@ -31,7 +31,15 @@ export const ChatSidebarTrigger = () => {
   if (!path.includes("chat")) return null
   return (
     <div ref={buttonContainerRef} className="ml-2 flex h-10 w-10 lg:hidden">
-      <button ref={ref} onClick={() => setIsOpen(!isOpen)}>
+      <button
+        className={cn(
+          buttonVariants({
+            variant: "ghost",
+          }),
+          "sm:hidden rounded-md"
+        )}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         {isOpen ? <PanelRightOpen /> : <PanelRightClose />}
       </button>
     </div>
