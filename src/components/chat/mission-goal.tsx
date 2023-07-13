@@ -1,5 +1,6 @@
 import { type Mission } from "@prisma/client"
 import { Button } from "@ui/button"
+import { DonateButton } from "@ui/donate-button"
 import { ChevronDown, HelpingHand } from "lucide-react"
 
 import { DonateIcon } from "../icons"
@@ -32,11 +33,7 @@ const MissionGoal = (props: MissionGoalProps) => {
         )}
       </div>
       <div className="flex flex-wrap gap-2 flex-row justify-center items-center">
-        <Button className="w-[160px] sm:w-[240px]">
-          <span className="ml-auto">Donate</span>
-
-          <DonateIcon className="ml-auto" />
-        </Button>
+        <DonateButton className="w-[160px] sm:w-[240px]" />
         <Button variant="secondary" className="w-[160px] sm:w-[240px]">
           <span className="ml-auto">Read More</span>
 

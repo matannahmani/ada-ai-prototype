@@ -3,6 +3,7 @@ import Link from "next/link"
 import { api } from "@/trpc/server"
 import { cn } from "@lib/utils"
 import { Button, buttonVariants } from "@ui/button"
+import { DonateButton } from "@ui/donate-button"
 
 import MissionGoalCard from "../cards/mission-goal"
 import { DonateIcon, ShareIcon } from "../icons"
@@ -35,10 +36,7 @@ const ChatPageHeroAsync = async ({
           description={mission.description}
         />
         <div className="flex-1 basis-full flex md:hidden">
-          <Button size="xl" className="w-full max-w-sm mx-auto ">
-            Donate
-            <DonateIcon className="ml-2" />
-          </Button>
+          <DonateButton size="xl" className="w-full max-w-sm mx-auto " />
         </div>
         <Button
           variant="outline"

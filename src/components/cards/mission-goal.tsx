@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { cn } from "@lib/utils"
 import { Button } from "@ui/button"
+import { DonateButton } from "@ui/donate-button"
 
 import { ChevronJacob, DonateIcon } from "../icons"
 
@@ -33,10 +34,9 @@ const MissionGoalCard = ({
       </div>
       <div className="flex flex-wrap m-auto gap-4 items-center justify-center">
         {!!donate && (
-          <Button className={cn("w-[160px] sm:w-[240px]", donate.className)}>
-            Donate
-            <DonateIcon className="ml-2" />
-          </Button>
+          <DonateButton
+            className={cn("w-[160px] sm:w-[240px]", donate.className)}
+          />
         )}
         <Button
           onClick={() => setIsExpanded((pre) => !pre)}

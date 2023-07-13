@@ -11,6 +11,7 @@ import { Separator } from "@ui/separator"
 import { Share2, ThumbsDown, ThumbsUp } from "lucide-react"
 
 import { ClientChatMessages } from "./chat-client-messages"
+import { ChatMessageMarkdown } from "./message-markdown"
 
 export type TChat = {
   mission: Mission
@@ -46,7 +47,7 @@ const ChatMessageHeader = memo(({ name }: { name: string }) => {
 ChatMessageHeader.displayName = "ChatMessageHeader"
 
 const ChatMessageBody = memo(({ message }: { message: string }) => {
-  return <p>{message}</p>
+  return <ChatMessageMarkdown>{message}</ChatMessageMarkdown>
 })
 ChatMessageBody.displayName = "ChatMessageBody"
 

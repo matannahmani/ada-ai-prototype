@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { cn } from "@lib/utils"
 import { Button, buttonVariants } from "@ui/button"
+import { DonateButton } from "@ui/donate-button"
 import { HelpingHand, Share } from "lucide-react"
 
 import { DonateIcon, ShareIcon } from "../icons"
@@ -16,10 +17,7 @@ const MissionChatFooter = (props: TChat) => {
         id="chatbox-footer-scroll-indicator"
         className="absolute -bottom-40"
       />
-      <Button>
-        Donate
-        <DonateIcon className="ml-2" />
-      </Button>
+      <DonateButton />
       <Link
         href={`/mission/${props.mission.id}`}
         className={cn(

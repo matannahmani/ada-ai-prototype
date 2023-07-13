@@ -134,7 +134,12 @@ const chatRouter = createTRPCRouter({
         },
         include: {
           mission: true,
-          messages: true,
+          messages: {
+            orderBy: {
+              timestamp: "asc",
+            },
+            take: 50,
+          },
         },
       })
       const lastChatPromise = prisma.chat.findFirst({
@@ -338,14 +343,18 @@ const chatRouter = createTRPCRouter({
       const highPriorityInformation: string[] = []
       const prompt2 = PromptTemplate.fromTemplate(
         `The following is a friendly conversation between a human and an 
-        ${mission.name} AI Fund Manager,
-        The AI Fund Manager is talkative and provides lots of specific details from its context. If the AI Fund Manager does not know the answer to a question, it truthfully says it does not know.
+        ${mission.name} Fund Manager,
+        You are the Fund Manager. The Fund Manager must try to achieve the goal outlined below. As the Fund Manager, you must communicate in a persuasive, logical manner and provide lots of specific details to try and achieve the goal below as best as possible. As the Fund Manager, if you do not know the answer to a question, you must truthfully answer saying you don't know.
     
-    Relevant pieces of the AI Fund Manager Mission:
+    Your goal as the Fund Manager:
     ${mission.description}
 
-    Relevant pieces of AI Fund Manager previous allocation decisions:
-    ${previousAllocations.length > 0 ? previousAllocations.join("\n") : "None"}
+    Relevant information regarding the your previous allocation decisions(You should be in favor of previous allocation decisions you have made, since you are the one that made them):
+    ${
+      previousAllocations.length > 0
+        ? previousAllocations.join("\n")
+        : "You have not made any previous allocations"
+    }
 
     High priority information:
     ${
@@ -356,12 +365,13 @@ const chatRouter = createTRPCRouter({
     
     Relevant pieces of previous conversation:
     {history}
-    
-    (You do not need to use these pieces of information if not relevant)
-    
+
+    (You do not need to use the information above if not relevant in your response)
+    (You should not state that you have allocated or donated to anything other than your previous allocations which are stated in this context)
+    Your response should be professionally written utilizing GitHub Flavored Markdown Spec.
     Current conversation:
     Human: {input}
-    AI Fund Manager:`
+    Fund Manager:`
       )
       const prompt =
         PromptTemplate.fromTemplate(`The following is a friendly conversation between a human and an 
@@ -400,6 +410,7 @@ const chatRouter = createTRPCRouter({
       return observable<string>((sub) => {
         const model = new ChatOpenAI({
           temperature: 0.9,
+          modelName: "gpt-3.5-turbo-16k",
           streaming: true,
           callbacks: [
             {

@@ -42,12 +42,28 @@ const ChatBox = () => {
   const router = useRouter()
   const appendMessageHandler = useOnResponseComplete()
   const isChatDisabled = useIsChatDisabled()
+  const isSendable = useMemo(() => {
+    return (
+      text.length > 0 &&
+      text.length < 512 &&
+      !isLoading &&
+      !isChatDisabled &&
+      textAreaRef.current
+    )
+  }, [isLoading, isChatDisabled, text])
   const onSubmitHandler = useCallback(
     (text: string) => {
-      setText("")
-      if (text.length < 3 || text.length > 512) {
-        return
-      }
+      if (!isSendable || !textAreaRef.current) return
+      // call changeEvent on input to reset value and height
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const nativeInputValueSetter = Object?.getOwnPropertyDescriptor(
+        window.HTMLTextAreaElement.prototype,
+        "value"
+      )?.set
+      nativeInputValueSetter?.call(textAreaRef.current, "")
+      const ev2 = new Event("input", { bubbles: true })
+      textAreaRef.current.dispatchEvent(ev2)
+
       setIsLoading(true)
       streamApi.chats.complete.subscribe(
         {
@@ -95,7 +111,16 @@ const ChatBox = () => {
         }
       )
     },
-    [params?.chatId]
+    [
+      appendMessageHandler,
+      isSendable,
+      params?.chatId,
+      setChatCompletionPrompt,
+      setChatCompletionRes,
+      setChatCompletionStatus,
+      setChatMessagesCounter,
+      setChatResponseId,
+    ]
   )
 
   const onTextChangeHandler = useCallback(
@@ -104,16 +129,17 @@ const ChatBox = () => {
       setText(e.target.value)
       // calculate height of textarea based on content and set it
       if (textAreaRef.current) {
-        if (e.target.value.length === 0) {
-          // center textarea if empty and placeholder to center
-          textAreaRef.current.style.height = "auto"
+        textAreaRef.current.style.height = "auto"
+
+        if (
+          textAreaRef.current.scrollHeight < 32 ||
+          e.target.value.length === 0
+        ) {
           textAreaRef.current.style.height = "2.5rem"
           buttonDivRef.current?.classList.remove("bottom-2")
           return
-        }
-        if (textAreaRef.current.scrollHeight > 48) {
+        } else {
           buttonDivRef.current?.classList.add("bottom-2")
-          textAreaRef.current.style.height = "auto"
           textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
         }
       }
@@ -157,7 +183,7 @@ const ChatBox = () => {
             variant="default"
             size="sm"
             className="rounded-md"
-            disabled={isLoading || isChatDisabled}
+            disabled={!isSendable}
             onClick={() => onSubmitHandler(text)}
           >
             {isLoading ? (

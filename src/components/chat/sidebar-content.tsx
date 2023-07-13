@@ -59,7 +59,9 @@ async function SidebarChatCounter() {
 
 function SidebarContent({ className }: SidebarProps) {
   return (
-    <div className={cn("pb-12 px-6 py-2 flex flex-col", className)}>
+    <div
+      className={cn("pb-12 px-6 py-2 flex flex-col sticky top-20", className)}
+    >
       <div className="flex flex-wrap justify-start items-center gap-2 px-1.5">
         <h2 className="relative xs:text-sm text-lg font-semibold tracking-tight text-[#021444]">
           Previous Chats
@@ -79,8 +81,8 @@ function SidebarContent({ className }: SidebarProps) {
           <SidebarChatCounter />
         </Suspense>
       </div> */}
-      <ScrollArea className="h-[540px]">
-        <div className="space-y-1 p-2 px-0">
+      <ScrollArea className="h-[80vh]">
+        <div className="space-y-1 p-2 px-0 overflow-y-auto">
           <Suspense
             fallback={new Array(10).fill(0).map((_, i) => (
               <Skeleton className="h-[36px] w-full" key={`skeleton-${i}`} />

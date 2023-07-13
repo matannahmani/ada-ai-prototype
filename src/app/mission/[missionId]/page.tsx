@@ -2,6 +2,7 @@ import Link from "next/link"
 import { cn } from "@lib/utils"
 import { Badge } from "@ui/badge"
 import { Button, buttonVariants } from "@ui/button"
+import { DonateButton } from "@ui/donate-button"
 import { Separator } from "@ui/separator"
 import {
   ChevronDown,
@@ -114,12 +115,10 @@ leading-9"
             />
           </div>
           <div className="flex flex-row gap-2 my-2 self-stretch">
-            <Button
+            <DonateButton
               size="lg"
               className="hidden md:inline-flex xl:w-[300px] gap-2"
-            >
-              Donate <DonateIcon />
-            </Button>
+            />
             <Button
               size="lg"
               variant="secondary"
@@ -150,9 +149,7 @@ leading-9"
             <br />
             <span>47 donations</span>
           </div>
-          <Button size="3xl" className="w-full">
-            Donate <DonateIcon className="ml-2" />
-          </Button>
+          <DonateButton size="3xl" className="w-full" />
           <Link
             className={cn(
               buttonVariants({ variant: "secondary", size: "3xl" }),
@@ -206,9 +203,7 @@ leading-9"
           <ChatIcon className="mr-2" />
           Chat with our AI Fundraiser Manager Live
         </Link>
-        <Button size="xs" className="w-full py-6 rounded-full">
-          Donate <DonateIcon className="ml-2" />
-        </Button>
+        <DonateButton size="xs" className="w-full py-6 rounded-full" />
       </div>
     </div>
   )

@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -31,12 +31,13 @@ model Account {
 
 // vistor is a temporary model to store the fingerprint of the user
 model Vistor {
-  id              String   @id @default(cuid())
+  id              String     @id @default(cuid())
   fingerprintHash String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
   chats           Chat[]
   User            User[]
+  Donation        Donation[]
 }
 
 model Session {
@@ -45,6 +46,14 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MissionStripe {
+  id        Int     @id @default(autoincrement())
+  missionId Int
+  mission   Mission @relation(fields: [missionId], references: [id])
+  stripeId  String
+  linkId    String
 }
 
 model Mission {
@@ -59,6 +68,8 @@ model Mission {
   image          String
   aiModel        String? // Could represent the file or URL of the AI model for the chatbot (if we go with fine-tuning)
   Chat           Chat[]
+  totalDonations Float            @default(0)
+  totalDonors    Int              @default(0)
   createdAt      DateTime         @default(now())
   creatorId      String
   updatedAt      DateTime         @updatedAt
@@ -66,6 +77,7 @@ model Mission {
   MissionUpdates MissionUpdates[]
   Donation       Donation[]
   MissionVector  MissionVector[]
+  MissionStripe  MissionStripe[]
 }
 
 model Chat {
@@ -93,7 +105,7 @@ model MessageVector {
   id        String                 @id @default(cuid())
   messageId Int
   chatId    Int
-  content   String
+  content      String @db.Text
   message   Message                @relation(fields: [messageId], references: [id], onDelete: Cascade)
   chat      Chat                   @relation(fields: [chatId], references: [id], onDelete: Cascade)
   vector    Unsupported("vector")?
@@ -105,8 +117,8 @@ model MessageVector {
 model Message {
   id            Int             @id @default(autoincrement())
   timestamp     DateTime        @default(now())
-  questionText  String
-  answerText    String
+  questionText  String @db.Text
+  answerText    String @db.Text
   isError       Boolean         @default(false)
   chatId        Int
   chat          Chat            @relation(fields: [chatId], references: [id], onDelete: Cascade)
@@ -119,7 +131,7 @@ model MissionVector {
   id           String                 @id @default(cuid())
   vector       Unsupported("vector")?
   missionId    Int
-  content String
+  content      String @db.Text
   qualityScore Float // 1-100
   createdAt    DateTime               @default(now())
   mission      Mission                @relation(fields: [missionId], references: [id], onDelete: Cascade)
@@ -131,7 +143,7 @@ model MissionUpdatesItem {
   id              Int            @id @default(autoincrement())
   missionUpdateId Int
   missionUpdate   MissionUpdates @relation(fields: [missionUpdateId], references: [id])
-  content         String
+  content      String @db.Text
   link            String
   logo            String
   createdAt       DateTime       @default(now())
@@ -142,21 +154,24 @@ model MissionUpdates {
   id                 Int                  @id @default(autoincrement())
   missionId          Int
   mission            Mission              @relation(fields: [missionId], references: [id])
-  content            String
+  content      String @db.Text
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   missionUpdatesItem MissionUpdatesItem[]
 }
 
 model Donation {
-  id        Int      @id @default(autoincrement())
-  amount    Float
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  missionId Int
-  mission   Mission  @relation(fields: [missionId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  amount      Float
+  userId      String?
+  visitorId   String?
+  asAnonymous Boolean  @default(false)
+  visitor     Vistor?  @relation(fields: [visitorId], references: [id])
+  user        User?    @relation(fields: [userId], references: [id])
+  missionId   Int
+  mission     Mission  @relation(fields: [missionId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {
