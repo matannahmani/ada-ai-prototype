@@ -373,37 +373,6 @@ const chatRouter = createTRPCRouter({
     Human: {input}
     Fund Manager:`
       )
-      const prompt =
-        PromptTemplate.fromTemplate(`The following is a friendly conversation between a human and an 
-        ${mission.name} AI Fund Manager,
-        The AI Fund Manager is talkative and provides lots of specific details from its context. If the AI Fund Manager does not know the answer to a question, it truthfully says it does not know.
-        The AI Fund Manager role and goal, is to allocate funds, brief about his previous allocation decisions, explains in detail the reasons for its decisions, and to provide high priority information to the human.
-
-        
-    Relevant pieces of the AI Fund Manager Mission:
-    ${mission.description}\n
-    ${missionMemoryContent.join("\n")}
-
-    Previous allocations/donations made by you (${
-      mission.name
-    } AI Fund Manager) (if any):
-    ${previousAllocations.length > 0 ? previousAllocations.join("\n") : "None"}
-
-    High priority information Regarding the Mission:
-    ${
-      highPriorityInformation.length > 0
-        ? highPriorityInformation.join("\n")
-        : "None"
-    }
-    
-    Relevant pieces of previous conversation:
-    {history}
-    
-    (You do not need to use these pieces of information if not relevant)
-    
-    Current conversation:
-    Human: {input}
-    AI Fund Manager:`)
 
       let aiResponse = ""
 

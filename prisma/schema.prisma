@@ -105,7 +105,7 @@ model MessageVector {
   id        String                 @id @default(cuid())
   messageId Int
   chatId    Int
-  content      String @db.Text
+  content   String                 @db.Text
   message   Message                @relation(fields: [messageId], references: [id], onDelete: Cascade)
   chat      Chat                   @relation(fields: [chatId], references: [id], onDelete: Cascade)
   vector    Unsupported("vector")?
@@ -117,8 +117,8 @@ model MessageVector {
 model Message {
   id            Int             @id @default(autoincrement())
   timestamp     DateTime        @default(now())
-  questionText  String @db.Text
-  answerText    String @db.Text
+  questionText  String          @db.Text
+  answerText    String          @db.Text
   isError       Boolean         @default(false)
   chatId        Int
   chat          Chat            @relation(fields: [chatId], references: [id], onDelete: Cascade)
@@ -127,23 +127,60 @@ model Message {
   @@index([chatId, timestamp], name: "chat_timestamp_index")
 }
 
+enum Role {
+  BACKOFFICE
+  USER
+}
+
+enum MissionVectorPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum MissionVectorStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model MissionVector {
-  id           String                 @id @default(cuid())
-  vector       Unsupported("vector")?
-  missionId    Int
-  content      String @db.Text
-  qualityScore Float // 1-100
-  createdAt    DateTime               @default(now())
-  mission      Mission                @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  id                   String                 @id @default(cuid())
+  vector               Unsupported("vector")?
+  missionId            Int
+  content              String                 @db.Text
+  approved             Boolean                @default(false)
+  approvedById         String?
+  source               String                 @default("manual")
+  sourceUrl             String?
+  status              MissionVectorStatus                 @default(PENDING)
+  approvedBy           User?                  @relation(fields: [approvedById], references: [id])
+  priority             MissionVectorPriority               @default(LOW)
+  title                String
+  aiNote               String?                @db.Text
+  approvedAt           DateTime?
+  approverNote         String?                @db.Text
+  aiQualityScore       Int // 1-100
+  approverQualityScore Int? // 1-100
+  mission              Mission                @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
 
   @@index([missionId], name: "mission_memory_index")
+  @@index([approvedById], name: "approvedBy_index")
+  @@index([createdAt], name: "memory_createdAt_index")
+  @@index([aiQualityScore], name: "memory_aiQualityScore_index")
+  @@index([title], name: "memory_title_index")
+  @@index([priority], name: "memory_priority_index")
+  @@index([status], name: "memory_status_index")
 }
 
 model MissionUpdatesItem {
   id              Int            @id @default(autoincrement())
   missionUpdateId Int
   missionUpdate   MissionUpdates @relation(fields: [missionUpdateId], references: [id])
-  content      String @db.Text
+  content         String         @db.Text
   link            String
   logo            String
   createdAt       DateTime       @default(now())
@@ -154,7 +191,7 @@ model MissionUpdates {
   id                 Int                  @id @default(autoincrement())
   missionId          Int
   mission            Mission              @relation(fields: [missionId], references: [id])
-  content      String @db.Text
+  content            String               @db.Text
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   missionUpdatesItem MissionUpdatesItem[]
@@ -175,22 +212,24 @@ model Donation {
 }
 
 model User {
-  id                        String     @id @default(cuid())
+  id                        String          @id @default(cuid())
   name                      String?
-  email                     String?    @unique
+  email                     String?         @unique
   password                  String?
   emailVerified             DateTime?
-  requiresEmailVerification Boolean    @default(false)
+  requiresEmailVerification Boolean         @default(false)
   visitorId                 String?
   image                     String?
-  visitor                   Vistor?    @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  visitor                   Vistor?         @relation(fields: [visitorId], references: [id], onDelete: Cascade)
   accounts                  Account[]
   sessions                  Session[]
   donations                 Donation[]
   Chat                      Chat[]
   Mission                   Mission[]
-  createdAt                 DateTime   @default(now())
-  updatedAt                 DateTime   @updatedAt
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+  role                      Role            @default(USER)
+  MissionVector             MissionVector[]
 
   @@index([email])
   @@index([email, password])

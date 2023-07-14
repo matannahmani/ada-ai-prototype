@@ -1,34 +1,26 @@
-import { promises as fs } from "fs"
-import path from "path"
 import { Metadata } from "next"
-import Image from "next/image"
-import { z } from "zod"
+import { missionVectorListZod } from "@/shared/zod/backoffice/missionVector"
+import { api } from "@/trpc/server"
 
 import { columns } from "./components/columns"
 import { DataTable } from "./components/data-table"
 import { UserNav } from "./components/user-nav"
-import { taskSchema } from "./data/schema"
 
 export const metadata: Metadata = {
   title: "Tasks",
-  description: "A task and issue tracker build using Tanstack Table.",
+  description: "Track our mission long-term memory tasks and their status.",
 }
 
-// Simulate a database read for tasks.
-async function getTasks() {
-  const data = await fs.readFile(
-    path.join(process.cwd(), "src/app/backoffice/memory/data/tasks.json")
+export default async function TaskPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const queryInput = missionVectorListZod.parse(searchParams)
+  const tasks = await api.backoffice.mission.missionVector.list.query(
+    queryInput
   )
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const tasks = JSON.parse(data.toString())
-
-  return z.array(taskSchema).parse(tasks)
-}
-
-export default async function TaskPage() {
-  const tasks = await getTasks()
-
+  const pageCount = Math.ceil(tasks.count / queryInput.take)
   return (
     <section className="container relative">
       <div className="flex h-full flex-1 flex-col space-y-4 p-4 overflow-hidden relative">
@@ -43,7 +35,7 @@ export default async function TaskPage() {
             <UserNav />
           </div>
         </div>
-        <DataTable data={tasks} columns={columns} />
+        <DataTable pageCount={pageCount} data={tasks.data} columns={columns} />
       </div>
     </section>
   )

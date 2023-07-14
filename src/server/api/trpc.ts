@@ -189,6 +189,23 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   })
 })
 
+/** Reusable middleware that enforces users are logged and backoffice role in before running the procedure. */
+const enforceUserBackofficeRole = t.middleware(({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" })
+  }
+  if (ctx.session.user.role !== "BACKOFFICE") {
+    throw new TRPCError({ code: "UNAUTHORIZED" })
+  }
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  })
+})
+
 /**
  * Protected (authenticated) procedure
  *
@@ -198,6 +215,17 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  */
 export const protectedUserOrVistorProcedure = t.procedure.use(
   enforceVistorOrUserIsAuthed
+)
+
+/**
+ * Protected backoffice role (authenticated) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged backoffice users, use this. It verifies
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const protectedBackofficeProcedure = t.procedure.use(
+  enforceUserBackofficeRole
 )
 
 /**

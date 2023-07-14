@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useAutoAnimate } from "@formkit/auto-animate/react"
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 import { Badge } from "@ui/badge"
@@ -65,7 +66,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <Badge
                         variant="secondary"
                         key={option.value}
-                        className="rounded-sm px-1 font-normal"
+                        className="rounded-sm px-1 font-normal capitalize"
                       >
                         {option.label}
                       </Badge>
@@ -114,7 +115,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
-                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs capitalize">
                         {facets.get(option.value)}
                       </span>
                     )}

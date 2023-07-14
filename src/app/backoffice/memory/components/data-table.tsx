@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import {
   flexRender,
   getCoreRowModel,
@@ -30,11 +31,13 @@ import { DataTableToolbar } from "../components/data-table-toolbar"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  pageCount: number
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  pageCount,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -42,18 +45,47 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
     columns,
+    pageCount,
     state: {
       sorting,
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination: {
+        pageSize: Number(searchParams.get("take")) || 10,
+        pageIndex: Number(searchParams.get("skip")) || 0,
+      },
     },
+    manualPagination: true,
     enableRowSelection: true,
+    onPaginationChange: (updater) => {
+      const urlParams = new URLSearchParams(window.location.search)
+      const take = Number(urlParams.get("take"))
+      const skip = Number(urlParams.get("skip"))
+      const pageState =
+        typeof updater === "function"
+          ? updater({
+              pageSize: take,
+              pageIndex: skip,
+            })
+          : updater
+      const { pageSize, pageIndex } = pageState
+      const current = new URLSearchParams(Array.from(searchParams.entries())) // -> has to use this form
+      current.set("take", pageSize.toString())
+      current.set("skip", pageIndex.toString())
+      // cast to string
+      const search = current.toString()
+      const query = search ? `?${search}` : ""
+      router.push(`${pathname}${query}`)
+    },
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
