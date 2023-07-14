@@ -51,14 +51,14 @@ function Sidebar(props: SidebarProps) {
   return (
     <div id={CHAT_SIDEBAR_SYMBOL.toString()} className="relative">
       <div
-        data-isOpen={isOpen}
+        data-isopen={isOpen}
         className={cn(
           "fixed top-16 z-20 w-[100%] max-w-xs h-full bg-background",
-          "data-[isOpen=true]:translate-x-0 data-[isOpen=true]:opacity-100 data-[isOpen=true]:shadow-lg",
-          "data-[isOpen=false]:-translate-x-full data-[isOpen=false]:opacity-0 data-[isOpen=false]:shadow-none",
+          "data-[isopen=true]:translate-x-0 data-[isopen=true]:opacity-100 data-[isopen=true]:shadow-lg",
+          "data-[isopen=false]:-translate-x-full data-[isopen=false]:opacity-0 data-[isopen=false]:shadow-none",
           "transition",
           "flex flex-row",
-          "lg:sticky lg:mr-2 lg:w-72 lg:translate-x-0 lg:border-r-2 lg:bg-transparent lg:shadow-none "
+          "lg:!sticky lg:!mr-2 lg:!w-72 lg:!translate-x-0 lg:!border-r-2 lg:!bg-transparent lg:!shadow-none lg:!opacity-100"
         )}
       >
         <div>{props.children}</div>
