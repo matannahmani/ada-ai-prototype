@@ -36,7 +36,7 @@ export const ChatSidebarTrigger = () => {
           buttonVariants({
             variant: "ghost",
           }),
-          "sm:hidden rounded-md"
+          "lg:hidden rounded-md"
         )}
         onClick={() => setIsOpen(!isOpen)}
       >

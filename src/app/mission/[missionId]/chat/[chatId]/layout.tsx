@@ -12,11 +12,11 @@ export const preferredRegion = "auto"
 const ChatLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <VisitorProtectedLayout>
-      <div className="flex flex-row space-y-4 py-4">
+      <div className="flex flex-row h-full w-full space-y-4 py-4">
         <Sidebar>
           <SidebarContent />
         </Sidebar>
-        <div className="w-full lg:ml-2">{children}</div>
+        <div className="w-full h-full lg:ml-2">{children}</div>
       </div>
     </VisitorProtectedLayout>
   )
